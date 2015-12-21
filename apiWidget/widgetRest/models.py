@@ -7,6 +7,8 @@ from django.db import models
 class User(models.Model):
     user_name=models.CharField(max_length=200)
     user_pass=models.CharField(max_length=50)
+    is_active=models.BooleanField
+    last_ping=models.DateField
 
 
 class Comment(models.Model):
@@ -20,6 +22,6 @@ class SpecificComment(Comment):
     url_tag=models.CharField(max_length=200)
 
 
-class ActiveUser(models.Model):
-	activeUser_user = models.CharField(max_length = 200) 
-	activeUser_domain = models.CharField(max_length = 200)
+# class ActiveUser(models.Model):
+# 	activeUser_user = models.CharField(max_length = 200)
+# 	activeUser_domain = models.CharField(max_length = 200)

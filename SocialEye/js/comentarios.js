@@ -30,7 +30,7 @@ function crearDebateGeneral(unWidget){
             });
             comenGeneralesCreado=true;
             comenGeneralesAbierto=true;
-            var usuarioComentario = getSession();
+            var usuarioComentario = localStorage['username'];
             $("#agregarComentarioGeneral").click(function(){
                 if ($("#textoComentarioGeneral").val()!=""){
                   var url=window.location.href;
@@ -112,13 +112,13 @@ function crearCommentBoxGenerales(){
 
 // handle a successful response
          success : function(data) {
-           $.each(data, function(i, item){
-             commentBox+="<li><div class='commentText'>";
-             commentBox+="<span class='date sub-text'>" + item.comment_user__user_name + " dijo el " +item.comment_date+":</span>";
-             commentBox+="<p>"+item.comment_text+"</p>";
-             commentBox+="</div>";
-             commentBox+="</li>";
-           });
+                 $.each(data, function (i, item) {
+                     commentBox += "<li><div class='commentText'>";
+                     commentBox += "<span class='date sub-text'>" + item.comment_user__user_name + " dijo el " + item.comment_date + ":</span>";
+                     commentBox += "<p>" + item.comment_text + "</p>";
+                     commentBox += "</div>";
+                     commentBox += "</li>";
+                 });
 
          },
 
@@ -199,9 +199,6 @@ function comentariosEspecificos(){
       commentBox+="<div class='actionBox'>";
       commentBox+="<ul id='listaComentario"+numeroComentario+"' class='commentList'>";
       commentBox+="<li>";
-      commentBox+="<div class='commenterImage'>";
-      commentBox+="<img src='http://lorempixel.com/50/50/people/6' />";
-      commentBox+="</div>";
       commentBox+="<div class='commentText'>";
       commentBox+="<p>Hello this is a test comment.</p> <span class='date sub-text'>on March 5th, 2014</span>";
       commentBox+="</div>";
