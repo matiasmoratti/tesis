@@ -191,6 +191,7 @@ function comentariosEspecificos(){
 
 
   function crearCommentBoxEspicifico(textoComentario){
+       var url=window.location.href;
       var commentBox="<div class='detailBox' id='comentario"+numeroComentario+"'>";
       commentBox+="<div class='titleBox'>";
       commentBox+="<label>"+ textoComentario +"</label>";
@@ -198,10 +199,39 @@ function comentariosEspecificos(){
       commentBox+="</div>";
       commentBox+="<div class='actionBox'>";
       commentBox+="<ul id='listaComentario"+numeroComentario+"' class='commentList'>";
+
+      //Creo los objetos
+       $.ajax({
+           url : "http://127.0.0.1:8000/widgetRest/comments/?comment_url="+url, // the endpoint
+             type : "GET", // http method
+             dataType: 'json',
+             async: false,
+            // data : {'comment_url' : url,}, // data sent with the post request
+
+// handle a successful response
+         success : function(data) {
+                 $.each(data, function (i, item) {
+                     commentBox += "<li><div class='commentText'>";
+                     commentBox += "<span class='date sub-text'>" + item.comment_user__user_name + " dijo el " + item.comment_date + ":</span>";
+                     commentBox += "<p>" + item.comment_text + "</p>";
+                     commentBox += "</div>";
+                     commentBox += "</li>";
+                 });
+
+         },
+
+             // handle a non-successful response
+             error : function(xhr,errmsg,err) {
+                 alert("Error al cargar los comentarios");
+
+             }
+             });
+
+
+
+
+
       commentBox+="<li>";
-      commentBox+="<div class='commentText'>";
-      commentBox+="<p>Hello this is a test comment.</p> <span class='date sub-text'>on March 5th, 2014</span>";
-      commentBox+="</div>";
       commentBox+="</li>";
       commentBox+="</ul>";
       commentBox+="<form class='form-inline' role='form'>";

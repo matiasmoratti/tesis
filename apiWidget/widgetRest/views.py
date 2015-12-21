@@ -109,3 +109,26 @@ def comments(request):
             #         return HttpResponse(usuarios_as_json, content_type='json')
             #     else:
             #         return HttpResponse()
+
+
+@csrf_exempt
+def specific_comments(request):
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        comment_form = CommentForm(request.POST)
+        # check whether it's valid:
+        if comment_form.is_valid():
+            # create the comment
+            comment = comment_form.save(commit=False)
+            comment.comment_date=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            comment.comment_user = User.objects.get(user_name = request.POST['user_name'])
+            comment.save()
+            return HttpResponse()
+        else:
+            return HttpResponseBadRequest()
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        comments=list(Comment.objects.filter(comment_url=request.GET['comment_url']).values('comment_user__user_name', 'comment_text' , 'comment_date'))
+        comments_as_json = json.dumps(comments)
+        return HttpResponse(comments_as_json, content_type='json')

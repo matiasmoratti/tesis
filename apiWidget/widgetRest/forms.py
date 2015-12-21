@@ -9,6 +9,12 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ('comment_text', 'comment_url')
 
+class SpecificCommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('comment_text', 'comment_url')
+
 class UserForm(forms.ModelForm):
 
     class Meta:
