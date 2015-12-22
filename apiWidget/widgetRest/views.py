@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
-from .forms import CommentForm
+from .forms import CommentForm,SpecificCommentForm
 from django.utils import timezone
 from .forms import UserForm
-from .models import User,Comment
+from .models import User,Comment,SpecificComment
 from django.core import serializers
 import datetime
 from django.core.exceptions import ObjectDoesNotExist
@@ -115,7 +115,7 @@ def comments(request):
 def specific_comments(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        comment_form = CommentForm(request.POST)
+        comment_form = SpecificCommentForm(request.POST)
         # check whether it's valid:
         if comment_form.is_valid():
             # create the comment
@@ -129,6 +129,6 @@ def specific_comments(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        comments=list(Comment.objects.filter(comment_url=request.GET['comment_url']).values('comment_user__user_name', 'comment_text' , 'comment_date'))
+        comments=list(SpecificComment.objects.filter(comment_url=request.GET['comment_url'],url_tag=request.GET['url_tag']).values('comment_user__user_name', 'comment_text' , 'comment_date'))
         comments_as_json = json.dumps(comments)
         return HttpResponse(comments_as_json, content_type='json')
