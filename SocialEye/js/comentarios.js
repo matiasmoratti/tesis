@@ -19,6 +19,14 @@ function Comentarios() {
 
     }
 
+    this.cerrarBox = function(){
+        if(comenGeneralesAbierto){
+            deSeleccionarWidgetGenerales(debateBox);
+            $("#comentariosGenerales").hide();
+            $("#textoComentarioGeneral").val("");
+        }
+    }
+
     function crearDebateGeneral(unWidget) {
         $("body").append(crearCommentBoxGenerales());
         //debate.attr("style", "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;");
@@ -53,14 +61,14 @@ function Comentarios() {
                         var hs = d.getHours();
                         var mins = d.getMinutes();
                         var secs = d.getSeconds();
-                        span.innerHTML = $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
+                        span.innerHTML = usuarioComentario + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
                         parrafo.innerHTML = $("#textoComentarioGeneral").val();
                         var divComentario = document.createElement('div');
                         divComentario.setAttribute('class', 'commentText');
                         var lineaComentario = document.createElement('li');
                         //Uno los objetos
-                        divComentario.appendChild(parrafo);
                         divComentario.appendChild(span);
+                        divComentario.appendChild(parrafo);
                         lineaComentario.appendChild(divComentario);
                         $("#listaComentariosGenerales").append(lineaComentario);
                         $("#textoComentarioGeneral").val("");
@@ -115,7 +123,7 @@ function Comentarios() {
             success: function (data) {
                 $.each(data, function (i, item) {
                     commentBox += "<li><div class='commentText'>";
-                    commentBox += "<span class='date sub-text'>" + item.comment_user__user_name + " dijo el " + item.comment_date + ":</span>";
+                    commentBox += "<span class='date sub-text'>" + item.comment_user__user_name + " dijo el " + item.comment_date + "</span>";
                     commentBox += "<p>" + item.comment_text + "</p>";
                     commentBox += "</div>";
                     commentBox += "</li>";
@@ -148,11 +156,13 @@ function comentariosEspecificos() {
     var comenEspecificoActivo = false;
     var numeroComentario = 0;
     var indexActual = 99999999;
+    var debateBox;
     this.iniciarWidgetComentariosEspecificos = function () {
         //Evento de cuando se apreta click en el widget comentarios especificos
         $("#comentarios").click(function (e) {
+            debateBox = e.target;
             if (comenEspecificoActivo)
-                deSeleccionarWidget(e.target);
+                deSeleccionarWidget();
             else {
                 seleccionarWidget(e.target);
                 changeClickListeners();
@@ -160,6 +170,12 @@ function comentariosEspecificos() {
 
         });
 
+    }
+
+    this.cerrarBox = function(){
+        if (comenEspecificoActivo){
+             deSeleccionarWidget(debateBox);
+        } 
     }
 
 
@@ -212,7 +228,7 @@ function comentariosEspecificos() {
             success: function (data) {
                 $.each(data, function (i, item) {
                     commentBox += "<li><div class='commentText'>";
-                    commentBox += "<span class='date sub-text'>" + item.comment_user__user_name + " dijo el " + item.comment_date + ":</span>";
+                    commentBox += "<span class='date sub-text'>" + item.comment_user__user_name + " dijo el " + item.comment_date + "</span>";
                     commentBox += "<p>" + item.comment_text + "</p>";
                     commentBox += "</div>";
                     commentBox += "</li>";
@@ -274,8 +290,15 @@ function comentariosEspecificos() {
     }
 
     function mostrarDebateEspecifico(idComentario, elemento) {
-        $("#" + idComentario).offset({left: elemento.pageX, top: elemento.pageY});
-        $("#" + idComentario).show({left: elemento.pageX, top: elemento.pageY});
+        if($("#" + idComentario).is(":visible")){
+              $("#" + idComentario).offset({left: elemento.pageX, top: elemento.pageY});
+              $("#" + idComentario).show({left: elemento.pageX, top: elemento.pageY});
+        }
+        else{
+             $("#" + idComentario).show();
+             $("#" + idComentario).offset({left: elemento.pageX, top: elemento.pageY});
+        }
+
     }
 
     function crearDebateEspecifico(elemento, tag) {
@@ -321,6 +344,7 @@ function comentariosEspecificos() {
             //Ahora tomo el numero, para formar el id del textarea
             var idSeleccionado = this.id;
             var numComen = idSeleccionado.split("agregarComentario")[1];
+            var usuarioComentario = localStorage['username'];
             if ($("#textoComentario" + numComen).val() != "") {
                 var url = window.location.href;
                 //Creo los objetos
@@ -330,7 +354,7 @@ function comentariosEspecificos() {
                     data: {
                         comment_text: $("#textoComentario" + numComen).val(),
                         comment_url: url,
-                        user_name: localStorage['username'],
+                        user_name: usuarioComentario,
                         url_tag: tag
                     }, // data sent with the post request
 
@@ -341,13 +365,17 @@ function comentariosEspecificos() {
                         parrafo.innerHTML = $("#textoComentario" + numComen).val();
                         var span = document.createElement('span');
                         span.setAttribute('class', 'date sub-text');
-                        span.innerHTML = $.datepicker.formatDate('dd-mm-yy', new Date());
+                        var d = new Date();
+                        var hs = d.getHours();
+                        var mins = d.getMinutes();
+                        var secs = d.getSeconds();
+                        span.innerHTML = usuarioComentario + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs; 
                         var divComentario = document.createElement('div');
                         divComentario.setAttribute('class', 'commentText');
                         var lineaComentario = document.createElement('li');
                         //Uno los objetos
-                        divComentario.appendChild(parrafo);
                         divComentario.appendChild(span);
+                        divComentario.appendChild(parrafo);
                         lineaComentario.appendChild(divComentario);
                         $("#listaComentario" + numComen).append(lineaComentario);
                         $("#textoComentario" + numComen).val("");
@@ -399,5 +427,6 @@ function comentariosEspecificos() {
         }
         return xpath;
     }
+
 
 }

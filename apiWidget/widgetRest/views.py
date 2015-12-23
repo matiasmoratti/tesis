@@ -96,7 +96,7 @@ def comments(request):
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        comments=list(Comment.objects.filter(comment_url=request.GET['comment_url']).values('comment_user__user_name', 'comment_text' , 'comment_date'))
+        comments=list(Comment.objects.filter(specificcomment__isnull = True, comment_url=request.GET['comment_url']).values('comment_user__user_name', 'comment_text' , 'comment_date'))
         comments_as_json = json.dumps(comments)
         return HttpResponse(comments_as_json, content_type='json')
 

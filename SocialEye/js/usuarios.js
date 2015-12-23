@@ -6,10 +6,10 @@ function Usuarios(){
   this.iniciarWidgetUsuarios = function(){
 
         $("#widgetUsuarios").click(function(e) {
-            debateBox=e.target;
+             debateBox = e.target;
              if(widgetUsuariosCreado){
                  if(widgetUsuariosAbierto) //La ventana está creada y mostrándose
-                     deSeleccionarWidgetUsuarios(e.target);
+                     deSeleccionarWidgetUsuarios(debateBox);
                  else   //La ventana está creada y oculta
                     seleccionarWidgetUsuarios(e.target);
              }
@@ -19,12 +19,19 @@ function Usuarios(){
 
    }
 
+  
+   this.cerrarBox = function(){
+      if(widgetUsuariosAbierto){
+          deSeleccionarWidgetUsuarios(debateBox);
+      }
+   }
+
 function crearWidgetUsuarios(unWidget){
             $("body").append(crearListaDeUsuarios());
             //debate.attr("style", "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;");
             unWidget.style.cssText =  "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;";
             $("#cerrarListaUsuarios").on("click", function(event){
-                deSeleccionarWidgetUsuarios(debateBox);
+                deSeleccionarWidgetUsuarios(unWidget);
                 $("#listaUsuarios").hide();
             });
             widgetUsuariosCreado=true;
@@ -42,7 +49,7 @@ function crearWidgetUsuarios(unWidget){
 
 
    function deSeleccionarWidgetUsuarios(unWidget){
-       unWidget.style.cssText =  "";
+        unWidget.style.cssText = "";
         $("#listaUsuarios").hide();
         widgetUsuariosAbierto=false;
    }
@@ -72,7 +79,6 @@ function crearListaDeUsuarios(){
 
              // handle a non-successful response
              error : function(xhr,errmsg,err) {
-                 alert(xhr);
 
              }
              });
