@@ -3,9 +3,10 @@ from django.views.decorators.csrf import csrf_exempt
 from .forms import CommentForm,SpecificCommentForm
 from django.utils import timezone
 from .forms import UserForm
-from .models import User,Comment,SpecificComment
+from .models import User,Comment,SpecificComment,ActiveUser
 from django.core import serializers
 import datetime
+from datetime import timedelta
 from django.core.exceptions import ObjectDoesNotExist
 import json
 
@@ -29,9 +30,10 @@ def login(request):
                 existeUser = User.objects.get(user_name= request.POST['user_name'])
                 if existeUser.user_pass == request.POST['user_pass']:
                     #existeUser_as_json= serializers.serialize('json', [existeUser])
-                    existeUser.is_active=True
-                    existeUser.last_ping=datetime.datetime.now()
-                    existeUser.save()
+                    active=ActiveUser.objects.get(active_user=request.POST['user_name'])
+                    active.is_active=True
+                    active.last_ping=datetime.datetime.now()
+                    active.save()
                     return HttpResponse()
                     #existeUserActivo = ActiveUser.objects.get(activeUser_user = request.POST['user_name'])
                     # if (existeUserActivo.activeUser_domain != request.POST['domain']):
@@ -51,8 +53,9 @@ def login(request):
 @csrf_exempt
 def logout(request):
     if request.method == 'POST':
-        usuario_activo = User.objects.get(user_name = request.POST['user_name'])
-        usuario_activo.is_active=False
+        active=ActiveUser.objects.get(active_user=request.POST['user_name'])
+        active.is_active=False
+        active.save()
         return HttpResponse()
 
 @csrf_exempt
@@ -71,6 +74,11 @@ def registration(request):
                 newUser.is_active=True
                 newUser.last_ping=timezone.now()
                 newUser.save()
+                active=ActiveUser()
+                active.active_user=request.POST['user_name']
+                active.is_active=True
+                active.last_ping=timezone.now()
+                active.save()
                 #newUser_as_json= serializers.serialize('json', [newUser])
                 #return HttpResponse(newUser_as_json, content_type='json')
                 return HttpResponse()
@@ -132,3 +140,17 @@ def specific_comments(request):
         comments=list(SpecificComment.objects.filter(comment_url=request.GET['comment_url'],url_tag=request.GET['url_tag']).values('comment_user__user_name', 'comment_text' , 'comment_date'))
         comments_as_json = json.dumps(comments)
         return HttpResponse(comments_as_json, content_type='json')
+
+@csrf_exempt
+def user_ping(request):
+    if request.method == 'POST':
+        active=ActiveUser.objects.get(active_user=request.POST['user_name'])
+        active.is_active=True
+        active.last_ping=datetime.datetime.now()
+        active.save()
+        now=datetime.datetime.now()
+        enddate = now + timedelta(seconds=60)
+        active_users=list(ActiveUser.objects.filter(last_ping__range=[now, enddate]).values('active_user'))
+        print(active_users)
+        active_as_json = json.dumps(active_users)
+        return HttpResponse(active_as_json, content_type='json')

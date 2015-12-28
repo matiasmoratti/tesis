@@ -7,21 +7,21 @@
 // @match      http://*/*
 // @noframes
 
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/jquery-2.1.4.min.js
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/jquery-ui.min.js
-// @resource   jqueryUICSS file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/css/jquery-ui.min.css
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/bootstrap.min.js
-// @resource   bootstrapCSS file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/bootstrap/css/bootstrap.min.css
-// @resource   bootstrapThemeCSS file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/bootstrap/css/bootstrap-theme.min.css
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/bootbox.min.js
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/sidebar_menu.js
-// @resource   sidebar file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/css/simple-sidebar.css
-// @resource   login file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/css/login.css
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/bootbox.min.js
-// @resource   commentBox file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/css/commentBox.css
-// @resource   listaUsuarios file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/css/listaUsuarios.css
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/comentarios.js
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/usuarios.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery-2.1.4.min.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery-ui.min.js
+// @resource   jqueryUICSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/jquery-ui.min.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/bootstrap.min.js
+// @resource   bootstrapCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap.min.css
+// @resource   bootstrapThemeCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap-theme.min.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/bootbox.min.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/sidebar_menu.js
+// @resource   sidebar file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/simple-sidebar.css
+// @resource   login file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/login.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/bootbox.min.js
+// @resource   commentBox file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/commentBox.css
+// @resource   listaUsuarios file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/listaUsuarios.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/comentarios.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/usuarios.js
 // ==/UserScript==
 
 function Manager() {

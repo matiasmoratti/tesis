@@ -39,7 +39,8 @@ function Comentarios() {
         comenGeneralesCreado = true;
         comenGeneralesAbierto = true;
         var usuarioComentario = localStorage['username'];
-        $("#agregarComentarioGeneral").click(function () {
+        $("#agregarComentarioGeneral").on('click', function () {
+            alert("chau");
             if ($("#textoComentarioGeneral").val() != "") {
                 var url = window.location.href;
                 //Creo los objetos
@@ -340,9 +341,10 @@ function comentariosEspecificos() {
             this.style.zIndex = indexActual;
         });
 
-        $('[id^="agregarComentario"]').click(function () {
+        $('[id^="agregarComentario"]').on('click',function (e) {
             //Ahora tomo el numero, para formar el id del textarea
             var idSeleccionado = this.id;
+            alert("hola");
             var numComen = idSeleccionado.split("agregarComentario")[1];
             var usuarioComentario = localStorage['username'];
             if ($("#textoComentario" + numComen).val() != "") {
