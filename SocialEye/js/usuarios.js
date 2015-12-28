@@ -4,6 +4,7 @@ function Usuarios() {
     var widgetUsuariosAbierto = false;
     var interval = null;
     var debateBox;
+    var listaUsuarios;
     this.iniciarWidgetUsuarios = function () {
 
         $("#widgetUsuarios").click(function (e) {
@@ -37,15 +38,19 @@ function Usuarios() {
         });
         widgetUsuariosCreado = true;
         widgetUsuariosAbierto = true;
-        interval=setInterval(function () {
+        interval = setInterval(function () {
             jQuery.ajax({
                 type: "POST",
                 url: "http://127.0.0.1:8000/widgetRest/user_ping/",
                 dataType: 'json',
-                data:{user_name: localStorage['username']},
-                success: function (response) {
+                data: {user_name: localStorage['username']},
+                success: function (data) {
+                    $('#listaUsuarios a').remove();
+                    $.each(data, function (i, item) {
+                        if (item.active_user!=localStorage['username'])
+                            $('#listaUsuarios').append("<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.active_user + "</a>");
+                    })
                 }
-
             });
         }, 30000);
 
@@ -57,13 +62,18 @@ function Usuarios() {
         unWidget.style.cssText = "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;";
         $("#listaUsuarios").show();
         widgetUsuariosAbierto = true;
-        interval=setInterval(function () {
+        interval = setInterval(function () {
             jQuery.ajax({
                 type: "POST",
                 url: "http://127.0.0.1:8000/widgetRest/user_ping/",
                 dataType: 'json',
-                data:{user_name: localStorage['username']},
-                success: function (response) {
+                data: {user_name: localStorage['username']},
+                success: function (data) {
+                    $('#listaUsuarios a').remove();
+                    $.each(data, function (i, item) {
+                        if (item.active_user!=localStorage['username'])
+                            $('#listaUsuarios').append("<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.active_user + "</a>");
+                    });
                 }
 
             });
@@ -80,7 +90,7 @@ function Usuarios() {
 
     function crearListaDeUsuarios() {
         var dominio = window.location.hostname;
-        var listaUsuarios = "<div class='list-group' id='listaUsuarios'>";
+        listaUsuarios = "<div class='list-group' id='listaUsuarios'>";
         listaUsuarios += "<div class='titleBox' id='tituloListaUsuarios'>";
         listaUsuarios += "<label>Usuarios activos en: " + dominio + "</label>";
         listaUsuarios += "<button type='button' class='close' id='cerrarListaUsuarios' aria-hidden='true'>&times;</button>";
@@ -89,7 +99,7 @@ function Usuarios() {
         $.ajax({
             url: "http://127.0.0.1:8000/widgetRest/user_ping/", // the endpoint
             type: "POST", // http method
-            data:{user_name: localStorage['username']},
+            data: {user_name: localStorage['username']},
             dataType: 'json',
             async: false,
             // data : {'comment_url' : url,}, // data sent with the post request
@@ -97,7 +107,8 @@ function Usuarios() {
 // handle a successful response
             success: function (data) {
                 $.each(data, function (i, item) {
-                    listaUsuarios += "<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.fields.activeUser_user + "</a>";
+                    if (item.active_user!=localStorage['username'])
+                        listaUsuarios += "<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.active_user + "</a>";
                 });
 
             },

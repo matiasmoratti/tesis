@@ -146,10 +146,12 @@ def user_ping(request):
     if request.method == 'POST':
         active=ActiveUser.objects.get(active_user=request.POST['user_name'])
         active.is_active=True
-        active.last_ping=datetime.datetime.now()
+        active.last_ping=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         active.save()
-        now=datetime.datetime.now()
-        enddate = now + timedelta(seconds=60)
+        now=(datetime.datetime.now() - timedelta(seconds=60)).strftime("%Y-%m-%d %H:%M:%S")
+        enddate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        print(now)
+        print(enddate)
         active_users=list(ActiveUser.objects.filter(last_ping__range=[now, enddate]).values('active_user'))
         print(active_users)
         active_as_json = json.dumps(active_users)

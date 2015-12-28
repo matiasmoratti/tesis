@@ -24,4 +24,4 @@ class SpecificComment(Comment):
 class ActiveUser(models.Model):
     active_user = models.CharField(max_length=200)
     is_active = models.BooleanField()
-    last_ping = models.DateField()
+    last_ping = models.DateTimeField()
