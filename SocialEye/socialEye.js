@@ -49,7 +49,7 @@ function Manager() {
 
         $("head").append("<link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet'>");
 
-        $("body").append(" <div id='socialEyeBar'> <ul class='socialEyeNavStyle nav-pills nav-stacked' id='menu'>   <li class='active'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg'><i class='fa fa-eye fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget'>  <a id='debateGeneral' title='Debate general'><span class='fa-stack fa-lg'><i class='fa fa-commenting fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget'>  <a id='comentarios' title='Comentar contenido'><span class='fa-stack fa-lg'><i class='fa fa-comments fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget'> <a id='widgetUsuarios' title='Contactos'><span class='fa-stack fa-lg'><i class='fa fa-users fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li> </ul> </div> ");
+        $("body").append(" <div id='socialEyeBar' class='socialEye'> <ul class='socialEyeNavStyle nav-pills nav-stacked socialEye' id='menu'>   <li class='active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='debateGeneral' class='socialEye' title='Debate general'><span class='fa-stack fa-lg socialEye'><i class='fa fa-commenting fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='comentarios' title='Comentar contenido'><span class='fa-stack fa-lg'><i class='fa fa-comments fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetUsuarios' class='socialEye' title='Contactos'><span class='fa-stack fa-lg socialEye'><i class='fa fa-users fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li> </ul> </div> ");
 
         $("#icono").click(function () {
             if ($("#boxRegistro").length != 0) {
@@ -149,9 +149,11 @@ function Manager() {
         $("#cerrarSesion").click(function () {
             cerrarBoxes();
             deleteSession();
+            setTimeout(function(){  //Delay porque quedaba la barra a medio cerrar cuando aparecia el mensaje de saludo.
             $(".socialEyeWidget").hide('fast');
             $("#socialEyeBar").animate({height: "42px"}, "500");
-            activo = 0;
+            activo = 0;}, 350); 
+
         });
         
         function cerrarBoxes(){
@@ -213,12 +215,14 @@ function Manager() {
     function deleteSession() {
         var usuario = localStorage['username'];
         localStorage.removeItem('username');
+        var dominio = window.location.hostname;
         //document.cookie="socialEyeUser=" + getSession() + "; expires=Thu, 18 Dec 2013 12:00:00 UTC";
         $.ajax({
             url: "http://127.0.0.1:8000/widgetRest/logout/", // the endpoint
             type: "POST", // http method
             data: {
                 user_name: usuario,
+                url: dominio,
             }, // data sent with the post request
             // handle a successful response
             success: function (data) {

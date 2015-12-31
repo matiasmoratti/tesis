@@ -2,13 +2,15 @@ from __future__ import unicode_literals
 
 from django.db import models
 
+
 # Create your models here.
 
 class User(models.Model):
-    user_name=models.CharField(max_length=200)
-    user_pass=models.CharField(max_length=50)
-    is_active=models.BooleanField
-    last_ping=models.DateField
+    user_name = models.CharField(max_length=200)
+    user_pass = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.user_name
 
 
 class Comment(models.Model):
@@ -19,9 +21,12 @@ class Comment(models.Model):
 
 
 class SpecificComment(Comment):
-    url_tag=models.CharField(max_length=200)
+    url_tag = models.CharField(max_length=200)
 
 
-# class ActiveUser(models.Model):
-# 	activeUser_user = models.CharField(max_length = 200)
-# 	activeUser_domain = models.CharField(max_length = 200)
+class UserActiveUrl(models.Model):
+    url = models.CharField(max_length=500)
+    last_ping = models.DateTimeField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+

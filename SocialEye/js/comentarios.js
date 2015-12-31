@@ -39,7 +39,7 @@ function Comentarios() {
         comenGeneralesCreado = true;
         comenGeneralesAbierto = true;
         var usuarioComentario = localStorage['username'];
-        $("#agregarComentarioGeneral").click(function () {
+        $("#agregarComentarioGeneral").on('click', function () {
             if ($("#textoComentarioGeneral").val() != "") {
                 var url = window.location.href;
                 //Creo los objetos
@@ -104,13 +104,13 @@ function Comentarios() {
 
     function crearCommentBoxGenerales() {
         var url = window.location.href;
-        var commentBox = "<div class='detailBox' id='comentariosGenerales'>";
-        commentBox += "<div class='titleBox'>";
-        commentBox += "<label>Comentarios Generales</label>";
-        commentBox += "<button type='button' class='close' id='cerrarBoxGenerales' aria-hidden='true'>&times;</button>";
+        var commentBox = "<div class='detailBox socialEye' id='comentariosGenerales'>";
+        commentBox += "<div class='titleBox socialEye'>";
+        commentBox += "<label class='socialEye'>Comentarios Generales</label>";
+        commentBox += "<button type='button' class='close socialEye' id='cerrarBoxGenerales' aria-hidden='true'>&times;</button>";
         commentBox += "</div>";
-        commentBox += "<div class='actionBox'>";
-        commentBox += "<ul id='listaComentariosGenerales' class='commentList'>";
+        commentBox += "<div class='actionBox socialEye'>";
+        commentBox += "<ul id='listaComentariosGenerales' class='commentList socialEye'>";
         //Creo los objetos
         $.ajax({
             url: "http://127.0.0.1:8000/widgetRest/comments/?comment_url=" + url, // the endpoint
@@ -122,9 +122,9 @@ function Comentarios() {
 // handle a successful response
             success: function (data) {
                 $.each(data, function (i, item) {
-                    commentBox += "<li><div class='commentText'>";
-                    commentBox += "<span class='date sub-text'>" + item.comment_user__user_name + " dijo el " + item.comment_date + "</span>";
-                    commentBox += "<p>" + item.comment_text + "</p>";
+                    commentBox += "<li class='socialEye'><div class='commentText socialEye'>";
+                    commentBox += "<span class='date sub-text socialEye'>" + item.comment_user__user_name + " dijo el " + item.comment_date + "</span>";
+                    commentBox += "<p class='socialEye'>" + item.comment_text + "</p>";
                     commentBox += "</div>";
                     commentBox += "</li>";
                 });
@@ -140,9 +140,9 @@ function Comentarios() {
 
 
         commentBox += "</ul>";
-        commentBox += "<form class='form-inline' role='form'>";
-        commentBox += "<textarea class='form-control' id='textoComentarioGeneral' type='text' placeholder='Escribe un comentario' ></textarea>";
-        commentBox += "<button id='agregarComentarioGeneral' class='btn btn-primary'>Agregar</button>";
+        commentBox += "<form class='form-inline socialEye' role='form'>";
+        commentBox += "<textarea class='form-control socialEye' id='textoComentarioGeneral' type='text' placeholder='Escribe un comentario' ></textarea>";
+        commentBox += "<button id='agregarComentarioGeneral' class='btn btn-primary socialEye'>Agregar</button>";
         commentBox += "</form>";
         commentBox += "</div>";
         commentBox += "</div>";
@@ -162,7 +162,7 @@ function comentariosEspecificos() {
         $("#comentarios").click(function (e) {
             debateBox = e.target;
             if (comenEspecificoActivo)
-                deSeleccionarWidget();
+                deSeleccionarWidget(debateBox);
             else {
                 seleccionarWidget(e.target);
                 changeClickListeners();
@@ -210,7 +210,7 @@ function comentariosEspecificos() {
         var url = window.location.href;
         var commentBox = "<div class='detailBox' id='comentario" + numeroComentario + "'>";
         commentBox += "<div class='titleBox'>";
-        commentBox += "<label>" + textoComentario + "</label>";
+        commentBox += "<label class=>" + textoComentario + "</label>";
         commentBox += "<button type='button' class='close' id='cerrarComentario" + numeroComentario + "' aria-hidden='true'>&times;</button>";
         commentBox += "</div>";
         commentBox += "<div class='actionBox'>";
@@ -270,23 +270,28 @@ function comentariosEspecificos() {
         var appElements = ["icono", "debateGeneral", "comentarios", "socialEyeBar", "contactos"];
         var actual;
         for (var i = 0, max = all.length; i < max; i++) {
-            if (($.inArray(all[i].id, appElements)) == -1) {
+            if ( ($.inArray(all[i].id, appElements)) == -1) {
                 // me guardo el estado actual que tiene el onClick
                 all[i]._onclick = all[i].onclick;
                 all[i].onclick = function (e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    var idComentario = mapeador.getComentarioFromTag(getXPath(this));
-                    if (idComentario == null)
-                        crearDebateEspecifico(e, getXPath(this));
-                    else {
-                        mostrarDebateEspecifico(idComentario, e);
+                    if(!(fromApp(e.target))){
+                        e.stopPropagation();
+                        e.preventDefault();
+                        var idComentario = mapeador.getComentarioFromTag(getXPath(this));
+                        if (idComentario == null)
+                            crearDebateEspecifico(e, getXPath(this));
+                        else {
+                            mostrarDebateEspecifico(idComentario, e);
+                        }
                     }
                 }
             }
 
         }
+    }
 
+    function fromApp(element){
+        return (" " + element.className + " ").replace(/[\n\t]/g, " ").indexOf(" socialEye ") > -1;
     }
 
     function mostrarDebateEspecifico(idComentario, elemento) {
@@ -340,7 +345,7 @@ function comentariosEspecificos() {
             this.style.zIndex = indexActual;
         });
 
-        $('[id^="agregarComentario"]').click(function () {
+        $('[id^="agregarComentario"]').on('click',function (e) {
             //Ahora tomo el numero, para formar el id del textarea
             var idSeleccionado = this.id;
             var numComen = idSeleccionado.split("agregarComentario")[1];
