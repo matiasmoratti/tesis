@@ -7,21 +7,21 @@
 // @match      http://*/*
 // @noframes
 
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/jquery-2.1.4.min.js
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/jquery-ui.min.js
-// @resource   jqueryUICSS file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/css/jquery-ui.min.css
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/bootstrap.min.js
-// @resource   bootstrapCSS file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/bootstrap/css/bootstrap.min.css
-// @resource   bootstrapThemeCSS file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/bootstrap/css/bootstrap-theme.min.css
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/bootbox.min.js
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/sidebar_menu.js
-// @resource   sidebar file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/css/simple-sidebar.css
-// @resource   login file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/css/login.css
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/bootbox.min.js
-// @resource   commentBox file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/css/commentBox.css
-// @resource   listaUsuarios file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/css/listaUsuarios.css
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/comentarios.js
-// @require   file:////C:/Iconos escritorio/Facu/Tesis/Proyecto/SocialEye/js/usuarios.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/jquery-2.1.4.min.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/jquery-ui.min.js
+// @resource   jqueryUICSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/jquery-ui.min.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/bootstrap.min.js
+// @resource   bootstrapCSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/bootstrap/css/bootstrap.min.css
+// @resource   bootstrapThemeCSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/bootstrap/css/bootstrap-theme.min.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/bootbox.min.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/sidebar_menu.js
+// @resource   sidebar file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/simple-sidebar.css
+// @resource   login file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/login.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/bootbox.min.js
+// @resource   commentBox file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/commentBox.css
+// @resource   listaUsuarios file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/listaUsuarios.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/comentarios.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/usuarios.js
 // ==/UserScript==
 
 function Manager() {
@@ -55,8 +55,7 @@ function Manager() {
             if ($("#boxRegistro").length != 0) {
                 $("#boxRegistro").remove();
             }
-            if (typeof localStorage['username'] != "undefined") {
-                //if(getSession() != ""){
+            if (typeof localStorage['user'] != "undefined") {
                 if (activo) {
                     $(".socialEyeWidget").hide('fast');
                     $("#socialEyeBar").animate({height: "42px"}, "500");
@@ -76,27 +75,27 @@ function Manager() {
                     });
                     $("#loginButton").click(function () {
                         $.ajax({
-                            url: "http://127.0.0.1:8000/widgetRest/login/", // the endpoint
+                            url: "http://127.0.0.1:8000/widgetRest/token/new.json", // the endpoint
                             type: "POST", // http method
                             data: {
-                                user_name: $("#user").val(),
-                                user_pass: $("#pass").val(),
+                                username: $("#user").val(),
+                                password: $("#pass").val(),
                                 //domain: window.location.hostname,
                             }, // data sent with the post request
 
                             // handle a successful response
-                            success: function () {
-                                localStorage.setItem('username', $("#user").val());
-                                //createSession(data[0].fields.user_name);
-                                $("#boxLogin").remove();
+                            success: function (response) {
+                                if (response.success==true) {
+                                    localStorage.setItem('token', response.token);
+                                    localStorage.setItem('user', response.user);
+                                    $("#boxLogin").remove();
+                                }
+                                else {
+                                    alert("Usuario o contraseña inválidos");
+                                    $("#user").val("");
+                                    $("#pass").val("");
+                                }
                             },
-
-                            // handle a non-successful response
-                            error: function (xhr, errmsg, err) {
-                                alert("Usuario o contraseña inválidos");
-                                $("#user").val("");
-                                $("#pass").val("");
-                            }
                         });
                     });
 

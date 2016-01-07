@@ -116,6 +116,16 @@ function Comentarios() {
             url: "http://127.0.0.1:8000/widgetRest/comments/?comment_url=" + url, // the endpoint
             type: "GET", // http method
             dataType: 'json',
+            //headers:{
+            //    "Authorization": "Basic " + btoa(localStorage['user']+":"+localStorage['token'])
+            //},
+            beforeSend : function(xhr) {
+                // generate base 64 string from username + password
+                //var bytes = Crypto.charenc.Binary.stringToBytes(localStorage['user'] + ":" + localStorage['token']);
+                //var base64 = Crypto.util.bytesToBase64(bytes);
+                // set header
+                xhr.setRequestHeader("Authorization", "Basic " + btoa(localStorage['user']+":"+localStorage['token']));
+            },
             async: false,
             // data : {'comment_url' : url,}, // data sent with the post request
 

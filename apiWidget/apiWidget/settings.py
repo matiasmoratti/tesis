@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'tokenapi',
     'widgetRest.apps.WidgetrestConfig',
     'corsheaders',
     'django.contrib.admin',
