@@ -15,7 +15,7 @@ class SpecificCommentForm(CommentForm):
         fields = CommentForm.Meta.fields + ('url_tag',)
 
 
-# class UserForm(forms.ModelForm):
-#     class Meta:
-#         model = User
-#         fields = ('user_name', 'user_pass')
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('username', 'password')
