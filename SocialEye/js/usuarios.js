@@ -44,12 +44,12 @@ function Usuarios() {
                 type: "POST",
                 url: "http://127.0.0.1:8000/widgetRest/user_ping/",
                 dataType: 'json',
-                data: {user_name: localStorage['username'], url: dominio},
+                data: {url: dominio},
                 success: function (data) {
                     $('#listaUsuarios a').remove();
                     $.each(data, function (i, item) {
-                        if (item.user__user_name!=localStorage['username'])
-                            $('#listaUsuarios').append("<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.user__user_name + "</a>");
+                        if (item.user__pk!=localStorage['user'])
+                            $('#listaUsuarios').append("<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.user__username + "</a>");
                     })
                 }
             });
@@ -69,12 +69,12 @@ function Usuarios() {
                 type: "POST",
                 url: "http://127.0.0.1:8000/widgetRest/user_ping/",
                 dataType: 'json',
-                data: {user_name: localStorage['username'], url: dominio},
+                data: {url: dominio},
                 success: function (data) {
                     $('#listaUsuarios a').remove();
                     $.each(data, function (i, item) {
-                        if (item.user__user_name!=localStorage['username'])
-                            $('#listaUsuarios').append("<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.user__user_name + "</a>");
+                        if (item.user__pk!=localStorage['user'])
+                            $('#listaUsuarios').append("<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.user__username + "</a>");
                     });
                 }
 
@@ -101,7 +101,7 @@ function Usuarios() {
         $.ajax({
             url: "http://127.0.0.1:8000/widgetRest/user_ping/", // the endpoint
             type: "POST", // http method
-            data: {user_name: localStorage['username'], url: dominio},
+            data: { url: dominio},
             dataType: 'json',
             async: false,
             // data : {'comment_url' : url,}, // data sent with the post request
@@ -109,8 +109,8 @@ function Usuarios() {
 // handle a successful response
             success: function (data) {
                 $.each(data, function (i, item) {
-                    if (item.user__user_name!=localStorage['username'])
-                        listaUsuarios += "<a href='#' class='list-group-item socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__user_name + "</a>";
+                    if (item.user__pk!=localStorage['user'])
+                        listaUsuarios += "<a href='#' class='list-group-item socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + "</a>";
                 });
 
             },

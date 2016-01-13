@@ -45,11 +45,7 @@ def index(request):
 def logout(request):
     if request.method == 'POST':
         try:
-            basic_auth = request.META.get('HTTP_AUTHORIZATION')
-            auth_method, auth_string = basic_auth.split(' ', 1)
-            if auth_method.lower() == 'basic':
-                auth_string = auth_string.strip().decode('base64')
-                user_id, token = auth_string.split(':', 1)
+            user_id=get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
             user = User.objects.get(pk = user_id)
             activeUrl = UserActiveUrl.objects.get(url = request.POST['url'], user = user)
             activeUrl.delete()
@@ -87,15 +83,16 @@ def comments(request):
             # create the comment
             comment = comment_form.save(commit=False)
             comment.comment_date=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            comment.comment_user = User.objects.get(user_name = request.POST['user_name'])
+            user_id=get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+            comment.comment_user = User.objects.get(pk = user_id)
             comment.save()
-            return HttpResponse()
+            return HttpResponse(comment.comment_user.username)
         else:
             return HttpResponseBadRequest()
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        comments=list(Comment.objects.filter(specificcomment__isnull = True, comment_url=request.GET['comment_url']).values('comment_user__user_name', 'comment_text' , 'comment_date'))
+        comments=list(Comment.objects.filter(specificcomment__isnull = True, comment_url=request.GET['comment_url']).values('comment_user__username', 'comment_text' , 'comment_date'))
         comments_as_json = json.dumps(comments)
         return HttpResponse(comments_as_json, content_type='json')
 
@@ -110,15 +107,16 @@ def specific_comments(request):
             # create the comment
             comment = comment_form.save(commit=False)
             comment.comment_date=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            comment.comment_user = User.objects.get(user_name = request.POST['user_name'])
+            user_id=get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+            comment.comment_user = User.objects.get(pk = user_id)
             comment.save()
-            return HttpResponse()
+            return HttpResponse(comment.comment_user.username)
         else:
             return HttpResponseBadRequest()
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        comments=list(SpecificComment.objects.filter(comment_url=request.GET['comment_url'],url_tag=request.GET['url_tag']).values('comment_user__user_name', 'comment_text' , 'comment_date'))
+        comments=list(SpecificComment.objects.filter(comment_url=request.GET['comment_url'],url_tag=request.GET['url_tag']).values('comment_user__username', 'comment_text' , 'comment_date'))
         comments_as_json = json.dumps(comments)
         return HttpResponse(comments_as_json, content_type='json')
 
@@ -126,7 +124,8 @@ def specific_comments(request):
 @token_required
 def user_ping(request):
     if request.method == 'POST':
-        user = User.objects.get(user_name = request.POST['user_name'])
+        user_id=get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+        user = User.objects.get(pk = user_id)
         try:
             activeUrl = UserActiveUrl.objects.get(url = request.POST['url'], user = user)
             activeUrl.last_ping = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -136,6 +135,15 @@ def user_ping(request):
             user.save()
         now=(datetime.datetime.now() - timedelta(seconds=60)).strftime("%Y-%m-%d %H:%M:%S")
         enddate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        active_users = list(UserActiveUrl.objects.filter(last_ping__range=[now, enddate]).filter(url = request.POST['url']).values('user__user_name'))
+        active_users = list(UserActiveUrl.objects.filter(last_ping__range=[now, enddate]).filter(url = request.POST['url']).values('user__username','user__pk'))
         active_as_json = json.dumps(active_users)
         return HttpResponse(active_as_json, content_type='json')
+
+
+def get_user_pk(basic_auth):
+    auth_method, auth_string = basic_auth.split(' ', 1)
+    if auth_method.lower() == 'basic':
+        auth_string = auth_string.strip().decode('base64')
+        user_id, token = auth_string.split(':', 1)
+    return user_id
+

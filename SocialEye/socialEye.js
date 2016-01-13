@@ -7,21 +7,21 @@
 // @match      http://*/*
 // @noframes
 
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery-2.1.4.min.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery-ui.min.js
-// @resource   jqueryUICSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/jquery-ui.min.css
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/bootstrap.min.js
-// @resource   bootstrapCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap.min.css
-// @resource   bootstrapThemeCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap-theme.min.css
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/bootbox.min.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/sidebar_menu.js
-// @resource   sidebar file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/simple-sidebar.css
-// @resource   login file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/login.css
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/bootbox.min.js
-// @resource   commentBox file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/commentBox.css
-// @resource   listaUsuarios file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/listaUsuarios.css
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/comentarios.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/usuarios.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/jquery-2.1.4.min.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/jquery-ui.min.js
+// @resource   jqueryUICSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/jquery-ui.min.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/bootstrap.min.js
+// @resource   bootstrapCSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/bootstrap/css/bootstrap.min.css
+// @resource   bootstrapThemeCSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/bootstrap/css/bootstrap-theme.min.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/bootbox.min.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/sidebar_menu.js
+// @resource   sidebar file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/simple-sidebar.css
+// @resource   login file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/login.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/bootbox.min.js
+// @resource   commentBox file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/commentBox.css
+// @resource   listaUsuarios file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/listaUsuarios.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/comentarios.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/usuarios.js
 // ==/UserScript==
 
 function Manager() {
@@ -200,21 +200,6 @@ function Manager() {
         return boxRegistro;
     }
 
-    //function getSession(){
-    //    var name =  "socialEyeUser=";
-    //    var ca = document.cookie.split(';');
-    //    for(var i=0; i<ca.length; i++) {
-    //        var c = ca[i];
-    //        while (c.charAt(0)==' ') c = c.substring(1);
-    //        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
-    //    }
-    //    return "";
-    //}
-
-    //function createSession(value) {
-    //    document.cookie = "socialEyeUser=" + value;
-    //    alert("Logueo exitoso como: " + value);
-    //}
 
     function deleteSession() {
         var dominio = window.location.hostname;

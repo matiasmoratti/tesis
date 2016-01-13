@@ -19,8 +19,8 @@ function Comentarios() {
 
     }
 
-    this.cerrarBox = function(){
-        if(comenGeneralesAbierto){
+    this.cerrarBox = function () {
+        if (comenGeneralesAbierto) {
             deSeleccionarWidgetGenerales(debateBox);
             $("#comentariosGenerales").hide();
             $("#textoComentarioGeneral").val("");
@@ -49,11 +49,10 @@ function Comentarios() {
                     data: {
                         comment_text: $("#textoComentarioGeneral").val(),
                         comment_url: url,
-                        user_name: usuarioComentario,
                     }, // data sent with the post request
 
                     // handle a successful response
-                    success: function (data) {
+                    success: function (username) {
                         var parrafo = document.createElement('p');
                         var span = document.createElement('span');
                         span.setAttribute('class', 'date sub-text');
@@ -61,7 +60,7 @@ function Comentarios() {
                         var hs = d.getHours();
                         var mins = d.getMinutes();
                         var secs = d.getSeconds();
-                        span.innerHTML = usuarioComentario + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
+                        span.innerHTML = username + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
                         parrafo.innerHTML = $("#textoComentarioGeneral").val();
                         var divComentario = document.createElement('div');
                         divComentario.setAttribute('class', 'commentText');
@@ -123,7 +122,7 @@ function Comentarios() {
             success: function (data) {
                 $.each(data, function (i, item) {
                     commentBox += "<li class='socialEye'><div class='commentText socialEye'>";
-                    commentBox += "<span class='date sub-text socialEye'>" + item.comment_user__user_name + " dijo el " + item.comment_date + "</span>";
+                    commentBox += "<span class='date sub-text socialEye'>" + item.comment_user__username + " dijo el " + item.comment_date + "</span>";
                     commentBox += "<p class='socialEye'>" + item.comment_text + "</p>";
                     commentBox += "</div>";
                     commentBox += "</li>";
@@ -172,10 +171,10 @@ function comentariosEspecificos() {
 
     }
 
-    this.cerrarBox = function(){
-        if (comenEspecificoActivo){
-             deSeleccionarWidget(debateBox);
-        } 
+    this.cerrarBox = function () {
+        if (comenEspecificoActivo) {
+            deSeleccionarWidget(debateBox);
+        }
     }
 
 
@@ -228,7 +227,7 @@ function comentariosEspecificos() {
             success: function (data) {
                 $.each(data, function (i, item) {
                     commentBox += "<li><div class='commentText'>";
-                    commentBox += "<span class='date sub-text'>" + item.comment_user__user_name + " dijo el " + item.comment_date + "</span>";
+                    commentBox += "<span class='date sub-text'>" + item.comment_user__username + " dijo el " + item.comment_date + "</span>";
                     commentBox += "<p>" + item.comment_text + "</p>";
                     commentBox += "</div>";
                     commentBox += "</li>";
@@ -270,11 +269,11 @@ function comentariosEspecificos() {
         var appElements = ["icono", "debateGeneral", "comentarios", "socialEyeBar", "contactos"];
         var actual;
         for (var i = 0, max = all.length; i < max; i++) {
-            if ( ($.inArray(all[i].id, appElements)) == -1) {
+            if (($.inArray(all[i].id, appElements)) == -1) {
                 // me guardo el estado actual que tiene el onClick
                 all[i]._onclick = all[i].onclick;
                 all[i].onclick = function (e) {
-                    if(!(fromApp(e.target))){
+                    if (!(fromApp(e.target))) {
                         e.stopPropagation();
                         e.preventDefault();
                         var idComentario = mapeador.getComentarioFromTag(getXPath(this));
@@ -290,18 +289,18 @@ function comentariosEspecificos() {
         }
     }
 
-    function fromApp(element){
+    function fromApp(element) {
         return (" " + element.className + " ").replace(/[\n\t]/g, " ").indexOf(" socialEye ") > -1;
     }
 
     function mostrarDebateEspecifico(idComentario, elemento) {
-        if($("#" + idComentario).is(":visible")){
-              $("#" + idComentario).offset({left: elemento.pageX, top: elemento.pageY});
-              $("#" + idComentario).show({left: elemento.pageX, top: elemento.pageY});
+        if ($("#" + idComentario).is(":visible")) {
+            $("#" + idComentario).offset({left: elemento.pageX, top: elemento.pageY});
+            $("#" + idComentario).show({left: elemento.pageX, top: elemento.pageY});
         }
-        else{
-             $("#" + idComentario).show();
-             $("#" + idComentario).offset({left: elemento.pageX, top: elemento.pageY});
+        else {
+            $("#" + idComentario).show();
+            $("#" + idComentario).offset({left: elemento.pageX, top: elemento.pageY});
         }
 
     }
@@ -345,6 +344,7 @@ function comentariosEspecificos() {
             this.style.zIndex = indexActual;
         });
 
+
         $('[id^="agregarComentario"]').on('click',function (e) {
             //Ahora tomo el numero, para formar el id del textarea
             var idSeleccionado = this.id;
@@ -359,12 +359,11 @@ function comentariosEspecificos() {
                     data: {
                         comment_text: $("#textoComentario" + numComen).val(),
                         comment_url: url,
-                        user_name: usuarioComentario,
                         url_tag: tag
                     }, // data sent with the post request
 
                     // handle a successful response
-                    success: function (data) {
+                    success: function (username) {
                         //Creo los objetos
                         var parrafo = document.createElement('p');
                         parrafo.innerHTML = $("#textoComentario" + numComen).val();
@@ -374,7 +373,7 @@ function comentariosEspecificos() {
                         var hs = d.getHours();
                         var mins = d.getMinutes();
                         var secs = d.getSeconds();
-                        span.innerHTML = usuarioComentario + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs; 
+                        span.innerHTML = username + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
                         var divComentario = document.createElement('div');
                         divComentario.setAttribute('class', 'commentText');
                         var lineaComentario = document.createElement('li');
