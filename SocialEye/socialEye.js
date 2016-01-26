@@ -22,6 +22,7 @@
 // @resource   listaUsuarios file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/listaUsuarios.css
 // @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/comentarios.js
 // @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/usuarios.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/encuestas.js
 // ==/UserScript==
 
 function Manager() {
@@ -49,7 +50,7 @@ function Manager() {
 
         $("head").append("<link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet'>");
 
-        $("body").append(" <div id='socialEyeBar' class='socialEye'> <ul class='socialEyeNavStyle nav-pills nav-stacked socialEye' id='menu'>   <li class='active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='debateGeneral' class='socialEye' title='Debate general'><span class='fa-stack fa-lg socialEye'><i class='fa fa-commenting fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='comentarios' title='Comentar contenido'><span class='fa-stack fa-lg'><i class='fa fa-comments fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetUsuarios' class='socialEye' title='Contactos'><span class='fa-stack fa-lg socialEye'><i class='fa fa-users fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li> </ul> </div> ");
+        $("body").append(" <div id='socialEyeBar' class='socialEye'> <ul class='socialEyeNavStyle nav-pills nav-stacked socialEye' id='menu'>   <li class='active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='debateGeneral' class='socialEye' title='Debate general'><span class='fa-stack fa-lg socialEye'><i class='fa fa-commenting fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='comentarios' title='Comentar contenido'><span class='fa-stack fa-lg'><i class='fa fa-comments fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetUsuarios' class='socialEye' title='Contactos'><span class='fa-stack fa-lg socialEye'><i class='fa fa-users fa-stack-1x socialEye'></i></span></a> </li> <ul class='socialEyeNavStyle nav-pills nav-stacked socialEye' id='menuEncuestas'><li id='widgetEncuestas' class='socialEyeWidget socialEye'> <a  class='socialEye' title='Encuestas'><span class='fa-stack fa-lg socialEye'><i class='fa fa-question-circle fa-stack-1x socialEye'></i></span></a> </li></ul> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li> </ul> </div> ");
         
 
         $.ajaxSetup({
@@ -151,6 +152,8 @@ function Manager() {
         Especificos.iniciarWidgetComentariosEspecificos();
         WidgetUsuarios = new Usuarios();
         WidgetUsuarios.iniciarWidgetUsuarios();
+        WidgetEncuestas = new Encuestas();
+        WidgetEncuestas.iniciarWidgetEncuestas();
 
         $("#cerrarSesion").click(function () {
             cerrarBoxes();
