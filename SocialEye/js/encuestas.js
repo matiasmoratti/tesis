@@ -1,14 +1,14 @@
 function Encuestas() {
 
-    var widgetUsuariosCreado = false;
-    var widgetUsuariosAbierto = false;
+    var widgetEncuestasCreado = false;
+    var widgetEncuestasAbierto = false;
     var interval = null;
     var debateBox;
     var listaUsuarios;
 
     this.iniciarWidgetEncuestas = function () {
 
-        $("#widgetEncuestas").append("<li class='active socialEye'>    <a id='nuevaEncuesta' title='Nueva Encuesta'><span class='fa-stack fa-lg socialEye'><i class='fa fa-plus-square fa-stack-1x socialEye'></i></span></a> </li><li class='active socialEye'>    <a id='verEncuestas' title='Ver encuestas'><span class='fa-stack fa-lg socialEye'><i class='fa fa-list-alt fa-stack-1x socialEye'></i></span></a> </li>");
+        $("#widgetEncuestas").append("<div class='socialEye' id='encuestasBar'> <ul class='nav navbar-nav'> <li> <a id='nuevaEncuesta' title='Nueva Encuesta'><span class='fa-stack fa-lg socialEye'><i class='fa fa-plus-square fa-stack-1x socialEye'></i></span></a> </li></ul></div>");
 
         $( "#widgetEncuestas" ).mouseover(function() {
             $( "#encuestasBar" ).css('visibility', 'visible');

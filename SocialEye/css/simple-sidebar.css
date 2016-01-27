@@ -10,23 +10,18 @@
     width: 65px;
     height: 46px;
 }
-
 #encuestasBar{
     z-index: 999999999999999999999;
-    position: fixed;
-    margin: 300 auto;
+    position: relative;
+    margin: 0 auto;
     top: 0;
     right: 0;
     padding: 5px;
     background: #000;
     width: 65px;
     height: 46px;
-    visibility:hidden
+    visibility: hidden;
 }
-
-
-/* Sidebar Styles */
- 
 .socialEyeNavStyle {
     position: absolute;
     top: 0;
@@ -71,8 +66,4 @@
 
 .socialEyeWidget{
     display: none;
-}
-
-#hola{
-    background-color: red;
 }
