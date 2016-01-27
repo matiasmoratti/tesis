@@ -1,4 +1,4 @@
-#listaUsuarios {
+#listaUsuarios,#menuEncuestas {
             z-index: 9999999999999;
             width:350px;
             position: fixed;
@@ -10,10 +10,16 @@
             background-color:#fdfdfd;
 }
 
-#listaUsuarios a:hover{
+#listaUsuarios a:hover,##menuEncuestas{
     background-color: #99CCFF;
 }
 
-#tituloListaUsuarios{
+#tituloListaUsuarios,#tituloListaEncuestas{
     background-color: #99CCFF;
+}
+
+#crearEncuesta{
+     float:right;
+   position: relative;
+    margin-right: 10%;
 }

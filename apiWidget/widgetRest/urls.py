@@ -10,5 +10,6 @@ urlpatterns = [
     url(r'^logout/', views.logout, name='logout'),
     url(r'^user_ping/', views.user_ping, name='user_ping'),
     url(r'', include('tokenapi.urls')),
+    url(r'^poll_list/', views.poll_list, name='poll_list'),
     # url(r'^usuariosActivos/', views.usuariosActivos, name='usuariosActivos'),
 ]

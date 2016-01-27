@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .forms import UserForm
-from .models import User,Comment,SpecificComment, UserActiveUrl
+from .models import User,Comment,SpecificComment, UserActiveUrl,Poll
 from django.core import serializers
 import datetime
 from datetime import timedelta
@@ -146,4 +146,12 @@ def get_user_pk(basic_auth):
         auth_string = auth_string.strip().decode('base64')
         user_id, token = auth_string.split(':', 1)
     return user_id
+
+@csrf_exempt
+@token_required
+def poll_list(request):
+    if request.method == 'POST':
+        poll_list = list(Poll.objects.filter(url = request.POST['url']))
+        poll_list_as_json = json.dumps(poll_list)
+        return HttpResponse(poll_list_as_json,content_type='json')
 
