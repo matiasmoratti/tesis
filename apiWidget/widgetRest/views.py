@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .forms import UserForm
-from .models import User,Comment,SpecificComment, UserActiveUrl,Poll
+from .models import User,Comment,SpecificComment, UserActiveUrl,Poll,PollQuestion,PollQuestionOption
 from django.core import serializers
 import datetime
 from datetime import timedelta
@@ -154,4 +154,37 @@ def poll_list(request):
         poll_list = list(Poll.objects.filter(url = request.POST['url']))
         poll_list_as_json = json.dumps(poll_list)
         return HttpResponse(poll_list_as_json,content_type='json')
+
+@csrf_exempt
+@token_required
+def poll_add(request):
+    if request.method == 'POST':
+        poll=Poll()
+        poll.date=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        poll.description=request.POST['description']
+        poll.poll_user=User.objects.get(pk=get_user_pk(request.META.get('HTTP_AUTHORIZATION')))
+        poll.url=request.POST['url']
+        poll.save()
+        list = json.loads(request.POST['json_data'])
+        for q in list:
+            poll_question=PollQuestion(question=q['pregunta'])
+            poll_question.poll=poll
+            poll_question.save()
+            poll_question_option=PollQuestionOption(option=q['option1'])
+            poll_question_option.poll_question= poll_question
+            poll_question_option.save()
+
+        return HttpResponse()
+
+@csrf_exempt
+@token_required
+def poll_vote(request):
+    if request.method == 'POST':
+        votes = json.loads(request.POST['json_data'])
+        for v in votes:
+            poll_question_option=PollQuestionOption.objects.get(pk=v['id'])
+            poll_question_option.votes += 1
+            poll_question_option.save()
+
+        return HttpResponse()
 

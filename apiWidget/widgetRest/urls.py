@@ -11,5 +11,7 @@ urlpatterns = [
     url(r'^user_ping/', views.user_ping, name='user_ping'),
     url(r'', include('tokenapi.urls')),
     url(r'^poll_list/', views.poll_list, name='poll_list'),
+    url(r'^poll_add/', views.poll_add, name='poll_add'),
+     url(r'^poll_vote/', views.poll_vote, name='poll_vote'),
     # url(r'^usuariosActivos/', views.usuariosActivos, name='usuariosActivos'),
 ]

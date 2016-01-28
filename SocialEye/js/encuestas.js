@@ -6,7 +6,7 @@ function Encuestas() {
     var listaEncuestas;
 
     this.iniciarWidgetEncuestas = function () {
-
+        crearModalEncuesta();
         $("#widgetEncuestas").click(function (e) {
             debateBox = e.target;
             if (widgetEncuestasCreado) {
@@ -30,6 +30,9 @@ function Encuestas() {
 
     function crearWidgetEncuestas(unWidget) {
         $("body").append(crearMenuEncuestas());
+        $("#crearEncuesta").on('click',function(e){
+            $("#modalEncuesta").css('visibility','visible');
+        });
         //debate.attr("style", "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;");
         unWidget.style.cssText = "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;";
         $("#cerrarMenuEncuestas").on("click", function (event) {
@@ -85,5 +88,20 @@ function Encuestas() {
         listaEncuestas += "</div>";
         return listaEncuestas;
 
+    }
+
+    function crearModalEncuesta(){
+
+        modal = "<div class='list-group ' id='modalEncuesta'>";
+        modal += "<div class='titleBox' id='tituloEncuesta'>";
+        modal += "<form class='form-horizontal' id='formEncuesta'>";
+        modal += "<input type='text' class='form-control' placeholder='Ingrese el contenido de la encuesta'/>";
+       // modal +="<a id='crearEncuesta' title='Crear Encuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        modal += "<button type='button' class='close socialEye'  aria-hidden='true'>&times;</button>";
+        modal += "</div>";
+        modal += "<div class='form-group'>";
+        modal += "<input type='text' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>";
+        modal +="<a id='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        $('body').append(modal);
     }
 }

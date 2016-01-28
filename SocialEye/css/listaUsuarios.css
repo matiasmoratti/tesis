@@ -10,16 +10,10 @@
             background-color:#fdfdfd;
 }
 
-#listaUsuarios a:hover,##menuEncuestas{
+#listaUsuarios a:hover{
     background-color: #99CCFF;
 }
 
 #tituloListaUsuarios,#tituloListaEncuestas{
     background-color: #99CCFF;
-}
-
-#crearEncuesta{
-     float:right;
-   position: relative;
-    margin-right: 10%;
 }

@@ -36,3 +36,4 @@ class PollQuestion(models.Model):
 class PollQuestionOption(models.Model):
     poll_question = models.ForeignKey(PollQuestion,on_delete=models.CASCADE)
     option = models.CharField(max_length=200)
+    votes = models.IntegerField()
