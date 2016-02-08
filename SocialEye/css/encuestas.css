@@ -1,0 +1,10 @@
+
+#crearEncuesta{
+     float:right;
+   position: relative;
+    margin-right: 10%;
+}
+
+#modalEncuesta{
+    visibility: hidden;
+}

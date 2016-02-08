@@ -23,4 +23,17 @@ class UserActiveUrl(models.Model):
     last_ping = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+class Poll(models.Model):
+    poll_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    url = models.CharField(max_length=200)
+    date = models.CharField(max_length=200)
+    description = models.CharField(max_length=200)
 
+class PollQuestion(models.Model):
+    poll = models.ForeignKey(Poll,on_delete=models.CASCADE)
+    question = models.CharField(max_length=200)
+
+class PollQuestionOption(models.Model):
+    poll_question = models.ForeignKey(PollQuestion,on_delete=models.CASCADE)
+    option = models.CharField(max_length=200)
+    votes = models.IntegerField()

@@ -2,126 +2,79 @@ function Encuestas() {
 
     var widgetEncuestasCreado = false;
     var widgetEncuestasAbierto = false;
-    var interval = null;
     var debateBox;
-    var listaUsuarios;
+    var listaEncuestas;
 
     this.iniciarWidgetEncuestas = function () {
-
-        $("#widgetEncuestas").append("<div class='socialEye' id='encuestasBar'> <ul class='nav navbar-nav'> <li> <a id='nuevaEncuesta' title='Nueva Encuesta'><span class='fa-stack fa-lg socialEye'><i class='fa fa-plus-square fa-stack-1x socialEye'></i></span></a> </li></ul></div>");
-
-        $( "#widgetEncuestas" ).mouseover(function() {
-            $( "#encuestasBar" ).css('visibility', 'visible');
+        crearModalEncuesta();
+        $("#widgetEncuestas").click(function (e) {
+            debateBox = e.target;
+            if (widgetEncuestasCreado) {
+                if (widgetEncuestasAbierto) //La ventana está creada y mostrándose
+                    deSeleccionarWidgetEncuestas(debateBox);
+                else   //La ventana está creada y oculta
+                    seleccionarWidgetEncuestas(e.target);
+            }
+            else //No se creó la ventana general
+                crearWidgetEncuestas(e.target);
         });
-
-        $( "#encuestasBar" ).mouseout(function() {
-            $( "#encuestasBar" ).css('visibility', 'hidden');
-        });
-
-        //$("#widgetUsuarios").click(function (e) {
-        //    debateBox = e.target;
-        //    if (widgetUsuariosCreado) {
-        //        if (widgetUsuariosAbierto) //La ventana está creada y mostrándose
-        //            deSeleccionarWidgetUsuarios(debateBox);
-        //        else   //La ventana está creada y oculta
-        //            seleccionarWidgetUsuarios(e.target);
-        //    }
-        //    else //No se creó la ventana general
-        //        crearWidgetUsuarios(e.target);
-        //});
 
     }
 
 
     this.cerrarBox = function () {
-        if (widgetUsuariosAbierto) {
-            deSeleccionarWidgetUsuarios(debateBox);
+        if (widgetEncuestasAbierto) {
+            deSeleccionarWidgetEncuestas(debateBox);
         }
     }
 
-    function crearWidgetUsuarios(unWidget) {
-        $("body").append(crearListaDeUsuarios());
+    function crearWidgetEncuestas(unWidget) {
+        $("body").append(crearMenuEncuestas());
+        $("#crearEncuesta").on('click',function(e){
+            $("#modalEncuesta").css('visibility','visible');
+        });
         //debate.attr("style", "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;");
         unWidget.style.cssText = "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;";
-        $("#cerrarListaUsuarios").on("click", function (event) {
-            deSeleccionarWidgetUsuarios(unWidget);
-            $("#listaUsuarios").hide();
+        $("#cerrarMenuEncuestas").on("click", function (event) {
+            deSeleccionarWidgetEncuestas(unWidget);
+            $("#menuEncuestas").hide();
         });
-        widgetUsuariosCreado = true;
-        widgetUsuariosAbierto = true;
-        var dominio = window.location.hostname;
-        interval = setInterval(function () {
-            jQuery.ajax({
-                type: "POST",
-                url: "http://127.0.0.1:8000/widgetRest/user_ping/",
-                dataType: 'json',
-                data: {url: dominio},
-                success: function (data) {
-                    $('#listaUsuarios a').remove();
-                    $.each(data, function (i, item) {
-                        if (item.user__pk!=localStorage['user'])
-                            $('#listaUsuarios').append("<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.user__username + "</a>");
-                    })
-                }
-            });
-        }, 30000);
-
-        return false;
+        widgetEncuestasCreado = true;
+        widgetEncuestasAbierto = true;
 
     }
 
-    function seleccionarWidgetUsuarios(unWidget) {
+    function seleccionarWidgetEncuestas(unWidget) {
         unWidget.style.cssText = "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;";
-        $("#listaUsuarios").show();
-        widgetUsuariosAbierto = true;
-        var dominio = window.location.hostname;
-        interval = setInterval(function () {
-            jQuery.ajax({
-                type: "POST",
-                url: "http://127.0.0.1:8000/widgetRest/user_ping/",
-                dataType: 'json',
-                data: {url: dominio},
-                success: function (data) {
-                    $('#listaUsuarios a').remove();
-                    $.each(data, function (i, item) {
-                        if (item.user__pk!=localStorage['user'])
-                            $('#listaUsuarios').append("<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.user__username + "</a>");
-                    });
-                }
-
-            });
-        }, 30000);
+        $("#menuEncuestas").show();
+        widgetEncuestasAbierto = true;
     }
 
 
-    function deSeleccionarWidgetUsuarios(unWidget) {
+    function deSeleccionarWidgetEncuestas(unWidget) {
         unWidget.style.cssText = "";
-        $("#listaUsuarios").hide();
-        widgetUsuariosAbierto = false;
-        clearInterval(interval);
+        $("#menuEncuestas").hide();
+        widgetEncuestasAbierto = false;
     }
 
-    function crearListaDeUsuarios() {
+    function crearMenuEncuestas() {
         var dominio = window.location.hostname;
-        listaUsuarios = "<div class='list-group socialEye' id='listaUsuarios'>";
-        listaUsuarios += "<div class='titleBox socialEye' id='tituloListaUsuarios'>";
-        listaUsuarios += "<label class='socialEye'>Usuarios activos en: " + dominio + "</label>";
-        listaUsuarios += "<button type='button' class='close socialEye' id='cerrarListaUsuarios' aria-hidden='true'>&times;</button>";
-        listaUsuarios += "</div>";
+        listaEncuestas = "<div class='list-group socialEye' id='menuEncuestas'>";
+        listaEncuestas += "<div class='titleBox socialEye' id='tituloListaEncuestas'>";
+        listaEncuestas += "<label class='socialEye'>Encuestas activas en: " + dominio + "</label>";
+        listaEncuestas +="<a id='crearEncuesta' title='Crear Encuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        listaEncuestas += "<button type='button' class='close socialEye' id='cerrarMenuEncuestas' aria-hidden='true'>&times;</button>";
+        listaEncuestas += "</div>";
         //Creo los objetos
         $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/user_ping/", // the endpoint
+            url: "http://127.0.0.1:8000/widgetRest/poll_list/", // the endpoint
             type: "POST", // http method
             data: { url: dominio},
             dataType: 'json',
             async: false,
-            // data : {'comment_url' : url,}, // data sent with the post request
-
-// handle a successful response
             success: function (data) {
                 $.each(data, function (i, item) {
-                    if (item.user__pk!=localStorage['user'])
-                        listaUsuarios += "<a href='#' class='list-group-item socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + "</a>";
+                    listaEncuestas += "<a id=item.pk class='list-group-item socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-question-circle fa-stack-1x socialEye'></i></span>" + item.description + ", creada por "+ item.poll_user__username + "</a>";
                 });
 
             },
@@ -132,8 +85,23 @@ function Encuestas() {
             }
         });
 
-        listaUsuarios += "</div>";
-        return listaUsuarios;
+        listaEncuestas += "</div>";
+        return listaEncuestas;
 
+    }
+
+    function crearModalEncuesta(){
+
+        modal = "<div class='list-group ' id='modalEncuesta'>";
+        modal += "<div class='titleBox' id='tituloEncuesta'>";
+        modal += "<form class='form-horizontal' id='formEncuesta'>";
+        modal += "<input type='text' class='form-control' placeholder='Ingrese el contenido de la encuesta'/>";
+       // modal +="<a id='crearEncuesta' title='Crear Encuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        modal += "<button type='button' class='close socialEye'  aria-hidden='true'>&times;</button>";
+        modal += "</div>";
+        modal += "<div class='form-group'>";
+        modal += "<input type='text' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>";
+        modal +="<a id='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        $('body').append(modal);
     }
 }
