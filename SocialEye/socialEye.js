@@ -7,22 +7,28 @@
 // @match      http://*/*
 // @noframes
 
-// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/jquery-2.1.4.min.js
-// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/jquery-ui.min.js
-// @resource   jqueryUICSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/jquery-ui.min.css
-// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/bootstrap/js/bootstrap.min.js
-// @resource   bootstrapCSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/bootstrap/css/bootstrap.min.css
-// @resource   bootstrapThemeCSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/bootstrap/css/bootstrap-theme.min.css
-// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/sidebar_menu.js
-// @resource   sidebar file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/simple-sidebar.css
-// @resource   login file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/login.css
-// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/bootbox.min.js
-// @resource   commentBox file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/commentBox.css
-// @resource   listaUsuarios file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/listaUsuarios.css
-// @resource   encuestas file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/encuestas.css
-// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/comentarios.js
-// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/usuarios.js
-// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/encuestas.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery-2.1.4.min.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery-ui.min.js
+// @resource   jqueryUICSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/jquery-ui.min.css
+// @require  file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/js/bootstrap.min.js
+// @resource   bootstrapCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap.min.css
+// @resource   bootstrapThemeCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap-theme.min.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/sidebar_menu.js
+// @resource   sidebar file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/simple-sidebar.css
+// @resource   login file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/login.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/bootbox.min.js
+// @resource   commentBox file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/commentBox.css
+// @resource   listaUsuarios file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/listaUsuarios.css
+// @resource   encuestas file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/encuestas.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/comentarios.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/usuarios.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/encuestas.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/adapter.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/common.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/mainRTC.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/ga.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/llamada.js
+// @resource   video file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/main.css
 // ==/UserScript==
 
 function Manager() {
@@ -48,6 +54,8 @@ function Manager() {
         cssTxt = GM_getResourceText("commentBox");
         GM_addStyle(cssTxt);
         cssTxt = GM_getResourceText("encuestas");
+        GM_addStyle(cssTxt);
+        cssTxt = GM_getResourceText("video");
         GM_addStyle(cssTxt);
 
         $("head").append("<link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet'>");
@@ -231,4 +239,7 @@ function Manager() {
 $(document).ready(function () {
     M = new Manager();
     M.iniciarScript();
+    V = new Llamada();
+    V.iniciarScript();
+    main();
 });
