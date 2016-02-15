@@ -59,12 +59,14 @@ function Encuestas() {
 
     function crearMenuEncuestas() {
         var dominio = window.location.hostname;
-        listaEncuestas = "<div class='list-group socialEye' id='menuEncuestas'>";
-        listaEncuestas += "<div class='titleBox socialEye' id='tituloListaEncuestas'>";
-        listaEncuestas += "<label class='socialEye'>Encuestas activas en: " + dominio + "</label>";
+        var listaEncuestas = "<div class='detailBox' id='divEncuestas'>";
+        listaEncuestas += "<div class='titleBox'>";
+        listaEncuestas += "<label class=> Encuestas activas en: "+dominio+"</label>";
         listaEncuestas +="<a id='crearEncuesta' title='Crear Encuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
-        listaEncuestas += "<button type='button' class='close socialEye' id='cerrarMenuEncuestas' aria-hidden='true'>&times;</button>";
+        listaEncuestas += "<button type='button' class='close' id='cerrarEncuestas' aria-hidden='true'>&times;</button>";
         listaEncuestas += "</div>";
+        listaEncuestas += "<div class='actionBox'>";
+        listaEncuestas += "<ul id='listaEncuestas' class='commentList socialEye'>";
         //Creo los objetos
         $.ajax({
             url: "http://127.0.0.1:8000/widgetRest/poll_list/", // the endpoint
@@ -96,12 +98,25 @@ function Encuestas() {
         modal += "<div class='titleBox' id='tituloEncuesta'>";
         modal += "<form class='form-horizontal' id='formEncuesta'>";
         modal += "<input type='text' class='form-control' placeholder='Ingrese el contenido de la encuesta'/>";
-       // modal +="<a id='crearEncuesta' title='Crear Encuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        modal +="<a id='agregarPregunta' title='Agregar Pregunta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
         modal += "<button type='button' class='close socialEye'  aria-hidden='true'>&times;</button>";
         modal += "</div>";
-        modal += "<div class='form-group'>";
+        modal += "<div id='divPreguntas' class='form-group'>";
         modal += "<input type='text' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>";
-        modal +="<a id='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        modal +="<a id='agregarOpcion' class='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        modal += "</div>";
+        modal +="</form>";
         $('body').append(modal);
+        //var input = document.createElement('input');
+        //input.className="form-control";
+        //input.type="text";
+        //input.placeholder="Ingrese el contenido de la pregunta";
+        $("#agregarPregunta").on('click',function(e){
+            $("#divPreguntas").append("<input type='text' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>");
+            $("#divPreguntas").append("<a id='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>");
+        });
+
+        $(".agregarOpcion").on('click',function(e){
+        });
     }
 }
