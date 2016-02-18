@@ -96,18 +96,19 @@ function Encuestas() {
         var numPregunta=1;
         var numOpcion=1;
         var encuestaPropia=[];
-        var pregunta=[];
+        var preguntas=[];
         modal = "<div class='list-group ' id='modalEncuesta'>";
         modal += "<div class='titleBox' id='tituloEncuesta'>";
         modal += "<form class='form-horizontal' id='formEncuesta'>";
-        modal += "<input type='text'  class='form-control' placeholder='Ingrese el contenido de la encuesta'/>";
+        modal += "<input type='text'  id='titEncuesta' class='form-control' placeholder='Ingrese el contenido de la encuesta'/>";
         modal += "<a id='agregarPregunta' title='Agregar Pregunta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
         modal += "<button type='button' class='close socialEye'  aria-hidden='true'>&times;</button>";
         modal += "</div>";
         modal += "<div id='divPreguntas' class='form-group'>";
         modal += "<input type='text' id='pregunta"+numPregunta+"' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>";
-        modal += "<a id='agregarOpcion' class='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        modal += "<a id='"+numPregunta+"' class='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
         modal += "</div>";
+        modal += "<button  id='agregarEncuesta'>Agregar Encuesta</button>";
         modal += "</form>";
         $('body').append(modal);
         //var input = document.createElement('input');
@@ -115,17 +116,34 @@ function Encuestas() {
         //input.type="text";
         //input.placeholder="Ingrese el contenido de la pregunta";
         $("#agregarPregunta").on('click', function (e) {
-            $("#divPreguntas").append("<input type='text' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>");
-            $("#divPreguntas").append("<a id='agregarOpcion' class='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>");
+            numPregunta++;
+            $("#divPreguntas").append("<input type='text' id='pregunta"+numPregunta+"' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>");
+            $("#divPreguntas").append("<a id='"+numPregunta+"' class='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>");
         });
 
         $(".agregarOpcion").on('click', function (e) {
+            var id=this.id;
             bootbox.prompt("Ingrese la opción de la pregunta", function (result) {
                 if (result) {
-                    opcion = { numOpcion : result };
-                    pregunta.push(opcion);
+                    var opcion = {id:result};
+                    preguntas.push(opcion);
 
-            }});
+            }
+            else {
+                    if (result!==null) {
+                        bootbox.alert("Usted no ha ingresado ninguna opcion");
+                        return false;
+                    }
+                }});
+        });
+
+        $("#agregarEncuesta").on('click', function (e) {
+            if ($("#titEncuesta").val()!=''){
+                var inputs=$('#formEncuesta').find('input');
+
+            }else {
+                bootbox.alert('Usted debe escribir el titulo de la encuesta');
+            }
         });
     }
 }
