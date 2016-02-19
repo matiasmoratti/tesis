@@ -7,30 +7,30 @@
 // @match      http://*/*
 // @noframes
 
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/jquery-2.1.4.min.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/jquery-ui.min.js
-// @resource   jqueryUICSS file:///home/matias/Tesis/ambiente/bin/SocialEye/css/jquery-ui.min.css
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/bootstrap/js/bootstrap.min.js
-// @resource   bootstrapCSS file:///home/matias/Tesis/ambiente/bin/SocialEye/bootstrap/css/bootstrap.min.css
-// @resource   bootstrapThemeCSS file:///home/matias/Tesis/ambiente/bin/SocialEye/bootstrap/css/bootstrap-theme.min.css
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/sidebar_menu.js
-// @resource   sidebar file:///home/matias/Tesis/ambiente/bin/SocialEye/css/simple-sidebar.css
-// @resource   login file:///home/matias/Tesis/ambiente/bin/SocialEye/css/login.css
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/bootbox.min.js
-// @resource   commentBox file:///home/matias/Tesis/ambiente/bin/SocialEye/css/commentBox.css
-// @resource   listaUsuarios file:///home/matias/Tesis/ambiente/bin/SocialEye/css/listaUsuarios.css
-// @resource   encuestas file:///home/matias/Tesis/ambiente/bin/SocialEye/css/encuestas.css
-// @resource   chats file:///home/matias/Tesis/ambiente/bin/SocialEye/css/chats.css
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/comentarios.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/usuarios.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/encuestas.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/chats.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/jquery-2.1.4.min.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/jquery-ui.min.js
+// @resource   jqueryUICSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/jquery-ui.min.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/bootstrap/js/bootstrap.min.js
+// @resource   bootstrapCSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/bootstrap/css/bootstrap.min.css
+// @resource   bootstrapThemeCSS file:////C:/Users/ips/Documents/Proyecto/SocialEye/bootstrap/css/bootstrap-theme.min.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/sidebar_menu.js
+// @resource   sidebar file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/simple-sidebar.css
+// @resource   login file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/login.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/bootbox.min.js
+// @resource   commentBox file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/commentBox.css
+// @resource   listaUsuarios file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/listaUsuarios.css
+// @resource   encuestas file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/encuestas.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/comentarios.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/usuarios.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/encuestas.js
+// @resource   chats file:////C:/Users/ips/Documents/Proyecto/SocialEye/css/chats.css
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/chats.js
+// @require   file:////C:/Users/ips/Documents/Proyecto/SocialEye/js/jquery.gracefulWebSocket.js
 // @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/adapter.js
 // @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/common.js
 // @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/mainRTC.js
 // @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/ga.js
 // @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/llamada.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/jquery.gracefulWebSocket.js
 // @resource   video file:///home/matias/Tesis/ambiente/bin/SocialEye/css/main.css
 // ==/UserScript==
 
@@ -170,8 +170,8 @@ function Manager() {
         WidgetUsuarios.iniciarWidgetUsuarios();
         WidgetEncuestas = new Encuestas();
         WidgetEncuestas.iniciarWidgetEncuestas();
-        WidgetChats = new Chats();
-        WidgetChats.iniciarWidgetChats();
+        //WidgetChats = new Chats();
+        //WidgetChats.iniciarWidgetChats();
 
         $("#cerrarSesion").click(function () {
             cerrarBoxes();
@@ -248,7 +248,7 @@ function Manager() {
 $(document).ready(function () {
     M = new Manager();
     M.iniciarScript();
-    V = new Llamada();
-    V.iniciarScript();
-    main();
+    //V = new Llamada();
+    //V.iniciarScript();
+    //main();
 });

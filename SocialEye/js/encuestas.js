@@ -93,10 +93,10 @@ function Encuestas() {
     }
 
     function crearModalEncuesta() {
-        var numPregunta=1;
-        var numOpcion=1;
-        var encuestaPropia=[];
-        var preguntas=[];
+        var numPregunta = 1;
+        var numOpcion = 1;
+        var encuestaPropia = [];
+        var opciones = [];
         modal = "<div class='list-group ' id='modalEncuesta'>";
         modal += "<div class='titleBox' id='tituloEncuesta'>";
         modal += "<form class='form-horizontal' id='formEncuesta'>";
@@ -105,8 +105,8 @@ function Encuestas() {
         modal += "<button type='button' class='close socialEye'  aria-hidden='true'>&times;</button>";
         modal += "</div>";
         modal += "<div id='divPreguntas' class='form-group'>";
-        modal += "<input type='text' id='pregunta"+numPregunta+"' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>";
-        modal += "<a id='"+numPregunta+"' class='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        modal += "<input type='text' id='pregunta" + numPregunta + "' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>";
+        modal += "<a id='" + numPregunta + "' class='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
         modal += "</div>";
         modal += "<button  id='agregarEncuesta'>Agregar Encuesta</button>";
         modal += "</form>";
@@ -117,32 +117,63 @@ function Encuestas() {
         //input.placeholder="Ingrese el contenido de la pregunta";
         $("#agregarPregunta").on('click', function (e) {
             numPregunta++;
-            $("#divPreguntas").append("<input type='text' id='pregunta"+numPregunta+"' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>");
-            $("#divPreguntas").append("<a id='"+numPregunta+"' class='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>");
+            $("#divPreguntas").append("<div><input type='text' id='pregunta" + numPregunta + "' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>");
+            $("#divPreguntas").append("<a id='" + numPregunta + "' class='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a></div>");
         });
 
         $(".agregarOpcion").on('click', function (e) {
-            var id=this.id;
+            var id = this.id;
             bootbox.prompt("Ingrese la opción de la pregunta", function (result) {
                 if (result) {
-                    var opcion = {id:result};
-                    preguntas.push(opcion);
+                    var opcion={};
+                    opcion[id]=result;
+                    opciones.push(opcion);
 
-            }
-            else {
-                    if (result!==null) {
+                }
+                else {
+                    if (result !== null) {
                         bootbox.alert("Usted no ha ingresado ninguna opcion");
                         return false;
                     }
-                }});
+                }
+            });
         });
 
         $("#agregarEncuesta").on('click', function (e) {
-            if ($("#titEncuesta").val()!=''){
-                var inputs=$('#formEncuesta').find('input');
+            if ($("#titEncuesta").val() != '') {
+                enviarEncuesta(opciones);
 
-            }else {
+            } else {
                 bootbox.alert('Usted debe escribir el titulo de la encuesta');
+            }
+        });
+    }
+
+    function enviarEncuesta(opciones) {
+        var preguntas = {};
+        var inputs = $('#divPreguntas').find('input');
+        $.each(inputs, function (index, value) {
+            preguntas[index + 1] = $(value).val();
+        });
+
+        $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/poll_add/", // the endpoint
+            type: "POST", // http method
+            data: {
+                preguntas: JSON.stringify(preguntas),
+                opciones: JSON.stringify(opciones),
+                descripcion: $("#titEncuesta").val(),
+                url:window.location.hostname
+            },
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+
             }
         });
     }
