@@ -37,3 +37,13 @@ class PollQuestionOption(models.Model):
     poll_question = models.ForeignKey(PollQuestion,on_delete=models.CASCADE)
     option = models.CharField(max_length=200)
     votes = models.IntegerField()
+
+class Chat(models.Model):
+    user1 = models.ForeignKey(User, on_delete= models.CASCADE, related_name="user1")
+    user2 = models.ForeignKey(User, on_delete= models.CASCADE, related_name="user2")
+
+class ChatMessage(models.Model):
+    chat = models.ForeignKey(Chat, on_delete= models.CASCADE)
+    text = models.CharField(max_length=500)
+    userName = models.CharField(max_length=200)
+

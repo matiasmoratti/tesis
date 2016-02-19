@@ -7,13 +7,14 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .forms import UserForm
-from .models import User,Comment,SpecificComment, UserActiveUrl,Poll,PollQuestion,PollQuestionOption
+from .models import User,Comment,SpecificComment, UserActiveUrl,Poll,PollQuestion,PollQuestionOption, Chat, ChatMessage
 from django.core import serializers
 import datetime
 from datetime import timedelta
 from django.core.exceptions import ObjectDoesNotExist
 from tokenapi.decorators import token_required
 from tokenapi.http import JsonResponse, JsonError
+from django.db.models import Q
 import json
 
 # Create your views here.
@@ -41,7 +42,7 @@ def index(request):
 
 
 @csrf_exempt
-@token_required
+#@token_required
 def logout(request):
     if request.method == 'POST':
         try:
@@ -72,7 +73,7 @@ def registration(request):
 
 
 @csrf_exempt
-@token_required
+#@token_required
 def comments(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -97,7 +98,7 @@ def comments(request):
         return HttpResponse(comments_as_json, content_type='json')
 
 @csrf_exempt
-@token_required
+#@token_required
 def specific_comments(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -121,7 +122,7 @@ def specific_comments(request):
         return HttpResponse(comments_as_json, content_type='json')
 
 @csrf_exempt
-@token_required
+#@token_required
 def user_ping(request):
     if request.method == 'POST':
         user_id=get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
@@ -148,7 +149,7 @@ def get_user_pk(basic_auth):
     return user_id
 
 @csrf_exempt
-@token_required
+#@token_required
 def poll_list(request):
     if request.method == 'POST':
         poll_list = list(Poll.objects.filter(url = request.POST['url']))
@@ -156,7 +157,7 @@ def poll_list(request):
         return HttpResponse(poll_list_as_json,content_type='json')
 
 @csrf_exempt
-@token_required
+#@token_required
 def poll_add(request):
     if request.method == 'POST':
         poll=Poll()
@@ -177,7 +178,7 @@ def poll_add(request):
         return HttpResponse()
 
 @csrf_exempt
-@token_required
+#@token_required
 def poll_vote(request):
     if request.method == 'POST':
         votes = json.loads(request.POST['json_data'])
@@ -188,3 +189,40 @@ def poll_vote(request):
 
         return HttpResponse()
 
+@csrf_exempt
+#@token_required
+def chats(request):
+    if request.method == 'GET':
+        user_id=get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+        chats = list((Chat.objects.filter(Q(user1=user_id) | Q(user2=user_id))).values('user1__pk', 'user2__pk', 'user1__username', 'user2__username'))
+        chats_as_json = json.dumps(chats)
+        return HttpResponse(chats_as_json, content_type='json')
+
+@csrf_exempt
+#@token_required
+def getChat(request):
+    if request.method == 'POST':
+        user_id=get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+        otroUsuario = request.POST['usuario2']
+        try:
+            chat = Chat.objects.get(Q(user1=user_id, user2=otroUsuario) | Q(user1=otroUsuario, user2=user_id))
+            messages = list(chat.chatmessage_set.all())
+            messages_as_json = serializers.serialize('json', messages, fields=('text','userName'))
+            return HttpResponse(messages_as_json, content_type='json')
+        except Chat.DoesNotExist:
+            chat = Chat()
+            chat.user1 = User.objects.get(pk = user_id)
+            chat.user2 = User.objects.get(pk = otroUsuario)
+            chat.save()
+            return HttpResponse({}, content_type='json')
+
+@csrf_exempt
+#@token_required
+def saveMessage(request):
+    if request.method == 'POST':
+        user_id=get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+        usuarioActual = User.objects.get(pk=user_id)
+        otroUsuario = request.POST['usuario2']
+        chat = Chat.objects.get(Q(user1=user_id, user2=otroUsuario) | Q(user1=otroUsuario, user2=user_id))
+        chat.chatmessage_set.create(text=request.POST['message'], userName=usuarioActual.username)
+        return HttpResponse()

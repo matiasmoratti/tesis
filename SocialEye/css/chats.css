@@ -1,4 +1,8 @@
-#listaUsuarios,#menuEncuestas {
+#chatBox{
+    z-index: 99999999999999999999;
+}
+
+#chatsBox{
             z-index: 9999999999999;
             width:350px;
             position: fixed;
@@ -10,10 +14,10 @@
             background-color:#fdfdfd;
 }
 
-#listaUsuarios a:hover{
+#chatsBox button:hover{
     background-color: #99CCFF;
 }
 
-#tituloListaUsuarios,#tituloListaEncuestas{
+#tituloListaChats{
     background-color: #99CCFF;
 }

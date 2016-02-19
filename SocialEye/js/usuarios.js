@@ -2,6 +2,9 @@ function Usuarios() {
 
     var widgetUsuariosCreado = false;
     var widgetUsuariosAbierto = false;
+    var chatAbierto = false;
+    var chatCreado = false;
+    var usuarioChatActual = null;
     var interval = null;
     var debateBox;
     var listaUsuarios;
@@ -26,6 +29,131 @@ function Usuarios() {
         if (widgetUsuariosAbierto) {
             deSeleccionarWidgetUsuarios(debateBox);
         }
+        if (chatAbierto){
+        	$("#chatBox").hide();
+	        chatAbierto = false;
+        }
+    }
+
+    function chatClick(e){
+    	if((!(chatCreado)) || (usuarioChatActual!=e.target.id)){
+    		if(chatCreado){
+    			$("#chatBox").remove();
+    			chatCreado = false;
+    		}
+    		chatAbierto = true;
+    		chatCreado = true;
+    		usuarioChatActual = e.target.id;
+            var conversacion = "<div class='detailBox socialEye' id='chatBox'>";
+	        conversacion += "<div class='titleBox socialEye'>";
+	        conversacion += "<label class='socialEye'>Conversación con "+ $("#" +usuarioChatActual).attr('name') +" </label>";
+	        conversacion += "<button type='button' class='close socialEye' id='cerrarChatBox' aria-hidden='true'>&times;</button>";
+	        conversacion += "</div>";
+	        conversacion += "<div class='actionBox socialEye'>";
+	        conversacion += "<ul id='listaComentarios' class='commentList socialEye'>";
+        	var chatId;
+        	$.ajax({
+	            url: "http://127.0.0.1:8000/widgetRest/getChat/", // the endpoint
+	            type: "POST", // http method
+	            data: {
+	            	usuario2: usuarioChatActual,
+	            },
+	            dataType: 'json',
+	            async: false,
+	            success: function (data) {
+	                $.each(data, function (i, item) {
+	                    conversacion += "<li class='socialEye'><div class='commentText socialEye'>";
+	                    conversacion += "<span class='date sub-text socialEye'>" + item.fields.userName + " dijo: </span>";
+	                    conversacion += "<p class='socialEye'>" + item.fields.text+ "</p>";
+	                    conversacion += "</div>";
+	                    conversacion += "</li>";
+	                });
+
+	            },
+
+	            // handle a non-successful response
+	            error: function (xhr, errmsg, err) {
+
+	            }
+
+	        });
+
+	        conversacion += "</ul>";
+	        conversacion += "<form class='form-inline socialEye' role='form'>";
+	        conversacion += "<textarea class='form-control socialEye' id='textoComentarioChat' type='text' placeholder='Escribe un comentario' ></textarea>";
+	        conversacion += "</form>";
+	        conversacion += "</div>";
+	        conversacion += "</div>";
+	        $("body").append(conversacion);
+
+
+	        window.chat = {};
+			//Instantiate a websocket client connected to our server
+			chat.ws = $.gracefulWebSocket("ws://127.0.0.1:1025/ws");
+			 
+			//Basic message send
+			chat.send = function (message) {
+			  chat.ws.send(message);
+			}
+			 
+			//Basic message receive
+			chat.ws.onmessage = function (event) {
+				var messageFromServer = event.data;
+			    $("#listaComentarios").append(messageFromServer);
+			};
+
+			var textoComentarioChat = document.getElementById("textoComentarioChat");
+		    textoComentarioChat.addEventListener("keydown", function(e) {
+		      if (!e) { var e = window.event; }
+		 
+		      //keyCode 13 is the enter/return button keyCode
+		      if (e.keyCode == 13) {
+		        // enter/return probably starts a new line by default
+		        e.preventDefault();
+		        var userName = localStorage['userName'];
+			    var mensaje = "<li class='socialEye'><div class='commentText socialEye'>";
+	            mensaje += "<span class='date sub-text socialEye'>" + userName + " dijo: </span>";
+	            mensaje += "<p class='socialEye'>" + textoComentarioChat.value + "</p>";
+	            mensaje += "</div>";
+	            mensaje += "</li>";
+		        chat.send(mensaje);
+
+		        $.ajax({
+		            url: "http://127.0.0.1:8000/widgetRest/saveMessage/", // the endpoint
+		            type: "POST", // http method
+		            data: {
+		            	usuario2: usuarioChatActual,
+		            	message: textoComentarioChat.value,
+		            },
+		            dataType: 'json',
+		            async: false,
+		            success: function (data) {
+
+		            },
+
+		            // handle a non-successful response
+		            error: function (xhr, errmsg, err) {
+
+		            }
+
+	        	});
+
+				textoComentarioChat.value="";
+
+		      }
+		    }, false); 
+
+		    $("#cerrarChatBox").on("click", function (event) {
+	            $("#chatBox").hide();
+	            chatAbierto = false;
+        	}); 
+        }
+        else{
+        	$("#chatBox").show();
+	        chatAbierto = true;
+        }
+
+
     }
 
     function crearWidgetUsuarios(unWidget) {
@@ -36,6 +164,11 @@ function Usuarios() {
             deSeleccionarWidgetUsuarios(unWidget);
             $("#listaUsuarios").hide();
         });
+
+      	$(".usuarioChat").each(function () {
+      		this.onclick = chatClick;
+      	});
+
         widgetUsuariosCreado = true;
         widgetUsuariosAbierto = true;
         var dominio = window.location.hostname;
@@ -46,10 +179,12 @@ function Usuarios() {
                 dataType: 'json',
                 data: {url: dominio},
                 success: function (data) {
-                    $('#listaUsuarios a').remove();
+                    $('#listaUsuarios button').remove();
                     $.each(data, function (i, item) {
-                        if (item.user__pk!=localStorage['user'])
-                            $('#listaUsuarios').append("<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.user__username + "</a>");
+                        if (item.user__pk!=localStorage['user']){
+                            $('#listaUsuarios').append("<button type='button' id="+ item.user__pk +" name="+ item.user__username +" class='list-group-item usuarioChat socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + "</button>");
+                       		$("#"+item.user__pk).on('click', chatClick);
+                        }
                     })
                 }
             });
@@ -71,10 +206,10 @@ function Usuarios() {
                 dataType: 'json',
                 data: {url: dominio},
                 success: function (data) {
-                    $('#listaUsuarios a').remove();
+                    $('#listaUsuarios button').remove();
                     $.each(data, function (i, item) {
                         if (item.user__pk!=localStorage['user'])
-                            $('#listaUsuarios').append("<a href='#' class='list-group-item'><span class='fa-stack fa-lg'><i class='fa fa-user fa-stack-1x '></i></span>" + item.user__username + "</a>");
+                            $('#listaUsuarios').append("<button type='button' id="+ item.user__pk +" name="+ item.user__username +" class='list-group-item usuarioChat socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + "</button>");
                     });
                 }
 
@@ -91,7 +226,7 @@ function Usuarios() {
     }
 
     function crearListaDeUsuarios() {
-        var dominio = window.location.hostname;
+    	var dominio = window.location.hostname;
         listaUsuarios = "<div class='list-group socialEye' id='listaUsuarios'>";
         listaUsuarios += "<div class='titleBox socialEye' id='tituloListaUsuarios'>";
         listaUsuarios += "<label class='socialEye'>Usuarios activos en: " + dominio + "</label>";
@@ -110,7 +245,7 @@ function Usuarios() {
             success: function (data) {
                 $.each(data, function (i, item) {
                     if (item.user__pk!=localStorage['user'])
-                        listaUsuarios += "<a href='#' class='list-group-item socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + "</a>";
+                        listaUsuarios += "<button type='button' id="+ item.user__pk +" name="+ item.user__username +" class='list-group-item usuarioChat socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + "</button>";
                 });
 
             },
@@ -121,6 +256,7 @@ function Usuarios() {
             }
         });
 
+        
         listaUsuarios += "</div>";
         return listaUsuarios;
 
