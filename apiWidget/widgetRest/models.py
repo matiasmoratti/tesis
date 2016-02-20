@@ -28,15 +28,35 @@ class Poll(models.Model):
     url = models.CharField(max_length=200)
     date = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
+    def what_i_need_in_ajax_call_for_poll(self): #METODO QUE ES UTILIZADO EN VIEWS.PY PARA DEVOLVER LO QUE YO QUIERA DEL OBJETO EN UN LLAMADO AJAX
+        return {
+            "date": self.date,
+            "description": self.description,
+            "pk": self.id,
+            "questions": list(map(lambda x: x.what_i_need_in_ajax_call_for_pollquestion_from_poll(),  self.pollquestion_set.all()))
+        }
+
 
 class PollQuestion(models.Model):
     poll = models.ForeignKey(Poll,on_delete=models.CASCADE)
     question = models.CharField(max_length=200)
+    def what_i_need_in_ajax_call_for_pollquestion_from_poll(self): #METODO QUE ES UTILIZADO EN VIEWS.PY PARA DEVOLVER LO QUE YO QUIERA DEL OBJETO EN UN LLAMADO AJAX
+        return {
+            "question": self.question,
+            "pk": self.id,
+            "options": list(map(lambda x: x.what_i_need_in_ajax_call_for_pollquestionoption_from_pollquestion(),  self.pollquestionoption_set.all()))
+        }
 
 class PollQuestionOption(models.Model):
     poll_question = models.ForeignKey(PollQuestion,on_delete=models.CASCADE)
     option = models.CharField(max_length=200)
     votes = models.IntegerField()
+    def what_i_need_in_ajax_call_for_pollquestionoption_from_pollquestion(self): #METODO QUE ES UTILIZADO EN VIEWS.PY PARA DEVOLVER LO QUE YO QUIERA DEL OBJETO EN UN LLAMADO AJAX
+        return {
+            "option": self.option,
+            "pk": self.id,
+            "votes": self.votes
+        }
 
 class Chat(models.Model):
     user1 = models.ForeignKey(User, on_delete= models.CASCADE, related_name="user1")

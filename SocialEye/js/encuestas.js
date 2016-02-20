@@ -76,7 +76,7 @@ function Encuestas() {
             async: false,
             success: function (data) {
                 $.each(data, function (i, item) {
-                    listaEncuestas += "<a id=item.pk class='list-group-item socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-question-circle fa-stack-1x socialEye'></i></span>" + item.description + ", creada por " + item.poll_user__username + "</a>";
+                    listaEncuestas += "<a id='"+item.pk+ "' class='list-group-item socialEye'>" + item.description + ", creada por " + item.poll_user__username + " el "+ item.date +"</a>";
                 });
 
             },

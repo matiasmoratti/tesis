@@ -165,7 +165,7 @@ def get_user_pk(basic_auth):
 # @token_required
 def poll_list(request):
     if request.method == 'POST':
-        poll_list = list(Poll.objects.filter(url=request.POST['url']))
+        poll_list = (list(Poll.objects.filter(url=request.POST['url']).values('date','description','pk','poll_user__username')))
         poll_list_as_json = json.dumps(poll_list)
         return HttpResponse(poll_list_as_json, content_type='json')
 
