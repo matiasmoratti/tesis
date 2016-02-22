@@ -102,11 +102,12 @@ function Encuestas() {
             dataType: 'json',
             async: false,
             success: function (data) {
-                $.each(data, function (i, item) {
-                    $("body").append(modalVotacion());
-                    $("#resultados").hide();
-                    $("#vote").modal('show');
-                });
+                alert(data);
+                //$.each(data, function (i, item) {
+                //    $("body").append(modalVotacion());
+                //    $("#resultados").hide();
+                //    $("#vote").modal('show');
+                //});
 
             },
 
@@ -127,12 +128,12 @@ function Encuestas() {
         modal += "<div class='titleBox' id='tituloEncuesta'>";
         modal += "<form class='form-horizontal' id='formEncuesta'>";
         modal += "<input type='text'  id='titEncuesta' class='form-control' placeholder='Ingrese el contenido de la encuesta'/>";
-        modal += "<a id='agregarPregunta' title='Agregar Pregunta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        modal += "<span id='agregarPregunta' class='fa fa-plus fa-stack-1x'></span>";
         modal += "<button type='button' class='close socialEye'  aria-hidden='true'>&times;</button>";
         modal += "</div>";
         modal += "<div id='divPreguntas' class='form-group'>";
         modal += "<input type='text' id='pregunta" + numPregunta + "' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>";
-        modal += "<a id='" + numPregunta + "' class='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
+        modal += "<span  id='" + numPregunta + "' class='fa fa-plus fa-stack-1x agregarOpcion'></span>";
         modal += "</div>";
         modal += "<button  id='agregarEncuesta'>Agregar Encuesta</button>";
         modal += "</form>";
@@ -144,10 +145,9 @@ function Encuestas() {
         $("#agregarPregunta").on('click', function (e) {
             numPregunta++;
             $("#divPreguntas").append("<div><input type='text' id='pregunta" + numPregunta + "' class='form-control' placeholder='Ingrese el contenido de la pregunta'/>");
-            $("#divPreguntas").append("<a id='" + numPregunta + "' class='agregarOpcion' title='Agregar opcion de respuesta'><span  class='fa fa-plus fa-stack-1x'></span></a></div>");
+            $("#divPreguntas").append("<span id='" + numPregunta + "' class='fa fa-plus fa-stack-1x agregarOpcion'></span></div>");
         });
-
-        $(".agregarOpcion").on('click', function (e) {
+        $(document.body).on('click', '.agregarOpcion' ,function(){
             var id = this.id;
             bootbox.prompt("Ingrese la opción de la pregunta", function (result) {
                 if (result) {
@@ -174,6 +174,7 @@ function Encuestas() {
             }
         });
     }
+
 
     function enviarEncuesta(opciones) {
         var preguntas = {};
