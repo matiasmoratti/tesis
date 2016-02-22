@@ -3,10 +3,11 @@
   <component name="ChangeListManager">
     <list default="true" id="838e5acc-6fdf-4ecf-aa48-c9937734d54e" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apiWidget/db.sqlite3" afterPath="$PROJECT_DIR$/apiWidget/db.sqlite3" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/vcs.xml" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SocialEye/css/encuestas.css" afterPath="$PROJECT_DIR$/SocialEye/css/encuestas.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SocialEye/js/encuestas.js" afterPath="$PROJECT_DIR$/SocialEye/js/encuestas.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/SocialEye/socialEye.js" afterPath="$PROJECT_DIR$/SocialEye/socialEye.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apiWidget/widgetRest/urls.py" afterPath="$PROJECT_DIR$/apiWidget/widgetRest/urls.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/apiWidget/widgetRest/views.py" afterPath="$PROJECT_DIR$/apiWidget/widgetRest/views.py" />
     </list>
     <ignored path="Proyecto.iws" />
@@ -31,7 +32,7 @@
     <favorites_list name="Proyecto" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -39,7 +40,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/apiWidget/widgetRest/urls.py" />
         <option value="$PROJECT_DIR$/apiWidget/widgetRest/forms.py" />
         <option value="$PROJECT_DIR$/../Tesis/Servidor/api/lib/python2.7/site-packages/django_tokenapi-0.2.3-py2.7.egg!/tokenapi/decorators.py" />
         <option value="$PROJECT_DIR$/apiWidget/apiWidget/tokenapi/tokenapi/decorators.py" />
@@ -55,10 +55,11 @@
         <option value="$PROJECT_DIR$/SocialEye/js/mainRTC.js" />
         <option value="$PROJECT_DIR$/SocialEye/css/main.css" />
         <option value="$PROJECT_DIR$/SocialEye/js/llamada.js" />
-        <option value="$PROJECT_DIR$/SocialEye/css/encuestas.css" />
         <option value="$PROJECT_DIR$/SocialEye/socialEye.js" />
-        <option value="$PROJECT_DIR$/SocialEye/js/encuestas.js" />
+        <option value="$PROJECT_DIR$/apiWidget/widgetRest/urls.py" />
         <option value="$PROJECT_DIR$/apiWidget/widgetRest/views.py" />
+        <option value="$PROJECT_DIR$/SocialEye/css/encuestas.css" />
+        <option value="$PROJECT_DIR$/SocialEye/js/encuestas.js" />
       </list>
     </option>
   </component>
@@ -98,7 +99,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -154,8 +154,27 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Proyecto" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Proyecto" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SocialEye" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="css" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -387,8 +406,8 @@
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <envs>
-        <env name="DJANGO_SETTINGS_MODULE" value="apiWidget.settings" />
         <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DJANGO_SETTINGS_MODULE" value="apiWidget.settings" />
       </envs>
       <option name="SDK_HOME" value="C:\Python27\python.exe" />
       <option name="WORKING_DIRECTORY" value="" />
@@ -458,7 +477,13 @@
       <option name="project" value="LOCAL" />
       <updated>1455070719519</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="haciendo widget encuestas">
+      <created>1455896897371</created>
+      <option name="number" value="00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1455896897371</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -475,7 +500,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38582677" sideWeight="0.4970588" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.38267717" sideWeight="0.4970588" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -545,16 +570,16 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/apiWidget/widgetRest/views.py</url>
-          <line>204</line>
+          <line>213</line>
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="python-line">
           <url>file://$PROJECT_DIR$/apiWidget/widgetRest/views.py</url>
-          <line>177</line>
+          <line>186</line>
           <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
-      <option name="time" value="24" />
+      <option name="time" value="25" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -572,8 +597,8 @@
           <caret line="61" column="0" selection-start-line="61" selection-start-column="0" selection-end-line="61" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <marker date="1455881862343" expanded="true" signature="10532:10560" placeholder="..." />
-            <marker date="1455881862343" expanded="true" signature="11521:11549" placeholder="..." />
+            <marker date="1456140235386" expanded="true" signature="10541:10569" placeholder="..." />
+            <marker date="1456140235386" expanded="true" signature="11530:11558" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -620,8 +645,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <marker date="1455881862343" expanded="true" signature="10532:10560" placeholder="..." />
-            <marker date="1455881862343" expanded="true" signature="11521:11549" placeholder="..." />
+            <marker date="1456140235386" expanded="true" signature="10541:10569" placeholder="..." />
+            <marker date="1456140235386" expanded="true" signature="11530:11558" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -661,8 +686,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <marker date="1455881862343" expanded="true" signature="10532:10560" placeholder="..." />
-            <marker date="1455881862343" expanded="true" signature="11521:11549" placeholder="..." />
+            <marker date="1456140235386" expanded="true" signature="10541:10569" placeholder="..." />
+            <marker date="1456140235386" expanded="true" signature="11530:11558" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -702,8 +727,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <marker date="1455881862343" expanded="true" signature="10532:10560" placeholder="..." />
-            <marker date="1455881862343" expanded="true" signature="11521:11549" placeholder="..." />
+            <marker date="1456140235386" expanded="true" signature="10541:10569" placeholder="..." />
+            <marker date="1456140235386" expanded="true" signature="11530:11558" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -743,8 +768,8 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
-            <marker date="1455881862343" expanded="true" signature="10532:10560" placeholder="..." />
-            <marker date="1455881862343" expanded="true" signature="11521:11549" placeholder="..." />
+            <marker date="1456140235386" expanded="true" signature="10541:10569" placeholder="..." />
+            <marker date="1456140235386" expanded="true" signature="11530:11558" placeholder="..." />
           </folding>
         </state>
       </provider>
@@ -884,17 +909,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SocialEye/css/encuestas.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.101580136">
-          <caret line="3" column="21" selection-start-line="3" selection-start-column="21" selection-end-line="3" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/SocialEye/js/comentarios.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="55" column="66" selection-start-line="55" selection-start-column="24" selection-end-line="55" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SocialEye/socialEye.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="159" column="9" selection-start-line="159" selection-start-column="9" selection-end-line="159" selection-end-column="9" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <marker date="1456140235386" expanded="true" signature="10541:10569" placeholder="..." />
+            <marker date="1456140235386" expanded="true" signature="11530:11558" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apiWidget/widgetRest/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8406593">
+          <caret line="18" column="65" selection-start-line="18" selection-start-column="65" selection-end-line="18" selection-end-column="65" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Python27/Lib/site-packages/Django-1.9-py2.7.egg/django/utils/autoreload.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3314917">
+          <caret line="279" column="21" selection-start-line="279" selection-start-column="21" selection-end-line="279" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -906,55 +953,47 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Python27/Lib/site-packages/Django-1.9-py2.7.egg/django/utils/autoreload.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6132597">
-          <caret line="285" column="31" selection-start-line="285" selection-start-column="31" selection-end-line="285" selection-end-column="31" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/apiWidget/widgetRest/urls.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.09392265">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/apiWidget/widgetRest/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.160221">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.26648352">
+          <caret line="30" column="41" selection-start-line="30" selection-start-column="8" selection-end-line="30" selection-end-column="41" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SocialEye/socialEye.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.26519337">
-          <caret line="151" column="16" selection-start-line="151" selection-start-column="16" selection-end-line="151" selection-end-column="16" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <marker date="1455881862343" expanded="true" signature="10532:10560" placeholder="..." />
-            <marker date="1455881862343" expanded="true" signature="11521:11549" placeholder="..." />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apiWidget/widgetRest/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.660221">
-          <caret line="211" column="53" selection-start-line="211" selection-start-column="53" selection-end-line="211" selection-end-column="53" />
+        <state vertical-scroll-proportion="0.5576923">
+          <caret line="174" column="0" selection-start-line="174" selection-start-column="0" selection-end-line="174" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SocialEye/css/encuestas.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.56508875">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/SocialEye/js/encuestas.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5635359">
-          <caret line="136" column="21" selection-start-line="136" selection-start-column="21" selection-end-line="136" selection-end-column="21" />
-          <folding />
+        <state vertical-scroll-proportion="2.313433">
+          <caret line="300" column="40" selection-start-line="300" selection-start-column="40" selection-end-line="300" selection-end-column="40" />
+          <folding>
+            <marker date="1456154492458" expanded="true" signature="10885:10902" placeholder="..." />
+            <marker date="1456154492458" expanded="true" signature="11122:11132" placeholder="..." />
+            <marker date="1456154492458" expanded="true" signature="11468:11478" placeholder="..." />
+            <marker date="1456154492458" expanded="true" signature="11820:11830" placeholder="..." />
+            <marker date="1456154492458" expanded="true" signature="12170:12180" placeholder="..." />
+            <marker date="1456154492458" expanded="true" signature="12511:12520" placeholder="..." />
+            <marker date="1456154492458" expanded="true" signature="12781:12791" placeholder="..." />
+            <marker date="1456154492458" expanded="true" signature="12961:12971" placeholder="..." />
+            <marker date="1456154492458" expanded="true" signature="13141:13151" placeholder="..." />
+            <marker date="1456154492458" expanded="true" signature="13320:13330" placeholder="..." />
+            <marker date="1456154492458" expanded="true" signature="13496:13505" placeholder="..." />
+          </folding>
         </state>
       </provider>
     </entry>

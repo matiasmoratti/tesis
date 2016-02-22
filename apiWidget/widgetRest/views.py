@@ -169,6 +169,15 @@ def poll_list(request):
         poll_list_as_json = json.dumps(poll_list)
         return HttpResponse(poll_list_as_json, content_type='json')
 
+@csrf_exempt
+# @token_required
+def poll_details(request):
+    idEncuesta = request.GET['idEncuesta']
+    poll = Poll.objects.filter(pk=idEncuesta)
+    data = map(lambda x: x.what_i_need_in_ajax_call_for_poll(), poll)
+    return HttpResponse(json.dumps({
+        "poll": json.dumps(list(data))}),
+            content_type='application/json')
 
 @csrf_exempt
 # @token_required

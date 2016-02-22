@@ -76,7 +76,7 @@ function Encuestas() {
             async: false,
             success: function (data) {
                 $.each(data, function (i, item) {
-                    listaEncuestas += "<a id='"+item.pk+ "' class='list-group-item socialEye'>" + item.description + ", creada por " + item.poll_user__username + " el "+ item.date +"</a>";
+                    listaEncuestas += "<li><input type='button' id='"+item.pk+ "' class='list-group-item socialEye filaEncuesta' value='"+ item.description + ", creada por " + item.poll_user__username + " el "+ item.date+"'/></li>";
                 });
 
             },
@@ -87,10 +87,36 @@ function Encuestas() {
             }
         });
 
+
+        listaEncuestas += "</div>";
         listaEncuestas += "</div>";
         return listaEncuestas;
 
     }
+    $(document.body).on('click', '.filaEncuesta' ,function(){
+            idEncuesta=this.id;
+             $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/poll_details/", // the endpoint
+            type: "GET", // http method
+            data: {idEncuesta: idEncuesta},
+            dataType: 'json',
+            async: false,
+            success: function (data) {
+                $.each(data, function (i, item) {
+                    $("body").append(modalVotacion());
+                    $("#resultados").hide();
+                    $("#vote").modal('show');
+                });
+
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+
+            }
+        });
+
+        });
 
     function crearModalEncuesta() {
         var numPregunta = 1;
@@ -177,4 +203,152 @@ function Encuestas() {
             }
         });
     }
+
+    function modalVotacion(){
+        var modal="<div class='container'>";
+	    modal+="<div class='row'>";
+        modal+="<br/><br/><br/>";
+        //modal+="<a class='btn btn-primary btn-lg' data-toggle='modal' data-target='#vote' data-original-title> Vota Ahora!</a>";
+        modal+="<div class='modal fade' id='vote' tabindex='-1' role='dialog' aria-labelledby='voteLabel' aria-hidden='true'>";
+        modal+="<div class='modal-dialog'>";
+        modal+="<div class='panel panel-primary'>";
+        modal+="<div class='panel-heading'>";
+        modal+="<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button>";
+        modal+="<h4 class='panel-title' id='voteLabel'><span class='glyphicon glyphicon-arrow-right'></span> How is My Site?</h4>";
+        modal+="</div>";
+        modal+="<div class='modal-body'>";
+        modal+="<ul class='list-group'>";
+        modal+="<li class='list-group-item'>";
+        modal+="<div class='radio'>";
+        modal+="<label>";
+        modal+="<input type='radio' name='optionsRadios'>";
+        modal+="Excellent";
+        modal+="</label>";
+        modal+="</div>";
+        modal+="</li>";
+        modal+="<li class='list-group-item'>";
+        modal+="<div class='radio'>";
+        modal+="<label>";
+        modal+="<input type='radio' name='optionsRadios'>";
+        modal+="Good";
+        modal+="</label>";
+        modal+="</div>";
+        modal+="</li>";
+        modal+="<li class='list-group-item'>";
+        modal+="<div class='radio'>";
+        modal+="<label>";
+        modal+="<input type='radio' name='optionsRadios'>";
+        modal+="Can Be Improved";
+        modal+="</label>";
+        modal+="</div>";
+        modal+="</li>";
+        modal+="<li class='list-group-item'>";
+        modal+="<div class='radio'>";
+        modal+="<label>";
+        modal+="<input type='radio' name='optionsRadios'>";
+        modal+="Bad";
+        modal+="</label>";
+        modal+="</div>";
+        modal+="</li>";
+        modal+="<li class='list-group-item'>";
+        modal+="<div class='radio'>";
+        modal+="<label>";
+        modal+="<input type='radio' name='optionsRadios'>";
+        modal+="No Comment";
+        modal+="</label>";
+        modal+="</div>";
+        modal+="</li>";
+        modal+="</ul>";
+        modal+="</div>";
+        modal+="<div class='modal-footer'>";
+        modal+="<button type='button' class='btn btn-success btn-vote'>Vote!</button>";
+        modal+="<span id='verResultados' class='btn btn-primary dropdown-results btn-results' data-for='.results'>View Results</span>";
+        modal+="<button type='button' class='btn btn-default btn-close' data-dismiss='modal'>Close</button>";
+        modal+="</div>";
+        modal+="<div id='resultados' class='row vote-results results'>";
+        modal+="<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12' style='margin-left: 5px;'>";
+        modal+="Excellent";
+        modal+="<div class='progress'>";
+        modal+="<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='20' aria-valuemin='0' aria-valuemax='100' style='width: 20%'>";
+        modal+="<span class='sr-only'>40% Excellent (success)</span>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="Good";
+        modal+="<div class='progress'>";
+        modal+="<div class='progress-bar progress-bar-primary' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width: 40%'>";
+        modal+="<span class='sr-only'>20% Good (primary)</span>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="Can Be Improved";
+        modal+="<div class='progress'>";
+        modal+="<div class='progress-bar progress-bar-warning' role='progressbar' aria-valuenow='25' aria-valuemin='0' aria-valuemax='100' style='width: 25%'>";
+        modal+="<span class='sr-only'>60% Can Be Improved (warning)</span>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="bad";
+        modal+="<div class='progress'>";
+        modal+="<div class='progress-bar progress-bar-danger' role='progressbar' aria-valuenow='10' aria-valuemin='0' aria-valuemax='100' style='width: 10%'>";
+        modal+="<span class='sr-only'>80% Bad (danger)</span>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="No Comment";
+        modal+="<div class='progress'>";
+        modal+="<div class='progress-bar progress-bar-info' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%'>";
+        modal+="<span class='sr-only'>80% No Comment (info)</span>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="Overall";
+        modal+="<div class='progress'>";
+        modal+="<div class='progress-bar progress-bar-success' style='width: 20%'>";
+        modal+="<span class='sr-only'>35% Complete (success)</span>";
+        modal+="</div>";
+        modal+="<div class='progress-bar progress-bar-primary' style='width: 40%'>";
+        modal+="<span class='sr-only'>20% Complete (primary)</span>";
+        modal+="</div>";
+        modal+="<div class='progress-bar progress-bar-warning' style='width: 25%'>";
+        modal+="<span class='sr-only'>10% Complete (warning)</span>";
+        modal+="</div>";
+        modal+="<div class='progress-bar progress-bar-danger' style='width: 10%'>";
+        modal+="<span class='sr-only'>10% Complete (danger)</span>";
+        modal+="</div>";
+        modal+="<div class='progress-bar progress-bar-info' style='width: 5%'>";
+        modal+="<span class='sr-only'>10% Complete (info)</span>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="</div>";
+        modal+="</div>";
+        return modal;
+    }
+
+    var panels = $('.vote-results');
+    var panelsButton = $('.dropdown-results');
+    panels.hide();
+     $(document.body).on('click', '#verResultados' ,function(){
+        $("#resultados").show();
+    });
+    //Click dropdown
+    panelsButton.click(function() {
+        //get data-for attribute
+        var dataFor = $(this).attr('data-for');
+        var idFor = $(dataFor);
+
+        //current button
+        var currentButton = $(this);
+        idFor.slideToggle(400, function() {
+            //Completed slidetoggle
+            if(idFor.is(':visible'))
+            {
+                currentButton.html('Hide Results');
+            }
+            else
+            {
+                currentButton.html('View Results');
+            }
+        })
+    });
 }
