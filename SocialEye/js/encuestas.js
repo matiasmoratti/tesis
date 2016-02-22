@@ -104,9 +104,9 @@ function Encuestas() {
             success: function (data) {
                 alert(data);
                 //$.each(data, function (i, item) {
-                //    $("body").append(modalVotacion());
-                //    $("#resultados").hide();
-                //    $("#vote").modal('show');
+                   $("body").append(modalVotacion());
+                   $("#resultados").hide();
+                   $("#vote").modal('show');
                 //});
 
             },
