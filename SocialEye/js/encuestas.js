@@ -4,6 +4,9 @@ function Encuestas() {
     var widgetEncuestasAbierto = false;
     var debateBox;
     var listaEncuestas;
+    var numPreguntaEncuesta;
+    var questions;
+    var votos;
 
     this.iniciarWidgetEncuestas = function () {
         crearModalEncuesta();
@@ -102,13 +105,13 @@ function Encuestas() {
             dataType: 'json',
             async: false,
             success: function (data) {
-                alert(data);
-                //$.each(data, function (i, item) {
-                   $("body").append(modalVotacion());
-                   $("#resultados").hide();
-                   $("#vote").modal('show');
-                //});
-
+                $("body").append(modalVotacion());
+                votos=[];
+                $("#resultados").hide();
+                numPreguntaEncuesta=0;
+                questions=data[0]['questions'];
+                $('#vote').modal('show');
+                siguientePregunta();
             },
 
             // handle a non-successful response
@@ -206,7 +209,7 @@ function Encuestas() {
     }
 
     function modalVotacion(){
-        var modal="<div class='container'>";
+        var modal="<div id='modalVotacion' class='container'>";
 	    modal+="<div class='row'>";
         modal+="<br/><br/><br/>";
         //modal+="<a class='btn btn-primary btn-lg' data-toggle='modal' data-target='#vote' data-original-title> Vota Ahora!</a>";
@@ -214,57 +217,17 @@ function Encuestas() {
         modal+="<div class='modal-dialog'>";
         modal+="<div class='panel panel-primary'>";
         modal+="<div class='panel-heading'>";
-        modal+="<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>×</button>";
-        modal+="<h4 class='panel-title' id='voteLabel'><span class='glyphicon glyphicon-arrow-right'></span> How is My Site?</h4>";
+        modal+="<button type='button' class='close' data-dismiss='modal' aria-hidden='true'>*</button>";
+        modal+="<h4 id='tituloPregunta' class='panel-title' id='voteLabel'><span class='glyphicon glyphicon-arrow-right'></span></h4>";
         modal+="</div>";
         modal+="<div class='modal-body'>";
-        modal+="<ul class='list-group'>";
-        modal+="<li class='list-group-item'>";
-        modal+="<div class='radio'>";
-        modal+="<label>";
-        modal+="<input type='radio' name='optionsRadios'>";
-        modal+="Excellent";
-        modal+="</label>";
-        modal+="</div>";
-        modal+="</li>";
-        modal+="<li class='list-group-item'>";
-        modal+="<div class='radio'>";
-        modal+="<label>";
-        modal+="<input type='radio' name='optionsRadios'>";
-        modal+="Good";
-        modal+="</label>";
-        modal+="</div>";
-        modal+="</li>";
-        modal+="<li class='list-group-item'>";
-        modal+="<div class='radio'>";
-        modal+="<label>";
-        modal+="<input type='radio' name='optionsRadios'>";
-        modal+="Can Be Improved";
-        modal+="</label>";
-        modal+="</div>";
-        modal+="</li>";
-        modal+="<li class='list-group-item'>";
-        modal+="<div class='radio'>";
-        modal+="<label>";
-        modal+="<input type='radio' name='optionsRadios'>";
-        modal+="Bad";
-        modal+="</label>";
-        modal+="</div>";
-        modal+="</li>";
-        modal+="<li class='list-group-item'>";
-        modal+="<div class='radio'>";
-        modal+="<label>";
-        modal+="<input type='radio' name='optionsRadios'>";
-        modal+="No Comment";
-        modal+="</label>";
-        modal+="</div>";
-        modal+="</li>";
+        modal+="<ul id='listaOpciones' class='list-group'>";
         modal+="</ul>";
         modal+="</div>";
         modal+="<div class='modal-footer'>";
-        modal+="<button type='button' class='btn btn-success btn-vote'>Vote!</button>";
-        modal+="<span id='verResultados' class='btn btn-primary dropdown-results btn-results' data-for='.results'>View Results</span>";
-        modal+="<button type='button' class='btn btn-default btn-close' data-dismiss='modal'>Close</button>";
+        modal+="<button id='votar' type='button' class='btn btn-success btn-vote'>Votar</button>";
+        modal+="<span id='verResultados' class='btn btn-primary dropdown-results btn-results' data-for='.results'>Ver resultados</span>";
+        modal+="<button type='button' class='btn btn-default btn-close' data-dismiss='modal'>Cerrar</button>";
         modal+="</div>";
         modal+="<div id='resultados' class='row vote-results results'>";
         modal+="<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12' style='margin-left: 5px;'>";
@@ -332,6 +295,17 @@ function Encuestas() {
      $(document.body).on('click', '#verResultados' ,function(){
         $("#resultados").show();
     });
+
+    $(document.body).on('click', '#votar' ,function(){
+        if ($("#listaOpciones").find('input:radio').is(":checked")) {
+            votos.push($('#listaOpciones input:checked').attr('id'));
+        }
+        else {
+            bootbox.alert("Debe seleccionar una opcion");
+            return false;
+        }
+        siguientePregunta();
+    });
     //Click dropdown
     panelsButton.click(function() {
         //get data-for attribute
@@ -352,4 +326,40 @@ function Encuestas() {
             }
         })
     });
+
+    function siguientePregunta(){
+        if (numPreguntaEncuesta<questions.length){
+            $("#tituloPregunta").html(questions[numPreguntaEncuesta]['question']);
+            $("#listaOpciones").empty();
+            $.each(questions[numPreguntaEncuesta]['options'], function (index, option) {
+                opciones="<li class='list-group-item'>";
+                opciones+="<div class='radio'>";
+                opciones+="<label>";
+                opciones+="<input id='"+option['pk']+"' type='radio' name='optionsRadios'>";
+                opciones+=option['option'];
+                opciones+="</label>";
+                opciones+="</div>";
+                opciones+="</li>";
+                $("#listaOpciones").append(opciones);
+             });
+        }
+        else {
+            $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/poll_vote/", // the endpoint
+            type: "POST", // http method
+            data: {votos: JSON.stringify(votos)},
+            async: false,
+            success: function () {
+                bootbox.alert("Gracias, usted ha finalizado la encuesta");
+                $('#vote').modal('toggle');
+            },
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+
+            }
+        });
+            //$("#resultados").show();
+        }
+        numPreguntaEncuesta++;
+    }
 }

@@ -175,9 +175,7 @@ def poll_details(request):
     idEncuesta = request.GET['idEncuesta']
     poll = Poll.objects.filter(pk=idEncuesta)
     data = map(lambda x: x.what_i_need_in_ajax_call_for_poll(), poll)
-    return HttpResponse(json.dumps({
-        "poll": json.dumps(list(data))}),
-            content_type='application/json')
+    return HttpResponse(json.dumps(list(data)), content_type='application/json')
 
 @csrf_exempt
 # @token_required
@@ -218,12 +216,11 @@ def poll_add(request):
 # @token_required
 def poll_vote(request):
     if request.method == 'POST':
-        votes = json.loads(request.POST['json_data'])
+        votes = json.loads(request.POST['votos'])
         for v in votes:
-            poll_question_option = PollQuestionOption.objects.get(pk=v['id'])
+            poll_question_option = PollQuestionOption.objects.get(pk=v)
             poll_question_option.votes += 1
             poll_question_option.save()
-
         return HttpResponse()
 
 
