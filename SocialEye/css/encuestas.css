@@ -1,14 +1,46 @@
-#crearEncuesta{
+#divEncuestas{
+            z-index: 9999999999999;
+            width:350px;
+            position: fixed;
+            margin: 0 auto;
+            top: 0;
+            left: 60%;
+            border:1px solid #bbb;
+            margin:50px;
+            background-color:#fdfdfd;
+}
 
-   position: relative;
-    margin-right: 10%;
-    margin-top: 50%
+#crearEncuesta{
+   position: absolute;
+   margin-left: 5px;
 }
 
 #modalEncuesta{
     visibility: hidden;
 }
 
+#vote{
+    z-index: 99999999999999999999;
+}
+
+.tituloEncuesta{
+   font-weight: bold;
+}
+
+.subtituloEncuesta{
+    color: grey;
+    font-style: italic;
+}
+
+#tituloListaEncuestas{
+    background-color: #99CCFF;
+}
+
+#cerrarEncuestas{
+    position: absolute;
+    top: 0;
+    margin-right: 0;
+}
 
 .modal-body:not(.two-col) { padding:0px }
 .glyphicon { margin-right:5px; }

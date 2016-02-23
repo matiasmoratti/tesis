@@ -36,7 +36,7 @@ function Chats() {
     function crearWidgetChats(unWidget) {
         $("body").append(crearChatsBox());
         $(".usuarioChat").each(function () {
-            this.onclick = chatClick;
+            $("#"+ this.id).on('click', chatClick);
         });
         //debate.attr("style", "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;");
         unWidget.style.cssText = "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;";
@@ -111,6 +111,7 @@ function Chats() {
             conversacion += "</div>";
             conversacion += "</div>";
             $("body").append(conversacion);
+            $('#listaComentarios').scrollTop( $('#listaComentarios')[0].scrollHeight);
 
 
             window.chat = {};
@@ -124,8 +125,11 @@ function Chats() {
              
             //Basic message receive
             chat.ws.onmessage = function (event) {
-                var messageFromServer = event.data;
-                $("#listaComentarios").append(messageFromServer);
+                if(usuarioChatActual == e.target.id){
+                        var messageFromServer = event.data;
+                        $("#listaComentarios").append(messageFromServer);
+                        $('#listaComentarios').animate({scrollTop: $('#listaComentarios')[0].scrollHeight});
+                }
             };
 
             var textoComentarioChat = document.getElementById("textoComentarioChat");
@@ -136,35 +140,37 @@ function Chats() {
               if (e.keyCode == 13) {
                 // enter/return probably starts a new line by default
                 e.preventDefault();
-                var userName = localStorage['userName'];
-                var mensaje = "<li class='socialEye'><div class='commentText socialEye'>";
-                mensaje += "<span class='date sub-text socialEye'>" + userName + " dijo: </span>";
-                mensaje += "<p class='socialEye'>" + textoComentarioChat.value + "</p>";
-                mensaje += "</div>";
-                mensaje += "</li>";
-                chat.send(mensaje);
+                if(textoComentarioChat.value != ""){
+                    var userName = localStorage['userName'];
+                    var mensaje = "<li class='socialEye'><div class='commentText socialEye'>";
+                    mensaje += "<span class='date sub-text socialEye'>" + userName + " dijo: </span>";
+                    mensaje += "<p class='socialEye'>" + textoComentarioChat.value + "</p>";
+                    mensaje += "</div>";
+                    mensaje += "</li>";
+                    chat.send(mensaje);
 
-                $.ajax({
-                    url: "http://127.0.0.1:8000/widgetRest/saveMessage/", // the endpoint
-                    type: "POST", // http method
-                    data: {
-                        usuario2: usuarioChatActual,
-                        message: textoComentarioChat.value,
-                    },
-                    dataType: 'json',
-                    async: false,
-                    success: function (data) {
+                    $.ajax({
+                        url: "http://127.0.0.1:8000/widgetRest/saveMessage/", // the endpoint
+                        type: "POST", // http method
+                        data: {
+                            usuario2: usuarioChatActual,
+                            message: textoComentarioChat.value,
+                        },
+                        dataType: 'json',
+                        async: false,
+                        success: function (data) {
 
-                    },
+                        },
 
-                    // handle a non-successful response
-                    error: function (xhr, errmsg, err) {
+                        // handle a non-successful response
+                        error: function (xhr, errmsg, err) {
 
-                    }
+                        }
 
-                });
+                    });
 
-                textoComentarioChat.value="";
+                    textoComentarioChat.value="";
+                }
 
               }
             }, false); 

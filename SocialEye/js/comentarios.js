@@ -29,6 +29,7 @@ function Comentarios() {
 
     function crearDebateGeneral(unWidget) {
         $("body").append(crearCommentBoxGenerales());
+        $('#listaComentariosGenerales').scrollTop($('#listaComentariosGenerales')[0].scrollHeight);
         //debate.attr("style", "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;");
         unWidget.style.cssText = "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;";
         $("#cerrarBoxGenerales").on("click", function (event) {
@@ -71,6 +72,7 @@ function Comentarios() {
                         lineaComentario.appendChild(divComentario);
                         $("#listaComentariosGenerales").append(lineaComentario);
                         $("#textoComentarioGeneral").val("");
+                        $('#listaComentariosGenerales').animate({scrollTop: $('#listaComentariosGenerales')[0].scrollHeight});
 
                     },
 
@@ -209,7 +211,7 @@ function comentariosEspecificos() {
         var url = window.location.href;
         var commentBox = "<div class='detailBox' id='comentario" + numeroComentario + "'>";
         commentBox += "<div class='titleBox'>";
-        commentBox += "<label class=>" + textoComentario + "</label>";
+        commentBox += "<label>" + textoComentario + "</label>";
         commentBox += "<button type='button' class='close' id='cerrarComentario" + numeroComentario + "' aria-hidden='true'>&times;</button>";
         commentBox += "</div>";
         commentBox += "<div class='actionBox'>";
@@ -248,7 +250,7 @@ function comentariosEspecificos() {
         commentBox += "</ul>";
         commentBox += "<form class='form-inline' role='form'>";
         commentBox += "<textarea class='form-control' id='textoComentario" + numeroComentario + "' type='text' placeholder='Escribe un comentario' ></textarea>";
-        commentBox += "<button id='agregarComentario" + numeroComentario + "' class='btn btn-primary'>Agregar</button>";
+        commentBox += "<button type = 'button' id='agregarComentario" + numeroComentario + "' class='btn btn-primary'>Agregar</button>";
         commentBox += "</form>";
         commentBox += "</div>";
         commentBox += "</div>";
@@ -330,22 +332,23 @@ function comentariosEspecificos() {
             textoComentario = "Comentarios de ".concat(host.substr(posicion, host.split(".", 2).join(".").length - posicion));
         }
         $("body").append(crearCommentBoxEspicifico(textoComentario, tag));
+        $('#listaComentario' + (numeroComentario - 1)).scrollTop( $('#listaComentario' + (numeroComentario - 1))[0].scrollHeight);
         mapeador.agregarComentario(tag, "comentario" + (numeroComentario - 1));
         //Le seteo la posicion donde se hizo el click
         $("#comentario" + (numeroComentario - 1)).css('position', 'absolute');
         $("#comentario" + (numeroComentario - 1)).offset({left: elemento.pageX, top: elemento.pageY});
         indexActual++;
         $("#comentario" + (numeroComentario - 1)).css('zIndex', indexActual);
-        $("[id^='cerrarComentario']").on('click', function (e) {
+
+        $("#cerrarComentario" + (numeroComentario - 1)).on('click', function (e) {
             deSeleccionarUnSoloBox(e.target);
         });
-        $("[id^='comentario']").on('click', function (e) {
+
+        $("#comentario" + (numeroComentario - 1)).on('click', function (e) {
             indexActual++;
             this.style.zIndex = indexActual;
         });
-
-
-        $('[id^="agregarComentario"]').on('click',function (e) {
+        $("#agregarComentario" + (numeroComentario - 1)).on('click',function (e) {
             //Ahora tomo el numero, para formar el id del textarea
             var idSeleccionado = this.id;
             var numComen = idSeleccionado.split("agregarComentario")[1];
@@ -383,6 +386,7 @@ function comentariosEspecificos() {
                         lineaComentario.appendChild(divComentario);
                         $("#listaComentario" + numComen).append(lineaComentario);
                         $("#textoComentario" + numComen).val("");
+                        $('#listaComentario' + numComen).animate({scrollTop: $('#listaComentario' + numComen)[0].scrollHeight});
 
                     },
 

@@ -44,7 +44,7 @@ def index(request):
 
 
 @csrf_exempt
-# @token_required
+@token_required
 def logout(request):
     if request.method == 'POST':
         try:
@@ -75,7 +75,7 @@ def registration(request):
 
 
 @csrf_exempt
-# @token_required
+@token_required
 def comments(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -103,7 +103,7 @@ def comments(request):
 
 
 @csrf_exempt
-# @token_required
+@token_required
 def specific_comments(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -131,7 +131,7 @@ def specific_comments(request):
 
 
 @csrf_exempt
-# @token_required
+@token_required
 def user_ping(request):
     if request.method == 'POST':
         user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
@@ -162,7 +162,7 @@ def get_user_pk(basic_auth):
 
 
 @csrf_exempt
-# @token_required
+@token_required
 def poll_list(request):
     if request.method == 'POST':
         poll_list = (list(Poll.objects.filter(url=request.POST['url']).values('date','description','pk','poll_user__username')))
@@ -170,7 +170,7 @@ def poll_list(request):
         return HttpResponse(poll_list_as_json, content_type='json')
 
 @csrf_exempt
-# @token_required
+@token_required
 def poll_details(request):
     idEncuesta = request.GET['idEncuesta']
     poll = Poll.objects.filter(pk=idEncuesta)
@@ -178,7 +178,7 @@ def poll_details(request):
     return HttpResponse(json.dumps(list(data)), content_type='application/json')
 
 @csrf_exempt
-# @token_required
+@token_required
 def poll_add(request):
     if request.method == 'POST':
         opciones = json.loads(request.POST['opciones'])
@@ -213,7 +213,7 @@ def poll_add(request):
 
 
 @csrf_exempt
-# @token_required
+@token_required
 def poll_vote(request):
     if request.method == 'POST':
         votes = json.loads(request.POST['votos'])
@@ -225,7 +225,7 @@ def poll_vote(request):
 
 
 @csrf_exempt
-# @token_required
+@token_required
 def chats(request):
     if request.method == 'GET':
         user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
@@ -237,7 +237,7 @@ def chats(request):
 
 
 @csrf_exempt
-# @token_required
+@token_required
 def getChat(request):
     if request.method == 'POST':
         user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
@@ -256,7 +256,7 @@ def getChat(request):
 
 
 @csrf_exempt
-# @token_required
+@token_required
 def saveMessage(request):
     if request.method == 'POST':
         user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
