@@ -162,7 +162,7 @@ def get_user_pk(basic_auth):
 
 
 @csrf_exempt
-@token_required
+# @token_required
 def poll_list(request):
     if request.method == 'POST':
         poll_list = (list(Poll.objects.filter(url=request.POST['url']).values('date','description','pk','poll_user__username')))
@@ -170,7 +170,7 @@ def poll_list(request):
         return HttpResponse(poll_list_as_json, content_type='json')
 
 @csrf_exempt
-@token_required
+# @token_required
 def poll_details(request):
     idEncuesta = request.GET['idEncuesta']
     poll = Poll.objects.filter(pk=idEncuesta)
@@ -178,7 +178,7 @@ def poll_details(request):
     return HttpResponse(json.dumps(list(data)), content_type='application/json')
 
 @csrf_exempt
-@token_required
+# @token_required
 def poll_add(request):
     if request.method == 'POST':
         opciones = json.loads(request.POST['opciones'])
@@ -213,7 +213,7 @@ def poll_add(request):
 
 
 @csrf_exempt
-@token_required
+# @token_required
 def poll_vote(request):
     if request.method == 'POST':
         votes = json.loads(request.POST['votos'])
@@ -221,6 +221,16 @@ def poll_vote(request):
             poll_question_option = PollQuestionOption.objects.get(pk=v)
             poll_question_option.votes += 1
             poll_question_option.save()
+        #Ahora voy a recuperar la encuesta de nuevo para armar los resultados para mostrarlos con la barra
+        poll = Poll.objects.get(pk=request.POST['idEncuestaActual'])
+        preguntas = poll.pollquestion_set.all()
+        for p in preguntas:
+            opciones = p.pollquestionoption_set.all()
+            total = 0
+            for o in opciones:
+                total += o.votes
+
+
         return HttpResponse()
 
 

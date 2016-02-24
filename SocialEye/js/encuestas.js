@@ -7,6 +7,7 @@ function Encuestas() {
     var numPreguntaEncuesta;
     var questions;
     var votos;
+    var idEncuestaActual;
 
     this.iniciarWidgetEncuestas = function () {
         crearModalEncuesta();
@@ -97,11 +98,11 @@ function Encuestas() {
 
     }
     $(document.body).on('click', '.filaEncuesta' ,function(){
-            idEncuesta=this.id;
+            idEncuestaActual=this.id;
              $.ajax({
             url: "http://127.0.0.1:8000/widgetRest/poll_details/", // the endpoint
             type: "GET", // http method
-            data: {idEncuesta: idEncuesta},
+            data: {idEncuesta: idEncuestaActual},
             dataType: 'json',
             async: false,
             success: function (data) {
@@ -226,7 +227,6 @@ function Encuestas() {
         modal+="</div>";
         modal+="<div class='modal-footer'>";
         modal+="<button id='votar' type='button' class='btn btn-success btn-vote'>Votar</button>";
-        modal+="<span id='verResultados' class='btn btn-primary dropdown-results btn-results' data-for='.results'>Ver resultados</span>";
         modal+="<button type='button' class='btn btn-default btn-close' data-dismiss='modal'>Cerrar</button>";
         modal+="</div>";
         modal+="<div id='resultados' class='row vote-results results'>";
@@ -347,7 +347,8 @@ function Encuestas() {
             $.ajax({
             url: "http://127.0.0.1:8000/widgetRest/poll_vote/", // the endpoint
             type: "POST", // http method
-            data: {votos: JSON.stringify(votos)},
+            data: {votos: JSON.stringify(votos),
+                    idEncuestaActual:idEncuestaActual},
             async: false,
             success: function () {
                 bootbox.alert("Gracias, usted ha finalizado la encuesta");
