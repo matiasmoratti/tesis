@@ -8,6 +8,8 @@ function Encuestas() {
     var questions;
     var votos;
     var idEncuestaActual;
+    var numeroActualResultado;
+    var porcentajes;
 
     this.iniciarWidgetEncuestas = function () {
         crearModalEncuesta();
@@ -107,6 +109,7 @@ function Encuestas() {
             async: false,
             success: function (data) {
                 $("body").append(modalVotacion());
+                $("#votar").prop( "disabled", false );
                 votos=[];
                 $("#resultados").hide();
                 numPreguntaEncuesta=0;
@@ -230,55 +233,9 @@ function Encuestas() {
         modal+="<button type='button' class='btn btn-default btn-close' data-dismiss='modal'>Cerrar</button>";
         modal+="</div>";
         modal+="<div id='resultados' class='row vote-results results'>";
-        modal+="<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12' style='margin-left: 5px;'>";
-        modal+="Excellent";
-        modal+="<div class='progress'>";
-        modal+="<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='20' aria-valuemin='0' aria-valuemax='100' style='width: 20%'>";
-        modal+="<span class='sr-only'>40% Excellent (success)</span>";
+        modal+="<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12' id='barraResultados' style='margin-left: 5px;'>";
         modal+="</div>";
-        modal+="</div>";
-        modal+="Good";
-        modal+="<div class='progress'>";
-        modal+="<div class='progress-bar progress-bar-primary' role='progressbar' aria-valuenow='40' aria-valuemin='0' aria-valuemax='100' style='width: 40%'>";
-        modal+="<span class='sr-only'>20% Good (primary)</span>";
-        modal+="</div>";
-        modal+="</div>";
-        modal+="Can Be Improved";
-        modal+="<div class='progress'>";
-        modal+="<div class='progress-bar progress-bar-warning' role='progressbar' aria-valuenow='25' aria-valuemin='0' aria-valuemax='100' style='width: 25%'>";
-        modal+="<span class='sr-only'>60% Can Be Improved (warning)</span>";
-        modal+="</div>";
-        modal+="</div>";
-        modal+="bad";
-        modal+="<div class='progress'>";
-        modal+="<div class='progress-bar progress-bar-danger' role='progressbar' aria-valuenow='10' aria-valuemin='0' aria-valuemax='100' style='width: 10%'>";
-        modal+="<span class='sr-only'>80% Bad (danger)</span>";
-        modal+="</div>";
-        modal+="</div>";
-        modal+="No Comment";
-        modal+="<div class='progress'>";
-        modal+="<div class='progress-bar progress-bar-info' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%'>";
-        modal+="<span class='sr-only'>80% No Comment (info)</span>";
-        modal+="</div>";
-        modal+="</div>";
-        modal+="Overall";
-        modal+="<div class='progress'>";
-        modal+="<div class='progress-bar progress-bar-success' style='width: 20%'>";
-        modal+="<span class='sr-only'>35% Complete (success)</span>";
-        modal+="</div>";
-        modal+="<div class='progress-bar progress-bar-primary' style='width: 40%'>";
-        modal+="<span class='sr-only'>20% Complete (primary)</span>";
-        modal+="</div>";
-        modal+="<div class='progress-bar progress-bar-warning' style='width: 25%'>";
-        modal+="<span class='sr-only'>10% Complete (warning)</span>";
-        modal+="</div>";
-        modal+="<div class='progress-bar progress-bar-danger' style='width: 10%'>";
-        modal+="<span class='sr-only'>10% Complete (danger)</span>";
-        modal+="</div>";
-        modal+="<div class='progress-bar progress-bar-info' style='width: 5%'>";
-        modal+="<span class='sr-only'>10% Complete (info)</span>";
-        modal+="</div>";
-        modal+="</div>";
+        modal+="<button type='button' id='siguiente' class='btn btn-default' style='margin-left:20px'>Siguiente</button>";
         modal+="</div>";
         modal+="</div>";
         modal+="</div>";
@@ -349,10 +306,14 @@ function Encuestas() {
             type: "POST", // http method
             data: {votos: JSON.stringify(votos),
                     idEncuestaActual:idEncuestaActual},
+            dataType: 'json',
             async: false,
-            success: function () {
-                bootbox.alert("Gracias, usted ha finalizado la encuesta");
-                $('#vote').modal('toggle');
+            success: function (data) {
+                porcentajes=data;
+                numeroActualResultado=0;
+                $("#resultados").show();
+                $("#votar").prop( "disabled", true );
+                siguienteResultado();
             },
             // handle a non-successful response
             error: function (xhr, errmsg, err) {
@@ -363,4 +324,32 @@ function Encuestas() {
         }
         numPreguntaEncuesta++;
     }
+
+    function siguienteResultado(){
+            $("#barraResultados").empty();
+            $.each(questions[numeroActualResultado]['options'], function (index, option) {
+                barra = option['option'];
+                barra += "<div class='progress'>";
+                barra += "<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='20' aria-valuemin='0' aria-valuemax='100' style='width:" + porcentajes[option['pk']] + "%'>";
+                barra += "<span>" + porcentajes[option['pk']] + "%</span>";
+                barra += "</div>";
+                barra += "</div>";
+                $("#barraResultados").append(barra);
+            });
+
+
+    }
+
+    $(document.body).on('click', '#siguiente' ,function(){
+        numeroActualResultado++;
+        if (numeroActualResultado<questions.length) {
+            siguienteResultado();
+        }
+        else {
+            $('#vote').modal('toggle');
+            bootbox.alert("Gracias por hacer esta encuesta");
+        }
+    });
+
+
 }

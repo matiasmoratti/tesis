@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .forms import UserForm
+import math
 from .models import User, Comment, SpecificComment, UserActiveUrl, Poll, PollQuestion, PollQuestionOption, Chat, \
     ChatMessage
 from django.core import serializers
@@ -162,7 +163,7 @@ def get_user_pk(basic_auth):
 
 
 @csrf_exempt
-# @token_required
+@token_required
 def poll_list(request):
     if request.method == 'POST':
         poll_list = (list(Poll.objects.filter(url=request.POST['url']).values('date','description','pk','poll_user__username')))
@@ -170,7 +171,7 @@ def poll_list(request):
         return HttpResponse(poll_list_as_json, content_type='json')
 
 @csrf_exempt
-# @token_required
+@token_required
 def poll_details(request):
     idEncuesta = request.GET['idEncuesta']
     poll = Poll.objects.filter(pk=idEncuesta)
@@ -178,7 +179,7 @@ def poll_details(request):
     return HttpResponse(json.dumps(list(data)), content_type='application/json')
 
 @csrf_exempt
-# @token_required
+@token_required
 def poll_add(request):
     if request.method == 'POST':
         opciones = json.loads(request.POST['opciones'])
@@ -186,8 +187,8 @@ def poll_add(request):
         poll = Poll()
         poll.date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         poll.description = request.POST['descripcion']
-        poll.poll_user = User.objects.get(username='fermin')
-        # poll.poll_user = User.objects.get(pk=get_user_pk(request.META.get('HTTP_AUTHORIZATION')))
+        user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+        poll.poll_user = User.objects.get(pk=user_id)
         poll.url = request.POST['url']
         poll.save()
         numPregunta = 1
@@ -213,7 +214,7 @@ def poll_add(request):
 
 
 @csrf_exempt
-# @token_required
+@token_required
 def poll_vote(request):
     if request.method == 'POST':
         votes = json.loads(request.POST['votos'])
@@ -230,8 +231,16 @@ def poll_vote(request):
             for o in opciones:
                 total += o.votes
 
+            porcentajes = {}
+            for o in opciones:
+                num = (o.votes * 100) / float(total)
+                decimales = num - int(num)
+                if decimales >= 0.5:
+                    porcentajes[o.pk] = int(num) + 1
+                else:
+                    porcentajes[o.pk] = int(num)
 
-        return HttpResponse()
+        return HttpResponse(json.dumps(porcentajes), content_type='application/json')
 
 
 @csrf_exempt
