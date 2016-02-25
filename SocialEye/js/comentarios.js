@@ -108,7 +108,7 @@ function Comentarios() {
         var commentBox = "<div class='detailBox socialEye' id='comentariosGenerales'>";
         commentBox += "<div class='titleBox socialEye'>";
         commentBox += "<label class='socialEye'>Comentarios Generales</label>";
-        commentBox += "<button type='button' class='close socialEye' id='cerrarBoxGenerales' aria-hidden='true'>&times;</button>";
+        commentBox += "<button type='button' class='close botonCerrar socialEye' id='cerrarBoxGenerales' aria-hidden='true'>&times;</button>";
         commentBox += "</div>";
         commentBox += "<div class='actionBox socialEye'>";
         commentBox += "<ul id='listaComentariosGenerales' class='commentList socialEye'>";
@@ -212,7 +212,7 @@ function comentariosEspecificos() {
         var commentBox = "<div class='detailBox' id='comentario" + numeroComentario + "'>";
         commentBox += "<div class='titleBox'>";
         commentBox += "<label>" + textoComentario + "</label>";
-        commentBox += "<button type='button' class='close' id='cerrarComentario" + numeroComentario + "' aria-hidden='true'>&times;</button>";
+        commentBox += "<button type='button' class='close botonCerrar' id='cerrarComentario" + numeroComentario + "' aria-hidden='true'>&times;</button>";
         commentBox += "</div>";
         commentBox += "<div class='actionBox'>";
         commentBox += "<ul id='listaComentario" + numeroComentario + "' class='commentList'>";

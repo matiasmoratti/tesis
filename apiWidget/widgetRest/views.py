@@ -7,11 +7,11 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .forms import UserForm
-import math
 from .models import User, Comment, SpecificComment, UserActiveUrl, Poll, PollQuestion, PollQuestionOption, Chat, \
     ChatMessage
 from django.core import serializers
 import datetime
+import math
 from datetime import timedelta
 from django.core.exceptions import ObjectDoesNotExist
 from tokenapi.decorators import token_required

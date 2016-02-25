@@ -1,5 +1,5 @@
 #divEncuestas{
-            z-index: 9999999999999;
+            z-index: 9999999999;
             width:350px;
             position: fixed;
             margin: 0 auto;
@@ -15,12 +15,8 @@
    margin-left: 5px;
 }
 
-#modalEncuesta{
-    visibility: hidden;
-}
-
 #vote{
-    z-index: 99999999999999999999;
+    z-index: 99999999999;
 }
 
 .tituloEncuesta{
@@ -36,10 +32,8 @@
     background-color: #99CCFF;
 }
 
-#cerrarEncuestas{
-    position: absolute;
-    top: 0;
-    margin-right: 0;
+#encueste{
+    z-index: 999999999999;
 }
 
 .modal-body:not(.two-col) { padding:0px }
@@ -63,11 +57,63 @@
         margin-top: 5px;
         width: 100%;
     }
-
 }
 .modal-footer .btn+.btn {
     margin-left: 0px;
 }
 .progress {
     margin-right: 10px;
+}
+
+.inputEncuesta,.inputPregunta{
+    margin: 0 auto;
+    width: 85%;
+}
+
+#titEncuesta{
+    border-style: solid;
+    border-color: #337ab7;
+}
+
+#iconoPregunta{
+    font-size: 30px;
+}
+
+#iconoMas{
+    font-size: 20px;
+}
+
+#agregarPregunta{
+    float: right;
+}
+
+#agregarEncuesta{
+    margin: 0 auto;
+    width: 30%;
+    background: #337ab7;
+}
+
+#divBotonNuevaEncuesta{
+    text-align: center;
+}
+
+.bootbox.modal {
+    z-index: 9999999999999;
+}
+
+.botonCerrar{
+    position: absolute;
+    top: 0;
+    margin-right: 0;
+    width: 20px;
+    height: 20px;
+    left: 95%;
+}
+
+input[type="radio"]{
+    vertical-align: baseline;
+}
+
+.opcion{
+    font-size: 20px;
 }
