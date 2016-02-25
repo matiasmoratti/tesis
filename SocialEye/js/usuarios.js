@@ -47,7 +47,7 @@ function Usuarios() {
             var conversacion = "<div class='detailBox socialEye' id='chatBox'>";
 	        conversacion += "<div class='titleBox socialEye'>";
 	        conversacion += "<label class='socialEye'>Conversación con "+ $("#" +usuarioChatActual).attr('name') +" </label>";
-	        conversacion += "<button type='button' class='close socialEye' id='cerrarChatBox' aria-hidden='true'>&times;</button>";
+	        conversacion += "<button type='button' class='close botonCerrar socialEye' id='cerrarChatBox' aria-hidden='true'>&times;</button>";
 	        conversacion += "</div>";
 	        conversacion += "<div class='actionBox socialEye'>";
 	        conversacion += "<ul id='listaComentarios' class='commentList socialEye'>";
@@ -236,7 +236,7 @@ function Usuarios() {
         listaUsuarios = "<div class='list-group socialEye' id='listaUsuarios'>";
         listaUsuarios += "<div class='titleBox socialEye' id='tituloListaUsuarios'>";
         listaUsuarios += "<label class='socialEye'>Usuarios activos en: " + dominio + "</label>";
-        listaUsuarios += "<button type='button' class='close socialEye' id='cerrarListaUsuarios' aria-hidden='true'>&times;</button>";
+        listaUsuarios += "<button type='button' class='close botonCerrar socialEye' id='cerrarListaUsuarios' aria-hidden='true'>&times;</button>";
         listaUsuarios += "</div>";
         //Creo los objetos
         $.ajax({

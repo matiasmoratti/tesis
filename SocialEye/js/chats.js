@@ -73,7 +73,7 @@ function Chats() {
             var conversacion = "<div class='detailBox socialEye' id='chatBox'>";
             conversacion += "<div class='titleBox socialEye'>";
             conversacion += "<label class='socialEye'>Conversación con "+ $("#" +usuarioChatActual).attr('name') +" </label>";
-            conversacion += "<button type='button' class='close socialEye' id='cerrarChatBox' aria-hidden='true'>&times;</button>";
+            conversacion += "<button type='button' class='close botonCerrar socialEye' id='cerrarChatBox' aria-hidden='true'>&times;</button>";
             conversacion += "</div>";
             conversacion += "<div class='actionBox socialEye'>";
             conversacion += "<ul id='listaComentarios' class='commentList socialEye'>";
@@ -193,7 +193,7 @@ function Chats() {
         var listaChats = "<div class='list-group socialEye' id='chatsBox'>";
         listaChats += "<div class='titleBox socialEye' id='tituloListaChats'>";
         listaChats += "<label class='socialEye'>Chats: </label>";
-        listaChats += "<button type='button' class='close socialEye' id='cerrarChatsBox' aria-hidden='true'>&times;</button>";
+        listaChats += "<button type='button' class='close botonCerrar socialEye' id='cerrarChatsBox' aria-hidden='true'>&times;</button>";
         listaChats += "</div>";
         var otroUsuarioName;
         var otroUsuarioPk;
@@ -234,7 +234,7 @@ function Chats() {
         var chatBox = "<div class='detailBox socialEye' id='chatBox'>";
         chatBox += "<div class='titleBox socialEye'>";
         chatBox += "<label class='socialEye'>Conversación</label>";
-        chatBox += "<button type='button' class='close socialEye' id='cerrarChatBox' aria-hidden='true'>&times;</button>";
+        chatBox += "<button type='button' class='close botonCerrar socialEye' id='cerrarChatBox' aria-hidden='true'>&times;</button>";
         chatBox += "</div>";
         chatBox += "<div class='actionBox socialEye'>";
         chatBox += "<ul id='listaComentarios' class='commentList socialEye'>";
