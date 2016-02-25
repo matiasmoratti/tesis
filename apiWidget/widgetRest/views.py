@@ -225,13 +225,13 @@ def poll_vote(request):
         #Ahora voy a recuperar la encuesta de nuevo para armar los resultados para mostrarlos con la barra
         poll = Poll.objects.get(pk=request.POST['idEncuestaActual'])
         preguntas = poll.pollquestion_set.all()
+        porcentajes = {}
         for p in preguntas:
             opciones = p.pollquestionoption_set.all()
             total = 0
             for o in opciones:
                 total += o.votes
 
-            porcentajes = {}
             for o in opciones:
                 num = (o.votes * 100) / float(total)
                 decimales = num - int(num)
