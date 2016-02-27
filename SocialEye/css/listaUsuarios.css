@@ -17,3 +17,22 @@
 #tituloListaUsuarios{
     background-color: #99CCFF;
 }
+
+.divIconoUsuario{
+    float: left;
+}
+
+.iconsSpan{
+    width: 20px;
+    cursor: hand;
+}
+
+.usuarioChat,.usuarioCall{
+    cursor: hand;
+}
+
+#videoCall{
+    float: left;
+    width: 320;
+    height: 240;
+}

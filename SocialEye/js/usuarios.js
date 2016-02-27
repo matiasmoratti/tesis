@@ -4,7 +4,10 @@ function Usuarios() {
     var widgetUsuariosAbierto = false;
     var chatAbierto = false;
     var chatCreado = false;
+    var callAbierto = false;
+    var callCreado = false;
     var usuarioChatActual = null;
+    var usuarioCallActual = null;
     var interval = null;
     var debateBox;
     var listaUsuarios;
@@ -36,17 +39,18 @@ function Usuarios() {
     }
 
     function chatClick(e){
-    	if((!(chatCreado)) || (usuarioChatActual!=e.target.id)){
+    	var usuarioClick = e.target.id.substr(4, e.target.id.length);
+    	if((!(chatCreado)) || (usuarioChatActual!=usuarioClick)){
     		if(chatCreado){
     			$("#chatBox").remove();
     			chatCreado = false;
     		}
     		chatAbierto = true;
     		chatCreado = true;
-    		usuarioChatActual = e.target.id;
+    		usuarioChatActual = usuarioClick;
             var conversacion = "<div class='detailBox socialEye' id='chatBox'>";
 	        conversacion += "<div class='titleBox socialEye'>";
-	        conversacion += "<label class='socialEye'>Conversación con "+ $("#" +usuarioChatActual).attr('name') +" </label>";
+	        conversacion += "<label class='socialEye'>Conversación con "+ $("#chat" +usuarioChatActual).attr('name') +" </label>";
 	        conversacion += "<button type='button' class='close botonCerrar socialEye' id='cerrarChatBox' aria-hidden='true'>&times;</button>";
 	        conversacion += "</div>";
 	        conversacion += "<div class='actionBox socialEye'>";
@@ -162,6 +166,26 @@ function Usuarios() {
 
     }
 
+    function callClick(e){
+    	var usuarioClick = e.target.id.substr(3, e.target.id.length);
+    	if((!(callCreado)) || (usuarioCallActual!=usuarioClick)){
+    		if(callCreado){
+    			$("#chatBox").remove();
+    			callCreado = false;
+            }
+	    	callCreado = true;
+	    	callAbierto = true;
+	    	usuarioCallActual = usuarioClick;
+	        var llamada = "<div class='detailBox socialEye' id='callBox'>";
+	        llamada += "<video id='videoCall'></video>";
+	        llamada += "</div>";
+
+
+			
+    	}
+
+    }
+
     function crearWidgetUsuarios(unWidget) {
         $("body").append(crearListaDeUsuarios());
         //debate.attr("style", "text-decoration: none; color: #fff; background: rgba(255,255,255,0.2);  border-left: red 2px solid;");
@@ -175,6 +199,10 @@ function Usuarios() {
       		this.onclick = chatClick;
       	});
 
+      	$(".usuarioCall").each(function () {
+      		this.onclick = callClick;
+      	});
+
         widgetUsuariosCreado = true;
         widgetUsuariosAbierto = true;
         var dominio = window.location.hostname;
@@ -185,11 +213,13 @@ function Usuarios() {
                 dataType: 'json',
                 data: {url: dominio},
                 success: function (data) {
-                    $('.usuarioChat').remove();
+                    $('.divUsuario').remove();
                     $.each(data, function (i, item) {
                         if (item.user__pk!=localStorage['user']){
-                            $('#listaUsuarios').append("<button type='button' id="+ item.user__pk +" name="+ item.user__username +" class='list-group-item usuarioChat socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + "</button>");
-                       		$("#"+item.user__pk).on('click', chatClick);
+                            $('#listaUsuarios').append("<div class='list-group-item socialEye divUsuario'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user socialEye'></i></span>" + item.user__username + "&nbsp;&nbsp; <span class='iconsSpan'><i id=chat"+ item.user__pk +" name="+item.user__username+" class='fa fa-weixin usuarioChat'> </i> </span><span class='iconsSpan'> <i id=call"+ item.user__pk +" class='fa fa-video-camera usuarioCall'> </i> </span></div>");
+                       		$("#chat"+item.user__pk).on('click', chatClick);
+                       		$("#call"+item.user__pk).on('click', callClick);
+
                         }
                     })
                 }
@@ -212,10 +242,10 @@ function Usuarios() {
                 dataType: 'json',
                 data: {url: dominio},
                 success: function (data) {
-                    $('.usuarioChat').remove();
+                    $('.divUsuario').remove();
                     $.each(data, function (i, item) {
                         if (item.user__pk!=localStorage['user'])
-                            $('#listaUsuarios').append("<button type='button' id="+ item.user__pk +" name="+ item.user__username +" class='list-group-item usuarioChat socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + "</button>");
+                            $('#listaUsuarios').append("<div class='list-group-item socialEye divUsuario'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user socialEye'></i></span>" + item.user__username + "&nbsp;&nbsp; <span class='iconsSpan'><i id=chat"+ item.user__pk +" name="+item.user__username+" class='fa fa-weixin usuarioChat'> </i> </span><span class='iconsSpan'> <i id=call"+ item.user__pk +" class='fa fa-video-camera usuarioCall'> </i> </span></div>");
                     });
                 }
 
@@ -251,7 +281,7 @@ function Usuarios() {
             success: function (data) {
                 $.each(data, function (i, item) {
                     if (item.user__pk!=localStorage['user'])
-                        listaUsuarios += "<button type='button' id="+ item.user__pk +" name="+ item.user__username +" class='list-group-item usuarioChat socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + "</button>";
+                        listaUsuarios += "<div class='list-group-item socialEye divUsuario'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user socialEye'></i></span>" + item.user__username + "&nbsp;&nbsp; <span class='iconsSpan'><i id=chat"+ item.user__pk +" name="+item.user__username+" class='fa fa-weixin usuarioChat'> </i> </span><span class='iconsSpan'> <i id=call"+ item.user__pk +" class='fa fa-video-camera usuarioCall'> </i> </span></div>";
                 });
 
             },

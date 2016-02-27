@@ -73,7 +73,7 @@ function Chats() {
             var conversacion = "<div class='detailBox socialEye' id='chatBox'>";
             conversacion += "<div class='titleBox socialEye'>";
             conversacion += "<label class='socialEye'>Conversación con "+ $("#" +usuarioChatActual).attr('name') +" </label>";
-            conversacion += "<button type='button' class='close botonCerrar socialEye' id='cerrarChatBox' aria-hidden='true'>&times;</button>";
+            conversacion += "<button type='button' class='close botonCerrar socialEye' id='cerrarChatBox' aria-hidden='true'>&times;</backgroundutton>";
             conversacion += "</div>";
             conversacion += "<div class='actionBox socialEye'>";
             conversacion += "<ul id='listaComentarios' class='commentList socialEye'>";
