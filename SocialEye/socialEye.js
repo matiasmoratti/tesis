@@ -7,31 +7,31 @@
 // @match      http://*/*
 // @noframes
 
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/jquery-2.1.4.min.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/jquery-ui.min.js
-// @resource   jqueryUICSS file:///home/matias/Tesis/ambiente/bin/SocialEye/css/jquery-ui.min.css
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/bootstrap/js/bootstrap.min.js
-// @resource   bootstrapCSS file:///home/matias/Tesis/ambiente/bin/SocialEye/bootstrap/css/bootstrap.min.css
-// @resource   bootstrapThemeCSS file:///home/matias/Tesis/ambiente/bin/SocialEye/bootstrap/css/bootstrap-theme.min.css
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/sidebar_menu.js
-// @resource   sidebar file:///home/matias/Tesis/ambiente/bin/SocialEye/css/simple-sidebar.css
-// @resource   login file:///home/matias/Tesis/ambiente/bin/SocialEye/css/login.css
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/bootbox.min.js
-// @resource   commentBox file:///home/matias/Tesis/ambiente/bin/SocialEye/css/commentBox.css
-// @resource   listaUsuarios file:///home/matias/Tesis/ambiente/bin/SocialEye/css/listaUsuarios.css
-// @resource   encuestas file:///home/matias/Tesis/ambiente/bin/SocialEye/css/encuestas.css
-// @resource   chats file:///home/matias/Tesis/ambiente/bin/SocialEye/css/chats.css
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/comentarios.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/usuarios.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/encuestas.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/chats.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/adapter.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/common.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/mainRTC.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/ga.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/llamada.js
-// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/jquery.gracefulWebSocket.js
-// @resource   video file:///home/matias/Tesis/ambiente/bin/SocialEye/css/main.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery-2.1.4.min.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery-ui.min.js
+// @resource   jqueryUICSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/jquery-ui.min.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/js/bootstrap.min.js
+// @resource   bootstrapCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap.min.css
+// @resource   bootstrapThemeCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap-theme.min.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/sidebar_menu.js
+// @resource   sidebar file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/simple-sidebar.css
+// @resource   login file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/login.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/bootbox.min.js
+// @resource   commentBox file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/commentBox.css
+// @resource   listaUsuarios file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/listaUsuarios.css
+// @resource   encuestas file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/encuestas.css
+// @require  file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/comentarios.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/usuarios.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/encuestas.js
+// @resource   chats file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/chats.css
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/chats.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery.gracefulWebSocket.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/adapter.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/common.js
+// @require  file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/mainRTC.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/ga.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/llamada.js
+// @resource   video file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/main.css
 // ==/UserScript==
 
 function Manager() {
@@ -99,7 +99,7 @@ function Manager() {
                     });
                     $("#loginButton").click(function () {
                         $.ajax({
-                            url: "http://127.0.0.1:8000/widgetRest/token/new.json", // the endpoint
+                            url: "https://127.0.0.1:8000/widgetRest/token/new.json", // the endpoint
                             type: "POST", // http method
                             data: {
                                 username: $("#user").val(),
@@ -133,7 +133,7 @@ function Manager() {
                             });
                             $("#registrationButton").click(function () {
                                 $.ajax({
-                                    url: "http://127.0.0.1:8000/widgetRest/registration/", // the endpoint
+                                    url: "https://127.0.0.1:8000/widgetRest/registration/", // the endpoint
                                     type: "POST", // http method
                                     async: false,
                                     data: {
@@ -225,7 +225,7 @@ function Manager() {
     function deleteSession() {
         var dominio = window.location.hostname;
         $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/logout/", // the endpoint
+            url: "https://127.0.0.1:8000/widgetRest/logout/", // the endpoint
             type: "POST", // http method
             data: {
                 url: dominio,

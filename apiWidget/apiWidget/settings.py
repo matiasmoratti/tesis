@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'sslserver',
     'tokenapi',
     'widgetRest.apps.WidgetrestConfig',
     'corsheaders',

@@ -45,7 +45,7 @@ function Comentarios() {
                 var url = window.location.href;
                 //Creo los objetos
                 $.ajax({
-                    url: "http://127.0.0.1:8000/widgetRest/comments/", // the endpoint
+                    url: "https://127.0.0.1:8000/widgetRest/comments/", // the endpoint
                     type: "POST", // http method
                     data: {
                         comment_text: $("#textoComentarioGeneral").val(),
@@ -114,7 +114,7 @@ function Comentarios() {
         commentBox += "<ul id='listaComentariosGenerales' class='commentList socialEye'>";
         //Creo los objetos
         $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/comments/?comment_url=" + url, // the endpoint
+            url: "https://127.0.0.1:8000/widgetRest/comments/?comment_url=" + url, // the endpoint
             type: "GET", // http method
             dataType: 'json',
             async: false,
@@ -219,7 +219,7 @@ function comentariosEspecificos() {
 
         //Creo los objetos
         $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/specific_comments/?comment_url=" + url + "&url_tag=" + tag, // the endpoint
+            url: "https://127.0.0.1:8000/widgetRest/specific_comments/?comment_url=" + url + "&url_tag=" + tag, // the endpoint
             type: "GET", // http method
             dataType: 'json',
             async: false,
@@ -357,7 +357,7 @@ function comentariosEspecificos() {
                 var url = window.location.href;
                 //Creo los objetos
                 $.ajax({
-                    url: "http://127.0.0.1:8000/widgetRest/specific_comments/", // the endpoint
+                    url: "https://127.0.0.1:8000/widgetRest/specific_comments/", // the endpoint
                     type: "POST", // http method
                     data: {
                         comment_text: $("#textoComentario" + numComen).val(),

@@ -79,7 +79,7 @@ function Chats() {
             conversacion += "<ul id='listaComentarios' class='commentList socialEye'>";
             var chatId;
             $.ajax({
-                url: "http://127.0.0.1:8000/widgetRest/getChat/", // the endpoint
+                url: "https://127.0.0.1:8000/widgetRest/getChat/", // the endpoint
                 type: "POST", // http method
                 data: {
                     usuario2: usuarioChatActual,
@@ -150,7 +150,7 @@ function Chats() {
                     chat.send(mensaje);
 
                     $.ajax({
-                        url: "http://127.0.0.1:8000/widgetRest/saveMessage/", // the endpoint
+                        url: "https://127.0.0.1:8000/widgetRest/saveMessage/", // the endpoint
                         type: "POST", // http method
                         data: {
                             usuario2: usuarioChatActual,
@@ -198,7 +198,7 @@ function Chats() {
         var otroUsuarioName;
         var otroUsuarioPk;
         $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/chats/", // the endpoint
+            url: "https://127.0.0.1:8000/widgetRest/chats/", // the endpoint
             type: "GET", // http method
             dataType: 'json',
             async: false,
@@ -240,7 +240,7 @@ function Chats() {
         chatBox += "<ul id='listaComentarios' class='commentList socialEye'>";
         //Creo los objetos
         $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/comments/?comment_url=" + url, // the endpoint
+            url: "https://127.0.0.1:8000/widgetRest/comments/?comment_url=" + url, // the endpoint
             type: "GET", // http method
             dataType: 'json',
             async: false,

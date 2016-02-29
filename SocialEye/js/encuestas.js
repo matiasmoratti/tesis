@@ -74,7 +74,7 @@ function Encuestas() {
         listaEncuestas += "<ul id='listaEncuestas' class='commentList socialEye'>";
         //Creo los objetos
         $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/poll_list/", // the endpoint
+            url: "https://127.0.0.1:8000/widgetRest/poll_list/", // the endpoint
             type: "POST", // http method
             data: {url: dominio},
             dataType: 'json',
@@ -100,7 +100,7 @@ function Encuestas() {
     $(document.body).on('click', '.filaEncuesta' ,function(){
             idEncuestaActual=this.id;
              $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/poll_details/", // the endpoint
+            url: "https://127.0.0.1:8000/widgetRest/poll_details/", // the endpoint
             type: "GET", // http method
             data: {idEncuesta: idEncuestaActual},
             dataType: 'json',
@@ -210,7 +210,7 @@ function Encuestas() {
         });
 
         $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/poll_add/", // the endpoint
+            url: "https://127.0.0.1:8000/widgetRest/poll_add/", // the endpoint
             type: "POST", // http method
             data: {
                 preguntas: JSON.stringify(preguntas),
@@ -317,7 +317,7 @@ function Encuestas() {
         }
         else {
             $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/poll_vote/", // the endpoint
+            url: "https://127.0.0.1:8000/widgetRest/poll_vote/", // the endpoint
             type: "POST", // http method
             data: {votos: JSON.stringify(votos),
                     idEncuestaActual:idEncuestaActual},

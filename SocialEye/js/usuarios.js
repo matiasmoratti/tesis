@@ -57,7 +57,7 @@ function Usuarios() {
 	        conversacion += "<ul id='listaComentarios' class='commentList socialEye'>";
         	var chatId;
         	$.ajax({
-	            url: "http://127.0.0.1:8000/widgetRest/getChat/", // the endpoint
+	            url: "https://127.0.0.1:8000/widgetRest/getChat/", // the endpoint
 	            type: "POST", // http method
 	            data: {
 	            	usuario2: usuarioChatActual,
@@ -128,7 +128,7 @@ function Usuarios() {
     		        chat.send(mensaje);
 
     		        $.ajax({
-    		            url: "http://127.0.0.1:8000/widgetRest/saveMessage/", // the endpoint
+    		            url: "https://127.0.0.1:8000/widgetRest/saveMessage/", // the endpoint
     		            type: "POST", // http method
     		            data: {
     		            	usuario2: usuarioChatActual,
@@ -209,7 +209,7 @@ function Usuarios() {
         interval = setInterval(function () {
             jQuery.ajax({
                 type: "POST",
-                url: "http://127.0.0.1:8000/widgetRest/user_ping/",
+                url: "https://127.0.0.1:8000/widgetRest/user_ping/",
                 dataType: 'json',
                 data: {url: dominio},
                 success: function (data) {
@@ -238,7 +238,7 @@ function Usuarios() {
         interval = setInterval(function () {
             jQuery.ajax({
                 type: "POST",
-                url: "http://127.0.0.1:8000/widgetRest/user_ping/",
+                url: "https://127.0.0.1:8000/widgetRest/user_ping/",
                 dataType: 'json',
                 data: {url: dominio},
                 success: function (data) {
@@ -270,7 +270,7 @@ function Usuarios() {
         listaUsuarios += "</div>";
         //Creo los objetos
         $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/user_ping/", // the endpoint
+            url: "https://127.0.0.1:8000/widgetRest/user_ping/", // the endpoint
             type: "POST", // http method
             data: { url: dominio},
             dataType: 'json',
