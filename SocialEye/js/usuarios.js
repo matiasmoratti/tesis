@@ -3,12 +3,15 @@ function Usuarios() {
     var widgetUsuariosCreado = false;
     var widgetUsuariosAbierto = false;
     var chatAbierto = false;
-    var chatCreado = false;
     var callAbierto = false;
     var callCreado = false;
+    var userConnected = false;
     var usuarioChatActual = null;
     var usuarioCallActual = null;
     var interval = null;
+    var roomEspecifico = null;
+    var enGeneral = false;
+    var llamadaEstablecida = false;
     var debateBox;
     var listaUsuarios;
     this.iniciarWidgetUsuarios = function () {
@@ -39,23 +42,24 @@ function Usuarios() {
     }
 
     function chatClick(e){
-    	var usuarioClick = e.target.id.substr(4, e.target.id.length);
-    	if((!(chatCreado)) || (usuarioChatActual!=usuarioClick)){
-    		if(chatCreado){
-    			$("#chatBox").remove();
-    			chatCreado = false;
+    	mostrarChat(e.target.id);
+    }
+
+
+    function mostrarChat(userId){
+    		chatAbierto = true; 
+    		enGeneral = false;
+    		usuarioChatActual = userId;
+    		if($("#"+usuarioChatActual+ " label").is(":visible")){
+    			$("#"+usuarioChatActual+ " label").hide();
     		}
-    		chatAbierto = true;
-    		chatCreado = true;
-    		usuarioChatActual = usuarioClick;
             var conversacion = "<div class='detailBox socialEye' id='chatBox'>";
 	        conversacion += "<div class='titleBox socialEye'>";
-	        conversacion += "<label class='socialEye'>Conversación con "+ $("#chat" +usuarioChatActual).attr('name') +" </label>";
+	        conversacion += "<label class='socialEye'>Conversación con "+ $("#" +usuarioChatActual).attr('name') +" </label>";
 	        conversacion += "<button type='button' class='close botonCerrar socialEye' id='cerrarChatBox' aria-hidden='true'>&times;</button>";
 	        conversacion += "</div>";
-	        conversacion += "<div class='actionBox socialEye'>";
+	        conversacion += "<div id='conversacionBox' class='actionBox socialEye'>";
 	        conversacion += "<ul id='listaComentarios' class='commentList socialEye'>";
-        	var chatId;
         	$.ajax({
 	            url: "https://127.0.0.1:8000/widgetRest/getChat/", // the endpoint
 	            type: "POST", // http method
@@ -68,7 +72,7 @@ function Usuarios() {
 	                $.each(data, function (i, item) {
 	                    conversacion += "<li class='socialEye'><div class='commentText socialEye'>";
 	                    conversacion += "<span class='date sub-text socialEye'>" + item.fields.userName + " dijo: </span>";
-	                    conversacion += "<p class='socialEye'>" + item.fields.text+ "</p>";
+	                    conversacion += "<div class='contenidoComentario'>" + item.fields.text+ "</div>";
 	                    conversacion += "</div>";
 	                    conversacion += "</li>";
 	                });
@@ -84,33 +88,87 @@ function Usuarios() {
 
 	        conversacion += "</ul>";
 	        conversacion += "<form class='form-inline socialEye' role='form'>";
+	        conversacion += "<div>";
 	        conversacion += "<textarea class='form-control socialEye' id='textoComentarioChat' type='text' placeholder='Escribe un comentario' ></textarea>";
+	        conversacion += "<a class='socialEye' title='Realizar videollamada'><span class='socialEye'><i id=call"+ usuarioChatActual +" class='fa fa-video-camera botonLlamada'></i></span></a>";
+	        conversacion += "</div>";
 	        conversacion += "</form>";
 	        conversacion += "</div>";
+	        conversacion += "<div id='videoCall'>"
+	        conversacion += "<div class='videoContainer'>";
+            conversacion += "<video id='localVideo' oncontextmenu='return false;'></video>";
+			conversacion += "</div>";
+        	conversacion += "<div id='remotes'></div>";
+        	conversacion += "</div>";
 	        conversacion += "</div>";
 	        $("body").append(conversacion);
             $('#listaComentarios').scrollTop( $('#listaComentarios')[0].scrollHeight);
 
+			webRTC.leaveRoom();
 
-	        window.chat = {};
-			//Instantiate a websocket client connected to our server
-			chat.ws = $.gracefulWebSocket("ws://127.0.0.1:1025/ws");
-			 
-			//Basic message send
-			chat.send = function (message) {
-			  chat.ws.send(message);
-			}
-			 
-			//Basic message receive
-			chat.ws.onmessage = function (event) {
-                if(usuarioChatActual == e.target.id){
-    				var messageFromServer = event.data;
-                    $("#listaComentarios").append(messageFromServer);
-                    $('#listaComentarios').animate({scrollTop: $('#listaComentarios')[0].scrollHeight});
+			//ambos deben entrar al mismo room. Para definir el nombre del mismo hago que calculen cual es el id mayor,
+        	//ese va primero en el nombre
+        	if(usuarioChatActual > localStorage['user'])
+        		roomEspecifico = 'chatSocialEye_' + usuarioChatActual + '_' + localStorage['user'];
+        	else
+        		roomEspecifico = 'chatSocialEye_' + localStorage['user'] + '_' + usuarioChatActual;
+
+        	//Modifico el comportamiento del onMessage ya que estoy dentro de un room específico
+        	webRTC.connection.on('message', function(data){
+        		if(!(enGeneral)){
+        			if(data.type === 'chat'){
+                    	  $("#listaComentarios").append(data.payload.message);
+                    	  $('#listaComentarios').animate({scrollTop: $('#listaComentarios')[0].scrollHeight});
+                    }
+                    else{
+                    	if(data.type === 'call'){
+                    		crearBoxLlamada(data, false);
+                   		}
+                   		else{
+                   			if((data.type === 'offer') || (data.type === 'estoy')){
+                   				userConnected = true;
+                   				if(data.type === 'offer'){
+                   					webRTC.sendToAll('estoy', {});
+                   				}
+                   			}
+                   			else{
+                   				if(data.type === 'callAnswer'){
+                   					if(data.payload.answer == 'aceptada'){
+                   						$("#videoCall").show();
+                   						document.getElementById("chatBox").style.width = "50%";
+                   						$("#call"+ usuarioChatActual).prop('onclick',null).off('click');
+                   						$("#call"+ usuarioChatActual).on('click', colgarClick);
+    									webRTC.startLocalVideo();
+                   					}
+                   					$("#listaComentarios").append(data.payload.respuesta);
+                    				$('#listaComentarios').animate({scrollTop: $('#listaComentarios')[0].scrollHeight});
+                   				}
+                   				else{
+                   					if(data.type === 'colgar'){
+                   						terminarLlamada();
+                   					}
+                   					else{
+                   						if(data.type === 'salir'){
+                   							userConnected = false;
+                   							if($("#videoCall").is(":visible")){
+                   								terminarLlamada();
+                   							}
+                   						}
+                   					}
+                   				}
+                   			}
+                   		}
+                    }
                 }
-			};
+            });
 
-			var textoComentarioChat = document.getElementById("textoComentarioChat");
+            cargarRTC();
+
+        	webRTC.joinRoom(roomEspecifico);
+
+        	$("#call"+ usuarioChatActual).on('click', callClick);
+
+        	var textoComentarioChat = document.getElementById("textoComentarioChat");
 		    textoComentarioChat.addEventListener("keydown", function(e) {
 		      if (!e) { var e = window.event; }
 		 
@@ -122,10 +180,35 @@ function Usuarios() {
     		        var userName = localStorage['userName'];
     			    var mensaje = "<li class='socialEye'><div class='commentText socialEye'>";
     	            mensaje += "<span class='date sub-text socialEye'>" + userName + " dijo: </span>";
-    	            mensaje += "<p class='socialEye'>" + textoComentarioChat.value + "</p>";
+    	            mensaje += "<div class='contenidoComentario'>" + textoComentarioChat.value + "</div>";
     	            mensaje += "</div>";
     	            mensaje += "</li>";
-    		        chat.send(mensaje);
+    	            $("#listaComentarios").append(mensaje);
+                    $('#listaComentarios').animate({scrollTop: $('#listaComentarios')[0].scrollHeight});
+
+                    if(userConnected){
+                    	webRTC.sendToAll('chat', {message: mensaje});
+                    }
+                    else{
+                    	webRTC.leaveRoom();
+		    			webRTC.joinRoom('socialEyeGeneral');
+		    			enGeneral = true;
+		    			setTimeout(function(){webRTC.sendToAll('chat', {idMensajeado: usuarioChatActual, idMensajero: localStorage['user']});}, 1000);
+
+
+
+				        var roomName;
+			        	if(usuarioChatActual > localStorage['user'])
+			        		roomName = 'chatSocialEye_' + usuarioChatActual + '_' + localStorage['user'];
+			        	else
+			        		roomName = 'chatSocialEye_' + localStorage['user'] + '_' + usuarioChatActual;
+
+			        	enGeneral = false;
+			        	webRTC.joinRoom(roomName);
+
+
+                    }
+    		        
 
     		        $.ajax({
     		            url: "https://127.0.0.1:8000/widgetRest/saveMessage/", // the endpoint
@@ -148,43 +231,239 @@ function Usuarios() {
     	        	});
 
     				textoComentarioChat.value="";
+
                 }
 
 		      }
-		    }, false); 
+		    }, false);
 
 		    $("#cerrarChatBox").on("click", function (event) {
-	            $("#chatBox").hide();
+		    	if($("#videoCall").is(":visible")){
+                   	terminarLlamada();
+                }
+	            $("#chatBox").remove();
 	            chatAbierto = false;
+	            webRTC.sendToAll('salir', {});
+	            webRTC.leaveRoom();
+    			webRTC.joinRoom('socialEyeGeneral');
+    			enGeneral = true;
         	}); 
-        }
-        else{
-        	$("#chatBox").show();
-	        chatAbierto = true;
-        }
-
-
+        
     }
 
     function callClick(e){
-    	var usuarioClick = e.target.id.substr(3, e.target.id.length);
-    	if((!(callCreado)) || (usuarioCallActual!=usuarioClick)){
-    		if(callCreado){
-    			$("#chatBox").remove();
-    			callCreado = false;
-            }
-	    	callCreado = true;
-	    	callAbierto = true;
-	    	usuarioCallActual = usuarioClick;
-	        var llamada = "<div class='detailBox socialEye' id='callBox'>";
-	        llamada += "<video id='videoCall'></video>";
-	        llamada += "</div>";
+    		var usuarioCallActual = e.target.id.substr(4, e.target.id.length);
 
+    		var textoLlamada = "<li class='socialEye'><div class='commentText socialEye'>";
+			textoLlamada += "<span class='date sub-text socialEye'>" + localStorage['userName'] + " solicitando llamada... </span>";
+			textoLlamada += "</div>";
+			textoLlamada += "</li>";
+			$("#listaComentarios").append(textoLlamada);
+			$('#listaComentarios').animate({scrollTop: $('#listaComentarios')[0].scrollHeight});
 
+    		if(userConnected){
+    			webRTC.sendToAll('call', {idLlamado: usuarioCallActual, idLlamante: localStorage['user'], userNameLlamante: localStorage['userName']});
+    		}
+    		else{
+    			webRTC.leaveRoom();
+    			webRTC.joinRoom('socialEyeGeneral');
+    			setTimeout(function(){webRTC.sendToAll('call', {idLlamado: usuarioCallActual, idLlamante: localStorage['user'], userNameLlamante: localStorage['userName']});}, 1000);
+    			webRTC.leaveRoom();
+		        webRTC.joinRoom(roomEspecifico);
+    		}
 			
-    	}
+    }
+
+    function colgarClick(e){
+    		terminarLlamada();
+            webRTC.sendToAll('colgar', {});
 
     }
+
+    function terminarLlamada(){
+    		$("#videoCall").hide();
+            document.getElementById("chatBox").style.width = "400px";
+            $("#call"+ usuarioChatActual).prop('onclick',null).off('click');
+            $("#call"+ usuarioChatActual).on('click', callClick);
+            llamadaEstablecida = false;
+    }
+
+    function crearBoxLlamada(data, responde){
+            var mensajeRespuesta = "<li class='socialEye'><div class='commentText socialEye'>";
+            bootbox.dialog({
+                message: "¿Contestar a la videollamada?",
+				title: data.payload.userNameLlamante + " llamando...",
+				buttons: {
+				success: {
+				label: "Contestar",
+				className: "btn-success",
+			      callback: function() {
+			      	if(responde){
+			      		mostrarChat(data.payload.idLlamante);
+			      	}
+			        document.getElementById("chatBox").style.width = "50%";
+			        $("#videoCall").show();
+			        $("#call"+ usuarioChatActual).prop('onclick',null).off('click');
+					$("#call"+ usuarioChatActual).on('click', colgarClick);
+					mensajeRespuesta += "<span class='date sub-text socialEye'> Conexión de videollamada establecida </span>";
+					mensajeRespuesta += "</div>";
+					mensajeRespuesta += "</li>";
+			        setTimeout(function(){webRTC.sendToAll('callAnswer', {answer: 'aceptada', respuesta: mensajeRespuesta});}, 3000);
+			        webRTC.startLocalVideo(); 
+			        $("#listaComentarios").append(mensajeRespuesta);
+					$('#listaComentarios').animate({scrollTop: $('#listaComentarios')[0].scrollHeight});
+  					}
+			    },
+			    danger: {
+			      label: "No contestar",
+			      className: "btn-danger",
+			      callback: function() {
+					mensajeRespuesta += "<span class='date sub-text socialEye'>" + localStorage['userName'] + " llamada rechazada </span>";
+					mensajeRespuesta += "</div>";
+					mensajeRespuesta += "</li>";
+			        webRTC.sendToAll('callAnswer', {answer: 'rechazada', respuesta: mensajeRespuesta});
+			        $("#listaComentarios").append(mensajeRespuesta);
+			        if(!(responde)){
+			        	$('#listaComentarios').animate({scrollTop: $('#listaComentarios')[0].scrollHeight});
+			        }
+			      }
+			    }
+			  }
+			});
+    }
+
+    function iniciarWebRTC(){
+    		// create our webrtc connection
+        	webRTC = new SimpleWebRTC({
+        		// the id/element dom element that will hold "our" video
+	            localVideoEl: 'localVideo',
+	            // the id/element dom element that will hold remote videos
+	            remoteVideosEl: '',
+	            // immediately ask for camera access
+	            autoRequestMedia: true,
+	            debug: false,
+	            detectSpeakingEvents: true,
+	            autoAdjustMic: false
+        	});
+    	 	//Uniendose al room general
+
+    	 	var idUsuario = localStorage['user'];
+
+            webRTC.joinRoom('socialEyeGeneral');
+
+            enGeneral = true;
+
+            webRTC.connection.on('message', function(data){
+            			if(enGeneral){
+	            			if(data.type === 'call'){
+	            				if(data.payload.idLlamado == idUsuario){
+	            					crearBoxLlamada(data, true);
+	            				}                         	
+	                   		}
+	                   		else{
+	                   			if(data.type === 'chat'){	                   				
+	                   				if(data.payload.idMensajeado == idUsuario){
+	                   					$("#"+data.payload.idMensajero+ " label").show();
+	                   				}
+	                   			}
+	                   		}
+                   		}
+            });
+            
+    }
+    function cargarRTC(){
+
+            // we got access to the camera
+            webRTC.on('localStream', function (stream) {
+                var button = document.querySelector('form>button');
+                if (button) button.removeAttribute('disabled');
+            });
+            // we did not get access to the camera
+            webRTC.on('localMediaError', function (err) {
+            	console.log("hubo un error");
+            });
+
+            // local screen obtained
+            webRTC.on('localScreenAdded', function (video) {
+            	console.log("agrego video local");
+                video.onclick = function () {
+                    video.style.width = video.videoWidth + 'px';
+                    video.style.height = video.videoHeight + 'px';
+                };
+                document.getElementById('localScreenContainer').appendChild(video);
+                $('#localScreenContainer').show();
+            });
+            // local screen removed
+            webRTC.on('localScreenRemoved', function (video) {
+            	console.log("remuevo local");
+                document.getElementById('localScreenContainer').removeChild(video);
+                $('#localScreenContainer').hide();
+            });
+
+            // a peer video has been added
+            webRTC.on('videoAdded', function (video, peer) {
+                if((!(llamadaEstablecida)) && (!(enGeneral))){
+	                console.log('video added', peer);
+	                var remotes = document.getElementById('remotes');
+	                if (remotes) {
+	                    var container = document.createElement('div');
+	                    container.className = 'videoContainer';
+	                    container.id = 'container_' + webRTC.getDomId(peer);
+	                    container.appendChild(video);
+
+	                    // suppress contextmenu
+	                    video.oncontextmenu = function () { return false; };
+
+	                    // resize the video on click
+	                    video.onclick = function () {
+	                        container.style.width = video.videoWidth + 'px';
+	                        container.style.height = video.videoHeight + 'px';
+	                    };
+
+	                    // show the ice connection state
+	                    if (peer && peer.pc) {
+	                        var connstate = document.createElement('div');
+	                        connstate.className = 'connectionstate';
+	                        container.appendChild(connstate);
+	                    }
+	                    remotes.appendChild(container);
+	                }
+	                llamadaEstablecida = true;
+            	}
+            });
+            // a peer was removed
+            webRTC.on('videoRemoved', function (video, peer) {
+                console.log('video removed ', peer);
+                var remotes = document.getElementById('remotes');
+                var el = document.getElementById(peer ? 'container_' + webRTC.getDomId(peer) : 'localScreenContainer');
+                if (remotes && el) {
+                    remotes.removeChild(el);
+                }
+            });
+
+            // local p2p/ice failure
+            webRTC.on('iceFailed', function (peer) {
+                var connstate = document.querySelector('#container_' + webRTC.getDomId(peer) + ' .connectionstate');
+                console.log('local fail', connstate);
+                if (connstate) {
+                    connstate.innerText = 'Connection failed.';
+                    fileinput.disabled = 'disabled';
+                }
+            });
+
+            // remote p2p/ice failure
+            webRTC.on('connectivityError', function (peer) {
+                var connstate = document.querySelector('#container_' + webRTC.getDomId(peer) + ' .connectionstate');
+                console.log('remote fail', connstate);
+                if (connstate) {
+                    connstate.innerText = 'Connection failed.';
+                    fileinput.disabled = 'disabled';
+                }
+            });
+    	 	
+    }
+
+
 
     function crearWidgetUsuarios(unWidget) {
         $("body").append(crearListaDeUsuarios());
@@ -198,10 +477,9 @@ function Usuarios() {
       	$(".usuarioChat").each(function () {
       		this.onclick = chatClick;
       	});
-
-      	$(".usuarioCall").each(function () {
-      		this.onclick = callClick;
-      	});
+        
+        var webRTC;
+        iniciarWebRTC();
 
         widgetUsuariosCreado = true;
         widgetUsuariosAbierto = true;
@@ -213,13 +491,11 @@ function Usuarios() {
                 dataType: 'json',
                 data: {url: dominio},
                 success: function (data) {
-                    $('.divUsuario').remove();
+                    $('.usuarioChat').remove();
                     $.each(data, function (i, item) {
                         if (item.user__pk!=localStorage['user']){
-                            $('#listaUsuarios').append("<div class='list-group-item socialEye divUsuario'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user socialEye'></i></span>" + item.user__username + "&nbsp;&nbsp; <span class='iconsSpan'><i id=chat"+ item.user__pk +" name="+item.user__username+" class='fa fa-weixin usuarioChat'> </i> </span><span class='iconsSpan'> <i id=call"+ item.user__pk +" class='fa fa-video-camera usuarioCall'> </i> </span></div>");
-                       		$("#chat"+item.user__pk).on('click', chatClick);
-                       		$("#call"+item.user__pk).on('click', callClick);
-
+							$('#listaUsuarios').append("<button type='button' id="+ item.user__pk +" name="+ item.user__username +" class='list-group-item usuarioChat socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + " <label class='nuevoMensaje'> Nuevo mensaje </label></button>");
+							$("#"+item.user__pk).on('click', chatClick);
                         }
                     })
                 }
@@ -242,10 +518,11 @@ function Usuarios() {
                 dataType: 'json',
                 data: {url: dominio},
                 success: function (data) {
-                    $('.divUsuario').remove();
+                    $('.usuarioChat').remove();
                     $.each(data, function (i, item) {
                         if (item.user__pk!=localStorage['user'])
-                            $('#listaUsuarios').append("<div class='list-group-item socialEye divUsuario'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user socialEye'></i></span>" + item.user__username + "&nbsp;&nbsp; <span class='iconsSpan'><i id=chat"+ item.user__pk +" name="+item.user__username+" class='fa fa-weixin usuarioChat'> </i> </span><span class='iconsSpan'> <i id=call"+ item.user__pk +" class='fa fa-video-camera usuarioCall'> </i> </span></div>");
+                        	 $('#listaUsuarios').append("<button type='button' id="+ item.user__pk +" name="+ item.user__username +" class='list-group-item usuarioChat socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + " <label class='nuevoMensaje'> Nuevo mensaje </label></button>");
+
                     });
                 }
 
@@ -281,7 +558,7 @@ function Usuarios() {
             success: function (data) {
                 $.each(data, function (i, item) {
                     if (item.user__pk!=localStorage['user'])
-                        listaUsuarios += "<div class='list-group-item socialEye divUsuario'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user socialEye'></i></span>" + item.user__username + "&nbsp;&nbsp; <span class='iconsSpan'><i id=chat"+ item.user__pk +" name="+item.user__username+" class='fa fa-weixin usuarioChat'> </i> </span><span class='iconsSpan'> <i id=call"+ item.user__pk +" class='fa fa-video-camera usuarioCall'> </i> </span></div>";
+                       listaUsuarios += "<button type='button' id="+ item.user__pk +" name="+ item.user__username +" class='list-group-item usuarioChat socialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-user fa-stack-1x socialEye'></i></span>" + item.user__username + " <label class='nuevoMensaje'> Nuevo mensaje </label></button>";
                 });
 
             },

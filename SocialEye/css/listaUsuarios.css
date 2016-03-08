@@ -31,8 +31,69 @@
     cursor: hand;
 }
 
+.videoContainer {
+    position: relative;
+    width: 200px;
+    height: 150px;
+    margin-right: 35px;
+    bottom:50px;
+    margin-bottom: 5px;
+}
+
+.videoContainer video {
+    position: absolute;
+    width: 100%;
+}
+
+.volume {
+    position: absolute;
+    left: 15%;
+    width: 70%;
+    bottom: 5px;
+    height: 5px;
+    display: none;
+}
+
+.connectionstate {
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    text-align: center;
+    color: #fff
+}
+
+#callBox{
+    z-index: 99999999999999;
+    height: 100%;
+    width: 50%;
+}
+
+.contenidoComentario{
+    padding-left: 20px;
+}
+
 #videoCall{
+    float:right;
+}
+
+#conversacionBox{
     float: left;
-    width: 320;
-    height: 240;
+}
+
+.botonLlamada{
+    position: fixed;
+    left: 30%;
+}
+
+#chatBox{
+    height: 340px;
+}
+
+#textoComentarioChat{
+    height: 70px;
+}
+
+.nuevoMensaje{
+    display: none;
+    color: #FF9933;
 }
