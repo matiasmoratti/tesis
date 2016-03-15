@@ -50,13 +50,15 @@ class PollQuestion(models.Model):
 class PollQuestionOption(models.Model):
     poll_question = models.ForeignKey(PollQuestion,on_delete=models.CASCADE)
     option = models.CharField(max_length=200)
-    votes = models.IntegerField()
     def what_i_need_in_ajax_call_for_pollquestionoption_from_pollquestion(self): #METODO QUE ES UTILIZADO EN VIEWS.PY PARA DEVOLVER LO QUE YO QUIERA DEL OBJETO EN UN LLAMADO AJAX
         return {
             "option": self.option,
             "pk": self.id,
-            "votes": self.votes
         }
+
+class Vote(models.Model):
+    poll_question = models.ForeignKey(PollQuestion,on_delete=models.CASCADE)
+    question_option = models.ForeignKey(PollQuestionOption,on_delete=models.CASCADE)
 
 class Chat(models.Model):
     user1 = models.ForeignKey(User, on_delete= models.CASCADE, related_name="user1")

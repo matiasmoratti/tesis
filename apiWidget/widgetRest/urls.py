@@ -17,5 +17,6 @@ urlpatterns = [
     url(r'^getChat/', views.getChat, name='getChat'),
     url(r'^saveMessage/', views.saveMessage, name='saveMessage'),
     url(r'^poll_details/', views.poll_details, name='poll_details'),
+    url(r'^get_votes/', views.get_votes, name='get_votes'),
     # url(r'^usuariosActivos/', views.usuariosActivos, name='usuariosActivos'),
 ]

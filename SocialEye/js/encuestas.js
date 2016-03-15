@@ -108,7 +108,7 @@ function Encuestas() {
             success: function (data) {
                 $("body").append(modalVotacion());
                 $("#votar").prop( "disabled", false );
-                votos=[];
+                votos={};
                 $("#resultados").hide();
                 numPreguntaEncuesta=0;
                 questions=data[0]['questions'];
@@ -270,7 +270,7 @@ function Encuestas() {
 
     $(document.body).on('click', '#votar' ,function(){
         if ($("#listaOpciones").find('input:radio').is(":checked")) {
-            votos.push($('#listaOpciones input:checked').attr('id'));
+            votos[$('#listaOpciones input:checked').attr('class')] = $('#listaOpciones input:checked').attr('id');
         }
         else {
             bootbox.alert("Debe seleccionar una opcion");
@@ -307,7 +307,7 @@ function Encuestas() {
                 opciones="<li class='list-group-item opcion'>";
                 opciones+="<div class='radio'>";
                 opciones+="<label>";
-                opciones+="<input id='"+option['pk']+"' type='radio' name='optionsRadios'/>";
+                opciones+="<input id='"+option['pk']+"' class='"+questions[numPreguntaEncuesta]['pk']+"' type='radio' name='optionsRadios'/>";
                 opciones+=option['option'];
                 opciones+="</label>";
                 opciones+="</div>";
@@ -321,14 +321,13 @@ function Encuestas() {
             type: "POST", // http method
             data: {votos: JSON.stringify(votos),
                     idEncuestaActual:idEncuestaActual},
-            dataType: 'json',
             async: false,
-            success: function (data) {
-                 porcentajes=data;
+            success: function () {
+                 //porcentajes=data;
                  numeroActualResultado=0;
                  $("#resultados").show();
                  $("#votar").prop( "disabled", true );
-                 siguienteResultado();
+                 pedirResultado();
             },
             // handle a non-successful response
             error: function (xhr, errmsg, err) {
@@ -340,13 +339,39 @@ function Encuestas() {
         numPreguntaEncuesta++;
     }
 
-    function siguienteResultado(){
+    function siguienteResultado(votos,cantVotos){
+             $("#tituloPregunta").html(questions[numeroActualResultado]['question']);
+            $("#listaOpciones").empty();
+            $.each(questions[numeroActualResultado]['options'], function (index, option) {
+                opciones="<li class='list-group-item opcion'>";
+                opciones+="<div class='radio'>";
+                opciones+="<label>";
+                opciones+="<input id='"+option['pk']+"' class='"+questions[numeroActualResultado]['pk']+"' type='radio' name='optionsRadios'/>";
+                opciones+=option['option'];
+                opciones+="</label>";
+                opciones+="</div>";
+                opciones+="</li>";
+                $("#listaOpciones").append(opciones);
+             });
+
+
+
              $("#barraResultados").empty();
              $.each(questions[numeroActualResultado]['options'], function (index, option) {
+                 var cantVotosOpcion = 0;
+                 $.each(votos, function (index, voto) {
+                     if (voto['question_option__pk'] == option['pk'])
+                        cantVotosOpcion++;
+                 });
+                 var porcentajeOpcion = cantVotosOpcion * 100;
+                 if (porcentajeOpcion == 0)
+                    porcentajeOpcion = 0;
+                 else
+                    porcentajeOpcion = porcentajeOpcion / cantVotos;
                  barra = option['option'];
                  barra += "<div class='progress'>";
-                 barra += "<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='20' aria-valuemin='0' aria-valuemax='100' style='width:" + porcentajes[option['pk']] + "%'>";
-                 barra += "<span>" + porcentajes[option['pk']] + "%</span>";
+                 barra += "<div class='progress-bar progress-bar-success' role='progressbar' aria-valuenow='20' aria-valuemin='0' aria-valuemax='100' style='width:" + porcentajeOpcion.toFixed(2) + "%'>";
+                 barra += "<span>" + porcentajeOpcion.toFixed(2) + "%</span>";
                  barra += "</div>";
                  barra += "</div>";
                  $("#barraResultados").append(barra);
@@ -358,11 +383,30 @@ function Encuestas() {
      $(document.body).on('click', '#siguiente' ,function(){
          numeroActualResultado++;
          if (numeroActualResultado<questions.length) {
-             siguienteResultado();
+             pedirResultado();
          }
          else {
              $('#vote').modal('toggle');
              bootbox.alert("Gracias por hacer esta encuesta");
          }
      });
+
+    function pedirResultado(){
+        $.ajax({
+            url: "https://127.0.0.1:8000/widgetRest/get_votes/", // the endpoint
+            type: "POST", // http method
+            data: {id_question: questions[numeroActualResultado]['pk'],
+            },
+            dataType: 'json',
+            async: false,
+            success: function (votos) {
+                 siguienteResultado(votos,votos.length);
+            },
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+
+            }
+        });
+
+    }
 }

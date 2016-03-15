@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .forms import UserForm
-from .models import User, Comment, SpecificComment, UserActiveUrl, Poll, PollQuestion, PollQuestionOption, Chat, \
+from .models import User, Comment, SpecificComment, UserActiveUrl, Poll, PollQuestion, Vote, PollQuestionOption, Chat, \
     ChatMessage
 from django.core import serializers
 import datetime
@@ -206,7 +206,6 @@ def poll_add(request):
                     pregunta.save()
                 opcion = PollQuestionOption()
                 opcion.option = value
-                opcion.votes = 0
                 opcion.poll_question = pregunta
                 opcion.save()
 
@@ -218,30 +217,41 @@ def poll_add(request):
 def poll_vote(request):
     if request.method == 'POST':
         votes = json.loads(request.POST['votos'])
-        for v in votes:
-            poll_question_option = PollQuestionOption.objects.get(pk=v)
-            poll_question_option.votes += 1
-            poll_question_option.save()
+        for key in votes:
+            vote = Vote()
+            vote.poll_question = PollQuestion.objects.get(pk=key)
+            vote.question_option = PollQuestionOption.objects.get(pk=votes[key])
+            vote.save()
+
         #Ahora voy a recuperar la encuesta de nuevo para armar los resultados para mostrarlos con la barra
-        poll = Poll.objects.get(pk=request.POST['idEncuestaActual'])
-        preguntas = poll.pollquestion_set.all()
-        porcentajes = {}
-        for p in preguntas:
-            opciones = p.pollquestionoption_set.all()
-            total = 0
-            for o in opciones:
-                total += o.votes
+        # poll = Poll.objects.get(pk=request.POST['idEncuestaActual'])
+        # preguntas = poll.pollquestion_set.all()
+        # porcentajes = {}
+        # for p in preguntas:
+        #     opciones = p.pollquestionoption_set.all()
+        #     total = 0
+        #     for o in opciones:
+        #         total += o.votes
+        #
+        #     for o in opciones:
+        #         num = (o.votes * 100) / float(total)
+        #         decimales = num - int(num)
+        #         if decimales >= 0.5:
+        #             porcentajes[o.pk] = int(num) + 1
+        #         else:
+        #             porcentajes[o.pk] = int(num)
+        #
+        # return HttpResponse(json.dumps(porcentajes), content_type='application/json')
+        return HttpResponse()
 
-            for o in opciones:
-                num = (o.votes * 100) / float(total)
-                decimales = num - int(num)
-                if decimales >= 0.5:
-                    porcentajes[o.pk] = int(num) + 1
-                else:
-                    porcentajes[o.pk] = int(num)
 
-        return HttpResponse(json.dumps(porcentajes), content_type='application/json')
-
+@csrf_exempt
+@token_required
+def get_votes(request):
+    if request.method == 'POST':
+        id_question = request.POST['id_question']
+        votes = list(Vote.objects.filter(poll_question__pk = id_question).values('question_option__pk'))
+        return HttpResponse(json.dumps(votes),content_type='json')
 
 @csrf_exempt
 @token_required
