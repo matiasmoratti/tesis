@@ -84,10 +84,14 @@ WSGI_APPLICATION = 'apiWidget.wsgi.application'
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+   'default': {
+       'ENGINE': 'django.db.backends.postgresql_psycopg2',
+       'NAME': 'tesis',
+       'USER': 'fermin',                      # Not used with sqlite3.
+       'PASSWORD': 'fermin2015',                  # Not used with sqlite3.
+       'HOST': '127.0.0.1',                      # Set to empty string for localhost. Not used with sqlite3.
+       'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
+   }
 }
 
 

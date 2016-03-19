@@ -2,10 +2,21 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import JSONField
 
 # Create your models here.
 
 
+
+class Widget(models.Model):
+    widget_name = models.CharField(max_length=200)
+
+class Element(models.Model):
+    widget = models.ForeignKey(Widget, on_delete=models.CASCADE)
+    url = models.CharField(max_length=200)
+    username = models.CharField(max_length=200)
+    date = models.CharField(max_length=200)
+    element = JSONField(default = {})
 
 class Comment(models.Model):
     comment_text = models.CharField(max_length=200)

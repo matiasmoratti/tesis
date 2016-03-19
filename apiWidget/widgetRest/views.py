@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from .forms import UserForm
-from .models import User, Comment, SpecificComment, UserActiveUrl, Poll, PollQuestion, Vote, PollQuestionOption, Chat, \
+from .models import User, Comment, Widget, Element, SpecificComment, UserActiveUrl, Poll, PollQuestion, Vote, PollQuestionOption, Chat, \
     ChatMessage
 from django.core import serializers
 import datetime
@@ -81,26 +81,23 @@ def comments(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
-        comment_form = CommentForm(request.POST)
         # check whether it's valid:
-        if comment_form.is_valid():
-            # create the comment
-            comment = comment_form.save(commit=False)
-            comment.comment_date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
-            comment.comment_user = User.objects.get(pk=user_id)
-            comment.save()
-            return HttpResponse(comment.comment_user.username)
-        else:
-            return HttpResponseBadRequest()
+        user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+        user = User.objects.get(pk=user_id)
+        ele = Element()
+        ele.username = user.username
+        ele.url = request.POST['url']
+        ele.date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        ele.widget = Widget.objects.get(pk=request.POST['idWidget'])
+        ele.element = request.POST['data']
+        ele.save()
+        return HttpResponse()
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        comments = list(
-            Comment.objects.filter(specificcomment__isnull=True, comment_url=request.GET['comment_url']).values(
-                'comment_user__username', 'comment_text', 'comment_date'))
-        comments_as_json = json.dumps(comments)
-        return HttpResponse(comments_as_json, content_type='json')
+        objects = list(Element.objects.filter(url=request.GET['url'], widget=request.GET['idWidget']).values('username','date','element'))
+        objects_as_json = json.dumps(objects)
+        return HttpResponse(objects_as_json, content_type='json')
 
 
 @csrf_exempt

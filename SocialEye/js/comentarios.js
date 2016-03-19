@@ -42,14 +42,19 @@ function Comentarios() {
         var usuarioComentario = localStorage['username'];
         $("#agregarComentarioGeneral").on('click', function () {
             if ($("#textoComentarioGeneral").val() != "") {
+                var c = new Object();
+                c.texto = $("#textoComentarioGeneral").val();
+                c.user = localStorage['username']; //Aca deberiamos llamar a nuestra funcion
+                cAsJson = JSON.stringify(c);
                 var url = window.location.href;
                 //Creo los objetos
                 $.ajax({
-                    url: "https://127.0.0.1:8000/widgetRest/comments/", // the endpoint
+                    url: "http://127.0.0.1:8000/widgetRest/comments/", // the endpoint
                     type: "POST", // http method
                     data: {
-                        comment_text: $("#textoComentarioGeneral").val(),
-                        comment_url: url,
+                        data: cAsJson,
+                        url: url,
+                        idWidget:'1'
                     }, // data sent with the post request
 
                     // handle a successful response
@@ -61,7 +66,7 @@ function Comentarios() {
                         var hs = d.getHours();
                         var mins = d.getMinutes();
                         var secs = d.getSeconds();
-                        span.innerHTML = username + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
+                        span.innerHTML = localStorage['username']  + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
                         parrafo.innerHTML = $("#textoComentarioGeneral").val();
                         var divComentario = document.createElement('div');
                         divComentario.setAttribute('class', 'commentText');
@@ -114,20 +119,24 @@ function Comentarios() {
         commentBox += "<ul id='listaComentariosGenerales' class='commentList socialEye'>";
         //Creo los objetos
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/comments/?comment_url=" + url, // the endpoint
+            url: "http://127.0.0.1:8000/widgetRest/comments/", // the endpoint
             type: "GET", // http method
             dataType: 'json',
             async: false,
-            // data : {'comment_url' : url,}, // data sent with the post request
+            data : {'url' : url,
+                   'idWidget' : '1'
+            }, // data sent with the post request
 
 // handle a successful response
             success: function (data) {
                 $.each(data, function (i, item) {
+                    object = JSON.parse(item.element);
                     commentBox += "<li class='socialEye'><div class='commentText socialEye'>";
-                    commentBox += "<span class='date sub-text socialEye'>" + item.comment_user__username + " dijo el " + item.comment_date + "</span>";
-                    commentBox += "<p class='socialEye'>" + item.comment_text + "</p>";
+                    commentBox += "<span class='date sub-text socialEye'>" + item.username + " dijo el " + item.date + "</span>";
+                    commentBox += "<p class='socialEye'>" + object.texto + "</p>";
                     commentBox += "</div>";
                     commentBox += "</li>";
+                    debugger;
                 });
 
             },

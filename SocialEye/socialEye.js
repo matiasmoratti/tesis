@@ -26,6 +26,7 @@
 // @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/encuestas.js
 // @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/chats.js
 // @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/common.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/latest-v2.js
 // @resource   video file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/main.css
 // ==/UserScript==
 
@@ -94,7 +95,7 @@ function Manager() {
                     });
                     $("#loginButton").click(function () {
                         $.ajax({
-                            url: "https://127.0.0.1:8000/widgetRest/token/new.json", // the endpoint
+                            url: "http://127.0.0.1:8000/widgetRest/token/new.json", // the endpoint
                             type: "POST", // http method
                             data: {
                                 username: $("#user").val(),
