@@ -11,6 +11,7 @@
 // @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery-ui.min.js
 // @resource   jqueryUICSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/jquery-ui.min.css
 // @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/js/bootstrap.min.js
+// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/widgetApi.js
 // @resource   bootstrapCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap.min.css
 // @resource   bootstrapThemeCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap-theme.min.css
 // @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/sidebar_menu.js
@@ -108,7 +109,7 @@ function Manager() {
                                 if (response.success == true) {
                                     localStorage.setItem('token', response.token);
                                     localStorage.setItem('user', response.user);
-                                    localStorage.setItem('userName', $("#user").val());
+                                    localStorage.setItem('username', $("#user").val());
                                     $("#boxLogin").remove();
                                 }
                                 else {

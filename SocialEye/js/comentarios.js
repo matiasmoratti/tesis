@@ -46,46 +46,30 @@ function Comentarios() {
                 c.texto = $("#textoComentarioGeneral").val();
                 c.user = localStorage['username']; //Aca deberiamos llamar a nuestra funcion
                 cAsJson = JSON.stringify(c);
-                var url = window.location.href;
-                //Creo los objetos
-                $.ajax({
-                    url: "http://127.0.0.1:8000/widgetRest/comments/", // the endpoint
-                    type: "POST", // http method
-                    data: {
-                        data: cAsJson,
-                        url: url,
-                        idWidget:'1'
-                    }, // data sent with the post request
+                //Funcion del framework que guarda los objetos
+                result = saveObject(1,cAsJson);
+                if (result == true) {
+                    var parrafo = document.createElement('p');
+                    var span = document.createElement('span');
+                    span.setAttribute('class', 'date sub-text');
+                    var d = new Date();
+                    var hs = d.getHours();
+                    var mins = d.getMinutes();
+                    var secs = d.getSeconds();
+                    span.innerHTML = localStorage['username'] + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
+                    parrafo.innerHTML = $("#textoComentarioGeneral").val();
+                    var divComentario = document.createElement('div');
+                    divComentario.setAttribute('class', 'commentText');
+                    var lineaComentario = document.createElement('li');
+                    //Uno los objetos
+                    divComentario.appendChild(span);
+                    divComentario.appendChild(parrafo);
+                    lineaComentario.appendChild(divComentario);
+                    $("#listaComentariosGenerales").append(lineaComentario);
+                    $("#textoComentarioGeneral").val("");
+                    $('#listaComentariosGenerales').animate({scrollTop: $('#listaComentariosGenerales')[0].scrollHeight});
+                }
 
-                    // handle a successful response
-                    success: function (username) {
-                        var parrafo = document.createElement('p');
-                        var span = document.createElement('span');
-                        span.setAttribute('class', 'date sub-text');
-                        var d = new Date();
-                        var hs = d.getHours();
-                        var mins = d.getMinutes();
-                        var secs = d.getSeconds();
-                        span.innerHTML = localStorage['username']  + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
-                        parrafo.innerHTML = $("#textoComentarioGeneral").val();
-                        var divComentario = document.createElement('div');
-                        divComentario.setAttribute('class', 'commentText');
-                        var lineaComentario = document.createElement('li');
-                        //Uno los objetos
-                        divComentario.appendChild(span);
-                        divComentario.appendChild(parrafo);
-                        lineaComentario.appendChild(divComentario);
-                        $("#listaComentariosGenerales").append(lineaComentario);
-                        $("#textoComentarioGeneral").val("");
-                        $('#listaComentariosGenerales').animate({scrollTop: $('#listaComentariosGenerales')[0].scrollHeight});
-
-                    },
-
-                    // handle a non-successful response
-                    error: function (xhr, errmsg, err) {
-                        alert("Error al enviar el comentario");
-                    }
-                });
 
             }
 
@@ -118,35 +102,16 @@ function Comentarios() {
         commentBox += "<div class='actionBox socialEye'>";
         commentBox += "<ul id='listaComentariosGenerales' class='commentList socialEye'>";
         //Creo los objetos
-        $.ajax({
-            url: "http://127.0.0.1:8000/widgetRest/comments/", // the endpoint
-            type: "GET", // http method
-            dataType: 'json',
-            async: false,
-            data : {'url' : url,
-                   'idWidget' : '1'
-            }, // data sent with the post request
-
-// handle a successful response
-            success: function (data) {
-                $.each(data, function (i, item) {
-                    object = JSON.parse(item.element);
-                    commentBox += "<li class='socialEye'><div class='commentText socialEye'>";
-                    commentBox += "<span class='date sub-text socialEye'>" + item.username + " dijo el " + item.date + "</span>";
-                    commentBox += "<p class='socialEye'>" + object.texto + "</p>";
-                    commentBox += "</div>";
-                    commentBox += "</li>";
-                    debugger;
-                });
-
-            },
-
-            // handle a non-successful response
-            error: function (xhr, errmsg, err) {
-                alert("Error al cargar los comentarios");
-
-            }
+        data = getObjects(1);
+        $.each(data, function (i, item) {
+            object = JSON.parse(item.element);
+            commentBox += "<li class='socialEye'><div class='commentText socialEye'>";
+            commentBox += "<span class='date sub-text socialEye'>" + item.username + " dijo el " + item.date + "</span>";
+            commentBox += "<p class='socialEye'>" + object.texto + "</p>";
+            commentBox += "</div>";
+            commentBox += "</li>";
         });
+
 
 
         commentBox += "</ul>";
@@ -225,32 +190,19 @@ function comentariosEspecificos() {
         commentBox += "</div>";
         commentBox += "<div class='actionBox'>";
         commentBox += "<ul id='listaComentario" + numeroComentario + "' class='commentList'>";
-
+        params = {};
+        params['tag'] = tag;
+        paramJson = JSON.stringify(params);
         //Creo los objetos
-        $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/specific_comments/?comment_url=" + url + "&url_tag=" + tag, // the endpoint
-            type: "GET", // http method
-            dataType: 'json',
-            async: false,
-            // data : {'comment_url' : url,}, // data sent with the post request
-
-// handle a successful response
-            success: function (data) {
-                $.each(data, function (i, item) {
-                    commentBox += "<li><div class='commentText'>";
-                    commentBox += "<span class='date sub-text'>" + item.comment_user__username + " dijo el " + item.comment_date + "</span>";
-                    commentBox += "<p>" + item.comment_text + "</p>";
-                    commentBox += "</div>";
-                    commentBox += "</li>";
-                });
-
-            },
-
-            // handle a non-successful response
-            error: function (xhr, errmsg, err) {
-                alert("Error al cargar los comentarios");
-
-            }
+        data = getObjects(2,paramJson);
+        $.each(data, function (i, item) {
+            var a = JSON.parse(item.element);
+            alert(a);
+            commentBox += "<li><div class='commentText'>";
+            commentBox += "<span class='date sub-text'>" + item.username + " dijo el " + item.date + "</span>";
+            commentBox += "<p>" + item.element.texto + "</p>";
+            commentBox += "</div>";
+            commentBox += "</li>";
         });
 
 
@@ -363,48 +315,33 @@ function comentariosEspecificos() {
             var numComen = idSeleccionado.split("agregarComentario")[1];
             var usuarioComentario = localStorage['username'];
             if ($("#textoComentario" + numComen).val() != "") {
-                var url = window.location.href;
-                //Creo los objetos
-                $.ajax({
-                    url: "https://127.0.0.1:8000/widgetRest/specific_comments/", // the endpoint
-                    type: "POST", // http method
-                    data: {
-                        comment_text: $("#textoComentario" + numComen).val(),
-                        comment_url: url,
-                        url_tag: tag
-                    }, // data sent with the post request
-
-                    // handle a successful response
-                    success: function (username) {
-                        //Creo los objetos
-                        var parrafo = document.createElement('p');
-                        parrafo.innerHTML = $("#textoComentario" + numComen).val();
-                        var span = document.createElement('span');
-                        span.setAttribute('class', 'date sub-text');
-                        var d = new Date();
-                        var hs = d.getHours();
-                        var mins = d.getMinutes();
-                        var secs = d.getSeconds();
-                        span.innerHTML = username + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
-                        var divComentario = document.createElement('div');
-                        divComentario.setAttribute('class', 'commentText');
-                        var lineaComentario = document.createElement('li');
-                        //Uno los objetos
-                        divComentario.appendChild(span);
-                        divComentario.appendChild(parrafo);
-                        lineaComentario.appendChild(divComentario);
-                        $("#listaComentario" + numComen).append(lineaComentario);
-                        $("#textoComentario" + numComen).val("");
-                        $('#listaComentario' + numComen).animate({scrollTop: $('#listaComentario' + numComen)[0].scrollHeight});
-
-                    },
-
-                    // handle a non-successful response
-                    error: function (xhr, errmsg, err) {
-                        alert("Error al enviar el comentario");
-                    }
-                });
-
+                obj = {}
+                obj['texto'] = $("#textoComentario" + numComen).val();
+                obj['tag'] = tag;
+                objJson = JSON.stringify(obj);
+                result = saveObject(2,objJson);
+                if (result == true) {
+                    //Creo los objetos
+                    var parrafo = document.createElement('p');
+                    parrafo.innerHTML = $("#textoComentario" + numComen).val();
+                    var span = document.createElement('span');
+                    span.setAttribute('class', 'date sub-text');
+                    var d = new Date();
+                    var hs = d.getHours();
+                    var mins = d.getMinutes();
+                    var secs = d.getSeconds();
+                    span.innerHTML = localStorage['username'] + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
+                    var divComentario = document.createElement('div');
+                    divComentario.setAttribute('class', 'commentText');
+                    var lineaComentario = document.createElement('li');
+                    //Uno los objetos
+                    divComentario.appendChild(span);
+                    divComentario.appendChild(parrafo);
+                    lineaComentario.appendChild(divComentario);
+                    $("#listaComentario" + numComen).append(lineaComentario);
+                    $("#textoComentario" + numComen).val("");
+                    $('#listaComentario' + numComen).animate({scrollTop: $('#listaComentario' + numComen)[0].scrollHeight});
+                }
             }
 
             return false;

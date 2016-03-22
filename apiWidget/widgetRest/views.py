@@ -77,7 +77,7 @@ def registration(request):
 
 @csrf_exempt
 @token_required
-def comments(request):
+def objects(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -89,13 +89,27 @@ def comments(request):
         ele.url = request.POST['url']
         ele.date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         ele.widget = Widget.objects.get(pk=request.POST['idWidget'])
-        ele.element = request.POST['data']
+        ele.element = json.loads(request.POST['data'])
         ele.save()
         return HttpResponse()
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        objects = list(Element.objects.filter(url=request.GET['url'], widget=request.GET['idWidget']).values('username','date','element'))
+        kwargs = {}
+        kwargs['url'] = request.GET['url']
+        kwargs['widget'] = request.GET['idWidget']
+
+        try:
+            params = request.GET['params']
+        except KeyError: # Be explicit with catching exceptions.
+            params = {}
+        if params:
+            kwargsjson = {}
+            par = json.loads(params)
+            for key,value in par.iteritems():
+                kwargsjson[ key ] = value
+            kwargs['element__contains'] = kwargsjson
+        objects = list(Element.objects.filter(**kwargs).values('username','date','element'))
         objects_as_json = json.dumps(objects)
         return HttpResponse(objects_as_json, content_type='json')
 
