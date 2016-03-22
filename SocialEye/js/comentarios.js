@@ -159,7 +159,8 @@ function comentariosEspecificos() {
         comenEspecificoActivo = true;
     }
 
-    function deSeleccionarWidget(unWidget) {
+    function
+    deSeleccionarWidget(unWidget) {
         unWidget.style.cssText = "";
         var all = document.getElementsByTagName("*");
         var appElements = ["icono", "debateGeneral", "comentarios"];

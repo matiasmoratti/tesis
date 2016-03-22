@@ -12,6 +12,7 @@ from .models import User, Comment, Widget, Element, SpecificComment, UserActiveU
 from django.core import serializers
 import datetime
 import math
+from django.db import IntegrityError
 from datetime import timedelta
 from django.core.exceptions import ObjectDoesNotExist
 from tokenapi.decorators import token_required
@@ -112,6 +113,22 @@ def objects(request):
         objects = list(Element.objects.filter(**kwargs).values('username','date','element'))
         objects_as_json = json.dumps(objects)
         return HttpResponse(objects_as_json, content_type='json')
+
+
+@csrf_exempt
+@token_required
+def widget(request):
+    if request.method == 'POST':
+        try:
+            widget = Widget(widget_name=request.POST['name'], widget_icon=request.POST['icon'])
+            widget.save()
+            return HttpResponse(widget.id)
+        except IntegrityError:
+            return HttpResponseBadRequest()
+    else:
+        widgets = list(Widget.objects.all().values('id','widget_name','widget_icon'))
+        wAsJson = json.dumps(widgets)
+        return HttpResponse(wAsJson, content_type='json')
 
 
 @csrf_exempt

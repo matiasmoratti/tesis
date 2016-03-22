@@ -63,7 +63,7 @@ function Manager() {
         $("head").append("<link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet'>");
 
         $("body").append(" <div id='socialEyeBar' class='socialEye'> <ul class='socialEyeNavStyle nav-pills nav-stacked socialEye' id='menu'>   <li class='active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='debateGeneral' class='socialEye' title='Debate general'><span class='fa-stack fa-lg socialEye'><i class='fa fa-commenting fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='comentarios' title='Comentar contenido'><span class='fa-stack fa-lg'><i class='fa fa-comments fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetUsuarios' class='socialEye' title='Contactos'><span class='fa-stack fa-lg socialEye'><i class='fa fa-users fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetEncuestas' class='socialEye' title='Encuestas'><span class='fa-stack fa-lg'><i class='fa fa-question-circle fa-stack-1x socialEye'></i></span></a></li> <li class='socialEyeWidget socialEye'>  <a id='chats' class='socialEye' title='Chats'><span class='fa-stack fa-lg socialEye'><i class='fa fa-weixin fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li> </ul> </div> ");
-        
+
 
         $.ajaxSetup({
             beforeSend: function (xhr) {
@@ -187,6 +187,41 @@ function Manager() {
             WidgetUsuarios.cerrarBox();
         }
 
+        initializeWidgets();
+
+    }
+
+    var initializeWidgets = function (){
+        var name;
+        $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/widget/", // the endpoint
+            type: "GET", // http method
+            async: false,
+
+            // handle a successful response
+            success: function (data) {
+                $.each(data, function (i, item) {
+                    $("#menu").append("<li class='socialEyeWidget socialEye'>  <a class='widgetIcon' id=widget'"+item.id+"' title='"+item.widget_name+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.widget_icon+" fa-stack-1x '></i></span></a> </li>");
+                });
+
+
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+                alert("No se pudieron inicializar los widgets");
+            }
+        });
+
+
+    }
+
+    var widgetsEvents = function (){
+        $(".widgetIcon").on('click',function(e){
+            id = this.id;
+
+        });
+
 
     }
 
@@ -241,6 +276,102 @@ function Manager() {
     }
 
 }
+
+
+function saveObject(idWidget,data){
+    var success = false;
+    $.ajax({
+                    url: "http://127.0.0.1:8000/widgetRest/objects/", // the endpoint
+                    type: "POST", // http method
+                    async: false,
+                    data: {
+                        data: data,
+                        url: window.location.href,
+                        idWidget: idWidget
+                    }, // data sent with the post request
+
+                    // handle a successful response
+                    success: function () {
+                        success = true;
+
+                    },
+
+                    // handle a non-successful response
+                    error: function (xhr, errmsg, err) {
+                        alert("Error al enviar el objeto");
+                    }
+    });
+    return success;
+}
+
+function getObjects(idWidget,params){
+    var data;
+    $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/objects/", // the endpoint
+            type: "GET", // http method
+            dataType: 'json',
+            async: false,
+            data : {'url' : window.location.href,
+                   'idWidget' : idWidget,
+                    'params' : params
+            }, // data sent with the post request
+
+// handle a successful response
+            success: function (response) {
+                data = response
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+                alert("Error al cargar los comentarios");
+
+            }
+        });
+    return data;
+
+}
+
+function newWidget(name,icon){
+    var success = 0;
+    $.ajax({
+                    url: "http://127.0.0.1:8000/widgetRest/widget/", // the endpoint
+                    type: "POST", // http method
+                    async: false,
+                    data: {
+                        name: name,
+                        icon: icon,
+                    }, // data sent with the post request
+
+                    // handle a successful response
+                    success: function (response) {
+                        success = response;
+
+                    },
+
+                    // handle a non-successful response
+                    error: function (xhr, errmsg, err) {
+                        alert("Hay un widget con ese nombre");
+                    }
+    });
+    return success;
+
+}
+
+function inyectHTML(idWidget,html){
+    var div = document.createElement('div');
+    div.className = 'container'+idWidget;
+    div.innerHTML = html;
+    $('body').appendChild(div);
+}
+
+function closeWidget(idWidget){
+    $(".container"+idWidget).hide();
+}
+
+function openWidget(idWidget){
+    $(".container"+idWidget).show();
+}
+
 
 $(document).ready(function () {
     M = new Manager();

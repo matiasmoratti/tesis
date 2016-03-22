@@ -9,7 +9,8 @@ from django.contrib.postgres.fields import JSONField
 
 
 class Widget(models.Model):
-    widget_name = models.CharField(max_length=200)
+    widget_name = models.CharField(max_length=200, unique=True)
+    widget_icon = models.CharField(max_length=200, unique=True)
 
 class Element(models.Model):
     widget = models.ForeignKey(Widget, on_delete=models.CASCADE)
