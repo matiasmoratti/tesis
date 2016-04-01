@@ -90,7 +90,7 @@ def objects(request):
         ele.url = request.POST['url']
         ele.date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         ele.widget = Widget.objects.get(pk=request.POST['idWidget'])
-        ele.element = json.loads(request.POST['data'])
+        ele.element =json.loads(request.POST['data'])
         ele.save()
         return HttpResponse()
 
@@ -133,6 +133,38 @@ def widget(request):
 
 @csrf_exempt
 @token_required
+def user_ping(request):
+    if request.method == 'POST':
+        user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+        user = User.objects.get(pk=user_id)
+        try:
+            activeUrl = UserActiveUrl.objects.get(url=request.POST['url'], widget=request.POST['id'],user=user)
+            activeUrl.last_ping = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            activeUrl.save()
+        except UserActiveUrl.DoesNotExist:
+            widget = Widget.objects.get(pk = request.POST['id'])
+            user.useractiveurl_set.create(url=request.POST['url'],
+                                          last_ping=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),widget=widget)
+            user.save()
+        return HttpResponse()
+    else:
+        now = (datetime.datetime.now() - timedelta(seconds=60)).strftime("%Y-%m-%d %H:%M:%S")
+        enddate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        try:
+            widget = request.GET['idWidget']
+            active_users = list(
+            UserActiveUrl.objects.filter(last_ping__range=[now, enddate], widget=widget,url=request.GET['url']).values(
+                'user__username'))
+        except KeyError: # Be explicit with catching exceptions.
+            active_users = list(
+            UserActiveUrl.objects.filter(last_ping__range=[now, enddate], url=request.GET['url']).values(
+                'user__username'))
+        active_as_json = json.dumps(active_users)
+        return HttpResponse(active_as_json, content_type='json')
+
+
+@csrf_exempt
+@token_required
 def specific_comments(request):
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -159,27 +191,7 @@ def specific_comments(request):
         return HttpResponse(comments_as_json, content_type='json')
 
 
-@csrf_exempt
-@token_required
-def user_ping(request):
-    if request.method == 'POST':
-        user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
-        user = User.objects.get(pk=user_id)
-        try:
-            activeUrl = UserActiveUrl.objects.get(url=request.POST['url'], user=user)
-            activeUrl.last_ping = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            activeUrl.save()
-        except UserActiveUrl.DoesNotExist:
-            user.useractiveurl_set.create(url=request.POST['url'],
-                                          last_ping=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            user.save()
-        now = (datetime.datetime.now() - timedelta(seconds=60)).strftime("%Y-%m-%d %H:%M:%S")
-        enddate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        active_users = list(
-            UserActiveUrl.objects.filter(last_ping__range=[now, enddate]).filter(url=request.POST['url']).values(
-                'user__username', 'user__pk'))
-        active_as_json = json.dumps(active_users)
-        return HttpResponse(active_as_json, content_type='json')
+
 
 
 def get_user_pk(basic_auth):

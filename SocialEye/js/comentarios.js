@@ -11,10 +11,9 @@ comentarios.loadWidget = function () {
     //Creo los objetos
     data = comentarios.getObjects();
     $.each(data, function (i, item) {
-        object = JSON.parse(item.element);
         commentBox += "<li class='socialEye'><div class='commentText socialEye'>";
         commentBox += "<span class='date sub-text socialEye'>" + item.username + " dijo el " + item.date + "</span>";
-        commentBox += "<p class='socialEye'>" + object.texto + "</p>";
+        commentBox += "<p class='socialEye'>" + item.element.texto + "</p>";
         commentBox += "</div>";
         commentBox += "</li>";
     });
@@ -44,12 +43,11 @@ comentarios.onReady = function () {
 
     $("#agregarComentarioGeneral").on('click', function (event) {
         if ($("#textoComentarioGeneral").val() != "") {
-            var c = new Object();
-            c.texto = $("#textoComentarioGeneral").val();
-            c.user = getUser() //Aca deberiamos llamar a nuestra funcion
+            var c = {};
+            c['texto'] = $("#textoComentarioGeneral").val();
             cAsJson = JSON.stringify(c);
             //Funcion del framework que guarda los objetos
-            result = comentarios.saveObject(cAsJson);
+            result = comentarios.saveObject(c);
             if (result == true) {
                 var parrafo = document.createElement('p');
                 var span = document.createElement('span');

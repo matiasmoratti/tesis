@@ -1,3 +1,46 @@
+var comentariosEspecificos = new Widget();
+
+comentariosEspecificos.loadWidget = function () {
+    data = comentariosEspecificos.getObjects();
+    $.each(data, function (i, item) {
+    var commentBox = "<div class='detailBox' id='comentario" + item.pk + "'>";
+    commentBox += "<div class='titleBox'>";
+    commentBox += "<label>" + item.element.textoComentario + "</label>";
+    commentBox += "<button type='button' class='close botonCerrar' id='cerrarComentario" + item.pk + "' aria-hidden='true'>&times;</button>";
+    commentBox += "</div>";
+    commentBox += "<div class='actionBox'>";
+    commentBox += "<ul id='listaComentario" + item.pk + "' class='commentList'>";
+    params = {};
+    params['tag'] = tag;
+    paramJson = JSON.stringify(params);
+    //Creo los objetos
+    data = getObjects(2, paramJson);
+    $.each(data, function (i, item) {
+        var a = JSON.parse(item.element);
+        alert(a);
+        commentBox += "<li><div class='commentText'>";
+        commentBox += "<span class='date sub-text'>" + item.username + " dijo el " + item.date + "</span>";
+        commentBox += "<p>" + item.element.texto + "</p>";
+        commentBox += "</div>";
+        commentBox += "</li>";
+    });
+
+
+    commentBox += "<li>";
+    commentBox += "</li>";
+    commentBox += "</ul>";
+    commentBox += "<form class='form-inline' role='form'>";
+    commentBox += "<textarea class='form-control' id='textoComentario" + numeroComentario + "' type='text' placeholder='Escribe un comentario' ></textarea>";
+    commentBox += "<button type = 'button' id='agregarComentario" + numeroComentario + "' class='btn btn-primary'>Agregar</button>";
+    commentBox += "</form>";
+    commentBox += "</div>";
+    commentBox += "</div>";
+    numeroComentario++;
+    });
+    return commentBox;
+}
+
+
 function comentariosEspecificos() {
     var comenEspecificoActivo = false;
     var numeroComentario = 0;

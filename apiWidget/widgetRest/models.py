@@ -34,6 +34,7 @@ class UserActiveUrl(models.Model):
     url = models.CharField(max_length=500)
     last_ping = models.DateTimeField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    widget = models.ForeignKey(Widget, on_delete=models.CASCADE)
 
 class Poll(models.Model):
     poll_user = models.ForeignKey(User, on_delete=models.CASCADE)

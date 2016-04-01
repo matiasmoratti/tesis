@@ -90,6 +90,7 @@ function Manager() {
             var div = document.createElement('div');
             div.className = 'container'+1;
             comentarios.idWidget = 1;
+            comentarios.ping(comentarios.idWidget);
             div.innerHTML = comentarios.loadWidget();
             $('body').append(div);
             comentarios.onReady();
