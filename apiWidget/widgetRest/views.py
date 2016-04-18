@@ -114,7 +114,7 @@ def objects(request):
             for key,value in par.iteritems():
                 kwargsjson[ key ] = value
             kwargs['element__contains'] = kwargsjson
-        objects = list(Element.objects.filter(**kwargs).values('username','date','element'))
+        objects = list(Element.objects.filter(**kwargs).values('id','username','date','element'))
         objects_as_json = json.dumps(objects)
         return HttpResponse(objects_as_json, content_type='json')
 

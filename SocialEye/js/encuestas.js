@@ -23,8 +23,7 @@ encuestas.loadWidget = function () {
     //Creo los objetos
     params = {};
     params['tipo'] = "encuesta";
-    paramJson = JSON.stringify(params);
-    data = encuestas.getObjects(paramJson);
+    data = encuestas.getObjects(params);
     $.each(data, function (i, item) {
         elementosEncuestas[item.id]=item.element;
         listaEncuestas += "<li><button type='button' id='"+item.id+ "' class='list-group-item socialEye filaEncuesta'> <div class='tituloEncuesta'>" + item.element.description + "</div>  <div class='subtituloEncuesta'> creada por " + item.username + " el "+ item.date+ "  </div> </button></li>";
@@ -80,6 +79,10 @@ encuestas.onReady = function () {
             return false;
         }
         siguientePregunta();
+    });
+
+    $(document.body).on('click', '#cerrarEncuestas' ,function(){
+        encuestas.close();
     });
 
 
@@ -169,9 +172,8 @@ function siguientePregunta(){
         params = {};
         params['tipo'] = 'voto';
         params['idEncuesta'] = idEncuestaActual;
-        paramJson = JSON.stringify(params);
         //Creo los objetos
-        votosResultados=encuestas.getObjects(paramJson);
+        votosResultados=encuestas.getObjects(params);
         $("#resultados").show();
         siguienteResultado();
     }

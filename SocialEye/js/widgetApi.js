@@ -93,7 +93,7 @@ function Manager() {
             var widgetAux;
             altoBarra = 44*(widgets.length + 3);
             $.each(widgets, function (i, item) {
-                if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
+                if((item.pk == 1) || (item.pk == 2) || (item.pk == 4)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
                     div = document.createElement('div');
                     div.className = 'container'+item.pk;
                     widgetAux = eval(item.fields.widget_name);
@@ -136,17 +136,39 @@ function Manager() {
                     });
                     $(".widgetCheck").click(function () {
                         widgetId = this.id.substring(11, this.id.length);
+                        widgetActual = getWidget(widgetId);
                         if(this.checked){
                             addUserWidget(widgetId);
-                            widgetActual = getWidget(widgetId);
                             iconPos =  $("#menu li").length - 3;
                             $("#menu li:eq("+iconPos+")").after("<li class='socialEyeWidget socialEye' id='widgetList"+widgetId+"' style='display: list-item;'>  <a class='widgetIcon' id='widget"+widgetId+"' title='"+widgetActual.fields.widget_name+"'><span class='fa-stack fa-lg'><i class='fa fa-"+widgetActual.fields.widget_icon+" fa-stack-1x '></i></span></a> </li>");
                             altoBarra = altoBarra + 44;
+                            $("#widget"+widgetId).click(function (e) {
+                                widgetAux = eval(widgetActual.fields.widget_name);
+                                if($(".container"+widgetId).length == 0){
+                                    div = document.createElement('div');
+                                    div.className = 'container'+widgetId;
+                                    widgetAux.idWidget = widgetId;
+                                    widgetAux.ping(widgetAux.idWidget);
+                                    div.innerHTML = widgetAux.loadWidget();
+                                    $('body').append(div);
+                                    widgetAux.onReady();
+                                    $("#widget"+widgetId).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+                                }
+                                else{
+                                    widgetAux.close();
+                                    widgetAux = null;
+                                }
+                            });
                         }
                         else{
                             $('#widgetList'+widgetId).remove();
                             removeUserWidget(widgetId);
                             altoBarra = altoBarra - 44;
+                            if($(".container"+widgetId).length != 0){
+                                $('#widgetList'+widgetId).remove();
+                                widgetAux = eval(widgetActual.fields.widget_name);
+                                widgetAux.close();
+                            }                
                         }
                         $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
                     });
@@ -163,9 +185,15 @@ function Manager() {
             $.each(widgetsUsuario, function (i, item) {
                 if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
                     if($(".container"+item.pk).length != 0){
+                        $('#widgetList'+item.pk).remove();
                         widgetAux = eval(item.fields.widget_name);
                         widgetAux.close();
                     }
+                }
+                $('#configuraciones').remove();
+                $('#cerrarSesion').remove();
+                if($("#boxConfig").length != 0){
+                     $('#boxConfig').remove();
                 }
             });
             deleteSession();
