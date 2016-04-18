@@ -1,31 +1,25 @@
-
-
-
-
 function Widget(){
     this.idWidget=null;
+    this.descripcion;
+    this.icono;
+    this.intervalPing;
+    
+    this.getUser =  function() {
+        return localStorage['username'];
+    }
 
-
-
-    //this.ping = function(idWidget){
-    //     setInterval(function () {
-    //        jQuery.ajax({
-    //            type: "POST",
-    //            url: "http://127.0.0.1:8000/widgetRest/user_ping/",
-    //            data: {
-    //                url: window.location.hostname,
-    //                id: idWidget
-    //            },
-    //            success: function () {
-    //            }
-    //        });
-    //    }, 30000);
-    //};
-
-    //this.ping(this.idWidget);
-
-    this.ping = function(idWidget){
-        setInterval(function(){
+    this.ping = function(idWidget){ //Encontrar otra solución para no repetir (me rompí el coco ya)
+        $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:8000/widgetRest/user_ping/",
+                data: {
+                    url: window.location.hostname,
+                    id: idWidget
+                },
+                success: function () {
+                }
+        });
+        this.intervalPing = setInterval(function(){
             $.ajax({
                 type: "POST",
                 url: "http://127.0.0.1:8000/widgetRest/user_ping/",
@@ -36,12 +30,8 @@ function Widget(){
                 success: function () {
                 }
             });
-        },30000);
+        },15000);
     }
-
-
-
-
 
 
     this.loadWidget = function (){
@@ -68,7 +58,9 @@ function Widget(){
 
     this.close = function (){
         this.onCloseWidget();
-        $(".container"+this.idWidget).hide();
+        clearInterval(this.intervalPing);
+        $(".container"+this.idWidget).remove();
+        $("#widget"+this.idWidget).removeAttr('style');
     }
 
     this.saveObject = function (data){
@@ -97,6 +89,32 @@ function Widget(){
         return success;
     }
 
+    this.updateObject = function (object, params){
+        var success = false;
+        $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/updateObject/", // the endpoint
+            type: "POST", // http method
+            async: false,
+            data: {
+                object: JSON.stringify(object),
+                idWidget: this.idWidget,
+                params: params
+            }, // data sent with the post request
+
+            // handle a successful response
+            success: function () {
+                success = true;
+
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+                alert("Error al actualizar el objeto");
+            }
+        });
+        return success;
+    }
+
     this.getObjects = function (params){
         var data;
         $.ajax({
@@ -104,9 +122,8 @@ function Widget(){
             type: "GET", // http method
             dataType: 'json',
             async: false,
-            data : {url : window.location.href,
-                idWidget : this.idWidget,
-                params : params
+            data : {idWidget : this.idWidget,
+                params : JSON.stringify(params)
             }, // data sent with the post request
 
             // handle a successful response
@@ -122,6 +139,96 @@ function Widget(){
         });
         return data;
 
+    }
+
+    this.getObject = function (params){
+        var data;
+        $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/objects/", // the endpoint
+            type: "GET", // http method
+            dataType: 'json',
+            async: false,
+            data : {idWidget : this.idWidget,
+                params : JSON.stringify(params)
+            }, // data sent with the post request
+
+            // handle a successful response
+            success: function (response) {
+                if(response.length > 1){
+                    alert("Error: más de un objeto con los parámetros especificados");
+                    return null;
+                }
+                else{
+                    data = response[0];
+                }
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+                alert("Error al cargar los comentarios");
+
+            }
+        });
+        return data;
+    }
+
+    this.getObjectsInUrl = function (url, params){
+        var data;
+        $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/objects/", // the endpoint
+            type: "GET", // http method
+            dataType: 'json',
+            async: false,
+            data : {url : url,
+                idWidget : this.idWidget,
+                params : JSON.stringify(params)
+            }, // data sent with the post request
+
+            // handle a successful response
+            success: function (response) {
+                data = response
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+                alert("Error al cargar los comentarios");
+
+            }
+        });
+        return data;
+
+    }
+
+    this.getObjectInUrl = function (url, params){
+        var data;
+        $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/objects/", // the endpoint
+            type: "GET", // http method
+            dataType: 'json',
+            async: false,
+            data : {url : url,
+                idWidget : this.idWidget,
+                params : JSON.stringify(params)
+            }, // data sent with the post request
+
+            // handle a successful response
+            success: function (response) {
+                if(response.length > 1){
+                    alert("Error: más de un objeto con los parámetros especificados");
+                    return null;
+                }
+                else{
+                    data = response[0];
+                }
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+                alert("Error al cargar los comentarios");
+
+            }
+        });
+        return data;
     }
 
     this.getUsersConnected = function (){
@@ -145,7 +252,7 @@ function Widget(){
 
             }
         });
-        return JSON.parse(data);
+        return changeUserAttributeName(data);
     }
 
     this.getUsersConnectedInWidget = function (){
@@ -170,7 +277,44 @@ function Widget(){
 
             }
         });
-        return JSON.parse(data);
+        return changeUserAttributeName(data);
+    }
+
+    this.isUserConnected = function (userName){
+        var data;
+        var connected = false;
+        data = this.getUsersConnected();
+        $.each(data, function (i, item) {    
+            if(item.userName == userName){
+                connected = true;
+                return false;
+            }
+        });   
+        return connected;
+    }
+
+    this.isUserConnectedInWidget = function (userName){
+        var data;
+        var connected = false;
+        data = this.getUsersConnectedInWidget();
+        $.each(data, function (i, item) {   
+            if(item.userName == userName){
+                connected = true;
+                return false;
+            }
+        });   
+        return connected;
+    }
+
+
+    function changeUserAttributeName(data){
+        result = [];
+        $.each(data, function (i, item) {    
+            userAux = new Object();
+            userAux.userName = item.user__username;
+            result[i] = userAux;
+        });     
+        return result;
     }
 
 

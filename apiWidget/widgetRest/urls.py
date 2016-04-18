@@ -5,6 +5,7 @@ from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^objects/', views.objects, name='objects'),
+    url(r'^updateObject/', views.updateObject, name='updateObject'),
     url(r'^specific_comments/', views.specific_comments, name='specific_comments'),
     url(r'^registration/', views.registration, name='registration'),
     url(r'^logout/', views.logout, name='logout'),
@@ -19,6 +20,10 @@ urlpatterns = [
     url(r'^poll_details/', views.poll_details, name='poll_details'),
     url(r'^get_votes/', views.get_votes, name='get_votes'),
     url(r'^widget/', views.widget, name='widget'),
+    url(r'^getWidget/', views.getWidget, name='getWidget'),
+    url(r'^addUserWidget/', views.addUserWidget, name='addUserWidget'),
+    url(r'^removeUserWidget/', views.removeUserWidget, name='removeUserWidget'),
+    url(r'^widgetsByUser/', views.widgetsByUser, name='widgetsByUser'),
 
     # url(r'^usuariosActivos/', views.usuariosActivos, name='usuariosActivos'),
 ]

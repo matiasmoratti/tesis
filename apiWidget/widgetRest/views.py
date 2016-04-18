@@ -18,6 +18,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from tokenapi.decorators import token_required
 from tokenapi.http import JsonResponse, JsonError
 from django.db.models import Q
+from django.core.exceptions import MultipleObjectsReturned
 import json
 
 # Create your views here.
@@ -52,8 +53,7 @@ def logout(request):
         try:
             user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
             user = User.objects.get(pk=user_id)
-            activeUrl = UserActiveUrl.objects.get(url=request.POST['url'], user=user)
-            activeUrl.delete()
+            UserActiveUrl.objects.filter(url=request.POST['url'], user=user).delete()
             log_out(request)
             return HttpResponse()
         except UserActiveUrl.DoesNotExist:
@@ -69,7 +69,10 @@ def registration(request):
         user_form = UserCreationForm(request.POST)
         # check whether it's valid:
         if user_form.is_valid():
-            user_form.save()
+            newUser = user_form.save()
+            for i in range(1,5):
+                defaultWidget = Widget.objects.get(pk=i)
+                newUser.widget_set.add(defaultWidget)
             return HttpResponse()
         else:
             print(user_form.errors)
@@ -97,7 +100,8 @@ def objects(request):
     # if a GET (or any other method) we'll create a blank form
     else:
         kwargs = {}
-        kwargs['url'] = request.GET['url']
+        if 'url' in request.GET:
+            kwargs['url'] = request.GET['url']
         kwargs['widget'] = request.GET['idWidget']
 
         try:
@@ -114,6 +118,30 @@ def objects(request):
         objects_as_json = json.dumps(objects)
         return HttpResponse(objects_as_json, content_type='json')
 
+@csrf_exempt
+@token_required
+def updateObject(request):
+    if request.method == 'POST':
+        kwargs = {}
+        #kwargs['url'] = request.POST['url']    OJO!! YA NO TIENE EN CUENTA URL, DEBATIR SOBRE ESTO!!
+        kwargs['widget'] = request.POST['idWidget']
+        try:
+            params = request.POST['params']
+        except KeyError:
+            params = {}
+        if params:
+            kwargsjson = {}
+            par = json.loads(params)
+            for key,value in par.iteritems():
+                kwargsjson[ key ] = value
+            kwargs['element__contains'] = kwargsjson
+        objeto = Element.objects.get(**kwargs)
+        objeto.date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        objeto.element = json.loads(request.POST['object'])
+        objeto.save()
+        return HttpResponse()
+
+
 
 @csrf_exempt
 @token_required
@@ -126,10 +154,20 @@ def widget(request):
         except IntegrityError:
             return HttpResponseBadRequest()
     else:
-        widgets = list(Widget.objects.all().values('id','widget_name','widget_icon'))
+        widgets = list(Widget.objects.all().values('pk','widget_name','widget_icon','widget_title', 'description'))
         wAsJson = json.dumps(widgets)
         return HttpResponse(wAsJson, content_type='json')
 
+@csrf_exempt
+@token_required
+def getWidget(request):
+    if request.method == 'GET':
+        try:
+            widget = Widget.objects.get(pk=request.GET['idWidget'])
+            widgetAsJson = serializers.serialize('json', [widget])
+            return HttpResponse(widgetAsJson, content_type='json')
+        except Widget.DoesNotExist:
+            return HttpResponseBadRequest()
 
 @csrf_exempt
 @token_required
@@ -148,7 +186,7 @@ def user_ping(request):
             user.save()
         return HttpResponse()
     else:
-        now = (datetime.datetime.now() - timedelta(seconds=60)).strftime("%Y-%m-%d %H:%M:%S")
+        now = (datetime.datetime.now() - timedelta(seconds=15)).strftime("%Y-%m-%d %H:%M:%S")
         enddate = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         try:
             widget = request.GET['idWidget']
@@ -162,6 +200,35 @@ def user_ping(request):
         active_as_json = json.dumps(active_users)
         return HttpResponse(active_as_json, content_type='json')
 
+@csrf_exempt
+@token_required
+def addUserWidget(request):
+    if request.method == 'POST':
+        user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+        user = User.objects.get(pk=user_id)
+        widget = Widget.objects.get(pk=request.POST['idWidget'])
+        user.widget_set.add(widget)
+        return HttpResponse()
+
+@csrf_exempt
+@token_required
+def removeUserWidget(request):
+    if request.method == 'POST':
+        user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+        user = User.objects.get(pk=user_id)
+        widget = Widget.objects.get(pk=request.POST['idWidget'])
+        user.widget_set.remove(widget)
+        return HttpResponse()
+
+@csrf_exempt
+@token_required
+def widgetsByUser(request):
+    if request.method == 'GET':
+        user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
+        user = User.objects.get(pk=user_id)
+        widgets = list(user.widget_set.all())
+        widgets_as_json = serializers.serialize('json', widgets, fields=('pk', 'widget_icon', 'widget_name', 'description', 'widget_title'))
+        return HttpResponse(widgets_as_json, content_type='json')
 
 @csrf_exempt
 @token_required
