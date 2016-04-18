@@ -49,6 +49,7 @@ function Manager() {
     var activo = 0;
     var debateGeneralA = 0;
     var comentariosA = 0;
+    var altoBarra;
 
     this.iniciarScript = function () {
 
@@ -75,9 +76,9 @@ function Manager() {
 
         $("head").append("<link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet'>");
 
-        $("body").append(" <div id='socialEyeBar' class='socialEye'> <ul class='socialEyeNavStyle nav-pills nav-stacked socialEye' id='menu'>   <li class='active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='debateGeneral' class='socialEye' title='Debate general'><span class='fa-stack fa-lg socialEye'><i class='fa fa-commenting fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='comentarios' title='Comentar contenido'><span class='fa-stack fa-lg'><i class='fa fa-comments fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetUsuarios' class='socialEye' title='Contactos'><span class='fa-stack fa-lg socialEye'><i class='fa fa-users fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetEncuestas' class='socialEye' title='Encuestas'><span class='fa-stack fa-lg'><i class='fa fa-question-circle fa-stack-1x socialEye'></i></span></a></li> <li class='socialEyeWidget socialEye'>  <a id='chats' class='socialEye' title='Chats'><span class='fa-stack fa-lg socialEye'><i class='fa fa-weixin fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='configuraciones' class='socialEye' title='Configuraciones'><span class='fa-stack fa-lg socialEye'><i class='fa fa-cogs fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li> </ul> </div> ");
+        $("body").append(" <div id='socialEyeBar' class='socialEye'> <ul class='socialEyeNavStyle nav-pills nav-stacked socialEye' id='menu'>   <li class='active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li></ul> </div> ");
 
-
+        //PARTE BORRADA DEL APPEND AL MENU  <li class='socialEyeWidget socialEye'>  <a id='debateGeneral' class='socialEye' title='Debate general'><span class='fa-stack fa-lg socialEye'><i class='fa fa-commenting fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='comentarios' title='Comentar contenido'><span class='fa-stack fa-lg'><i class='fa fa-comments fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetUsuarios' class='socialEye' title='Contactos'><span class='fa-stack fa-lg socialEye'><i class='fa fa-users fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetEncuestas' class='socialEye' title='Encuestas'><span class='fa-stack fa-lg'><i class='fa fa-question-circle fa-stack-1x socialEye'></i></span></a></li> <li class='socialEyeWidget socialEye'>  <a id='chats' class='socialEye' title='Chats'><span class='fa-stack fa-lg socialEye'><i class='fa fa-weixin fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='configuraciones' class='socialEye' title='Configuraciones'><span class='fa-stack fa-lg socialEye'><i class='fa fa-cogs fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li> 
         $.ajaxSetup({
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('Authorization', "Basic " + btoa(localStorage['user'] + ":" + localStorage['token']));
@@ -89,19 +90,92 @@ function Manager() {
         function initializeWidgets (){
             var widgets = getUserWidgets();
             var div;
-            var data;
-            $.each(data, function (i, item) {
-                if((i+1) < 3){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
+            var widgetAux;
+            altoBarra = 44*(widgets.length + 3);
+            $.each(widgets, function (i, item) {
+                if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
                     div = document.createElement('div');
-                    div.className = 'container'+(i + 1);                 
-                    eval(item.widget_name).idWidget = item.pk;
-                    eval(item.widget_name).ping(eval(item.widget_name).idWidget);
-                    div.innerHTML = eval(item.widget_name).loadWidget();
+                    div.className = 'container'+item.pk;
+                    widgetAux = eval(item.fields.widget_name);
+                    widgetAux.idWidget = item.pk;
+                    widgetAux.ping(widgetAux.idWidget);
+                    div.innerHTML = widgetAux.loadWidget();
                     $('body').append(div);
-                    eval(item.widget_name).onReady();
-                    $("#menu").append("<li class='socialEyeWidget socialEye' id='widgetList"+item.pk+"'>  <a class='widgetIcon' id=widget'"+item.pk+"' title='"+item.widget_name+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.widget_icon+" fa-stack-1x '></i></span></a> </li>");
+                    widgetAux.onReady();
+                }
+                $("#menu").append("<li class='socialEyeWidget socialEye' id='widgetList"+item.pk+"'>  <a class='widgetIcon' id='widget"+item.pk+"' title='"+item.fields.widget_title+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.fields.widget_icon+" fa-stack-1x '></i></span></a> </li>");
+                $("#widget"+item.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+                $("#widget"+item.pk).click(function (e) {
+                     widgetAux = eval(item.fields.widget_name);
+                     if($(".container"+item.pk).length == 0){
+                         div = document.createElement('div');
+                         div.className = 'container'+item.pk;
+                         widgetAux.idWidget = item.pk;
+                         widgetAux.ping(widgetAux.idWidget);
+                         div.innerHTML = widgetAux.loadWidget();
+                         $('body').append(div);
+                         widgetAux.onReady();
+                         $("#widget"+item.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+                     }
+                     else{
+                         widgetAux.close();
+                         widgetAux = null;
+                     }
+                });
+            });
+
+            $("#menu").append(" <li class='socialEyeWidget socialEye'>  <a id='configuraciones' class='socialEye' title='Configuraciones'><span class='fa-stack fa-lg socialEye'><i class='fa fa-cogs fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li>");
+            
+            $("#configuraciones").click(function () {
+                if($("#boxConfig").length == 0){
+                    $("#configuraciones").css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+                    $("body").append(crearBoxConfiguraciones());
+                    $("#cerrarBoxConfig").on("click", function (event) {
+                        $("#boxConfig").remove();
+                        $("#configuraciones").removeAttr('style');
+                    });
+                    $(".widgetCheck").click(function () {
+                        widgetId = this.id.substring(11, this.id.length);
+                        if(this.checked){
+                            addUserWidget(widgetId);
+                            widgetActual = getWidget(widgetId);
+                            iconPos =  $("#menu li").length - 3;
+                            $("#menu li:eq("+iconPos+")").after("<li class='socialEyeWidget socialEye' id='widgetList"+widgetId+"' style='display: list-item;'>  <a class='widgetIcon' id='widget"+widgetId+"' title='"+widgetActual.fields.widget_name+"'><span class='fa-stack fa-lg'><i class='fa fa-"+widgetActual.fields.widget_icon+" fa-stack-1x '></i></span></a> </li>");
+                            altoBarra = altoBarra + 44;
+                        }
+                        else{
+                            $('#widgetList'+widgetId).remove();
+                            removeUserWidget(widgetId);
+                            altoBarra = altoBarra - 44;
+                        }
+                        $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
+                    });
+               }
+               else{
+                   $("#boxConfig").remove();
+                   $("#configuraciones").removeAttr('style');
+               }
+          });
+
+        $("#cerrarSesion").click(function () {
+            var widgetsUsuario = getUserWidgets();
+            var widgetAux;
+            $.each(widgetsUsuario, function (i, item) {
+                if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
+                    if($(".container"+item.pk).length != 0){
+                        widgetAux = eval(item.fields.widget_name);
+                        widgetAux.close();
+                    }
                 }
             });
+            deleteSession();
+            setTimeout(function () {  //Delay porque quedaba la barra a medio cerrar cuando aparecia el mensaje de saludo.
+                $(".socialEyeWidget").hide('fast');
+                $("#socialEyeBar").animate({height: "42px"}, "500");
+                activo = 0;
+            }, 350);
+
+        });
 
             /*var div = document.createElement('div');
             div.className = 'container'+1;
@@ -153,7 +227,7 @@ function Manager() {
                     activo = 0;
                 }
                 else {
-                    $("#socialEyeBar").animate({height: "310px"}, "500");
+                    $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
                     activo = 1;
                     $(".socialEyeWidget").show('slow');
                 }
@@ -230,36 +304,6 @@ function Manager() {
 
         });
 
-        $("#configuraciones").click(function () {
-            $("body").append(crearBoxConfiguraciones());
-            $("#cerrarBoxConfig").on("click", function (event) {
-                $("#boxConfig").remove();
-            });
-            $(".widgetCheck").click(function () {
-                widgetId = this.id.substring(0,11);
-                if(this.checked){
-                    addUserWidget(widgetId);
-                    widgetActual = getWidget(widgetId);
-                    $("#menu").append("<li class='socialEyeWidget socialEye' id='widgetList"+widgetId+"'>  <a class='widgetIcon' id=widget'"+widgetId+"' title='"+widgetActual.widget_name+"'><span class='fa-stack fa-lg'><i class='fa fa-"+widgetActual.widget_icon+" fa-stack-1x '></i></span></a> </li>");
-                }
-                else{
-                    $('#widgetList'+widgetId).remove();
-                    removeUserWidget(widgetId);
-                }
-            });
-        });
-
-        $("#cerrarSesion").click(function () {
-            cerrarBoxes();
-            deleteSession();
-            setTimeout(function () {  //Delay porque quedaba la barra a medio cerrar cuando aparecia el mensaje de saludo.
-                $(".socialEyeWidget").hide('fast');
-                $("#socialEyeBar").animate({height: "42px"}, "500");
-                activo = 0;
-            }, 350);
-
-        });
-
 
 
 
@@ -267,7 +311,6 @@ function Manager() {
 
     function crearBoxConfiguraciones(){
         var allWidgets;
-        var data;
         var userWidgets;
         var boxConfig = "<div id='boxConfig' class='socialEyeContainer' style='z-index: 999999999999999999;'>";
         boxConfig += "<button type='button' class='close' id='cerrarBoxConfig' aria-hidden='true'>&times;</button>";
@@ -275,13 +318,14 @@ function Manager() {
         boxConfig += "<ul id='listaWidgets'>";
         allWidgets = getWidgets();
         userWidgets = getUserWidgets();
-        $.each(data, function (i, item) {
-            boxConfig += "<li> <a class='widgetIcon' title='"+item.widget_name+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.widget_icon+" fa-stack-1x '></i></span></a>";
-            if($.inArray(item, userWidgets) != -1){
-                boxConfig += "<input type='checkbox' id='widgetCheck'"+item.pk+" class='widgetCheck' checked>";
+        idsWidgets = getIdsWidgets(userWidgets);
+        $.each(allWidgets, function (i, item) {
+            boxConfig += "<li> <a class='widgetIcon' title='"+item.widget_title+": "+item.description+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.widget_icon+" fa-stack-1x '></i></span></a>";
+            if($.inArray(item.pk, idsWidgets) != -1){
+                boxConfig += "<input type='checkbox' id='widgetCheck"+item.pk+"' class='widgetCheck' checked>";
             }
             else{
-                boxConfig += "<input type='checkbox' id='widgetCheck'"+item.pk+" class='widgetCheck'>";
+                boxConfig += "<input type='checkbox' id='widgetCheck"+item.pk+"' class='widgetCheck'>";
             }
             boxConfig += "</li>";
         });
@@ -329,10 +373,10 @@ function Manager() {
             }, // data sent with the post request
             // handle a successful response
             success: function (data) {
+                alert("Hasta luego "+ localStorage['username']);
                 localStorage.removeItem('user');
                 localStorage.removeItem('token');
                 localStorage.removeItem('userName');
-                alert("Hasta luego");
             },
             error: function (xhr, errmsg, err) {
                 alert("Hubo un error al cerrar la sesión");
@@ -393,7 +437,6 @@ function Manager() {
         $.ajax({
             url: "http://127.0.0.1:8000/widgetRest/getWidget/", // the endpoint
             type: "GET", // http method
-            dataType: 'json',
             async: false,
             data : {idWidget: idWidget
             }, // data sent with the post request
@@ -409,7 +452,15 @@ function Manager() {
 
             }
         });
-        return data;
+        return data[0];
+    }
+    
+    function getIdsWidgets(widgets){
+        var result = [];
+        $.each(widgets, function (i, item) {
+             result.push(item.pk);
+        });
+        return result;
     }
 
     function addUserWidget(idWidget){
