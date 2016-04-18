@@ -7,34 +7,34 @@
 // @match      http://*/*
 // @noframes
 
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery-2.1.4.min.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/jquery-ui.min.js
-// @resource   jqueryUICSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/jquery-ui.min.css
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/js/bootstrap.min.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/socialEye.js
-// @resource   bootstrapCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap.min.css
-// @resource   bootstrapThemeCSS file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/bootstrap/css/bootstrap-theme.min.css
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/sidebar_menu.js
-// @resource   sidebar file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/simple-sidebar.css
-// @resource   login file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/login.css
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/bootbox.min.js
-// @resource   commentBox file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/commentBox.css
-// @resource   listaUsuarios file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/listaUsuarios.css
-// @resource   encuestas file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/encuestas.css
-// @resource   chats file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/chats.css
-// @require  file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/comentarios.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/usuarios.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/encuestas.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/chats.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/common.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/latest-v2.js
-// @resource   video file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/main.css
+// @grant GM_getResourceText
+// @grant GM_addStyle
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/jquery-2.1.4.min.js
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/jquery-ui.min.js
+// @resource   jqueryUICSS file:///home/matias/Tesis/ambiente/bin/SocialEye/css/jquery-ui.min.css
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/bootstrap/js/bootstrap.min.js
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/socialEye.js
+// @resource   bootstrapCSS file:///home/matias/Tesis/ambiente/bin/SocialEye/bootstrap/css/bootstrap.min.css
+// @resource   bootstrapThemeCSS file:///home/matias/Tesis/ambiente/bin/SocialEye/bootstrap/css/bootstrap-theme.min.css
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/sidebar_menu.js
+// @resource   sidebar file:///home/matias/Tesis/ambiente/bin/SocialEye/css/simple-sidebar.css
+// @resource   login file:///home/matias/Tesis/ambiente/bin/SocialEye/css/login.css
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/bootbox.min.js
+// @resource   commentBox file:///home/matias/Tesis/ambiente/bin/SocialEye/css/commentBox.css
+// @resource   listaUsuarios file:///home/matias/Tesis/ambiente/bin/SocialEye/css/listaUsuarios.css
+// @resource   encuestas file:///home/matias/Tesis/ambiente/bin/SocialEye/css/encuestas.css
+// @resource   chats file:///home/matias/Tesis/ambiente/bin/SocialEye/css/chats.css
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/comentarios.js
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/usuarios.js
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/encuestas.js
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/chats.js
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/common.js
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/latest-v2.js
+// @resource   video file:///home/matias/Tesis/ambiente/bin/SocialEye/css/main.css
 // ==/UserScript==
 
 
-        function getUser () {
-            return localStorage['username'];
-        }
+
 
 
 //va a estar el click del icono del widget, en donde
@@ -49,6 +49,7 @@ function Manager() {
     var activo = 0;
     var debateGeneralA = 0;
     var comentariosA = 0;
+    var altoBarra;
 
     this.iniciarScript = function () {
 
@@ -75,9 +76,9 @@ function Manager() {
 
         $("head").append("<link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet'>");
 
-        $("body").append(" <div id='socialEyeBar' class='socialEye'> <ul class='socialEyeNavStyle nav-pills nav-stacked socialEye' id='menu'>   <li class='active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='debateGeneral' class='socialEye' title='Debate general'><span class='fa-stack fa-lg socialEye'><i class='fa fa-commenting fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='comentarios' title='Comentar contenido'><span class='fa-stack fa-lg'><i class='fa fa-comments fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetUsuarios' class='socialEye' title='Contactos'><span class='fa-stack fa-lg socialEye'><i class='fa fa-users fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetEncuestas' class='socialEye' title='Encuestas'><span class='fa-stack fa-lg'><i class='fa fa-question-circle fa-stack-1x socialEye'></i></span></a></li> <li class='socialEyeWidget socialEye'>  <a id='chats' class='socialEye' title='Chats'><span class='fa-stack fa-lg socialEye'><i class='fa fa-weixin fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li> </ul> </div> ");
+        $("body").append(" <div id='socialEyeBar' class='socialEye'> <ul class='socialEyeNavStyle nav-pills nav-stacked socialEye' id='menu'>   <li class='active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li></ul> </div> ");
 
-
+        //PARTE BORRADA DEL APPEND AL MENU  <li class='socialEyeWidget socialEye'>  <a id='debateGeneral' class='socialEye' title='Debate general'><span class='fa-stack fa-lg socialEye'><i class='fa fa-commenting fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='comentarios' title='Comentar contenido'><span class='fa-stack fa-lg'><i class='fa fa-comments fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetUsuarios' class='socialEye' title='Contactos'><span class='fa-stack fa-lg socialEye'><i class='fa fa-users fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetEncuestas' class='socialEye' title='Encuestas'><span class='fa-stack fa-lg'><i class='fa fa-question-circle fa-stack-1x socialEye'></i></span></a></li> <li class='socialEyeWidget socialEye'>  <a id='chats' class='socialEye' title='Chats'><span class='fa-stack fa-lg socialEye'><i class='fa fa-weixin fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='configuraciones' class='socialEye' title='Configuraciones'><span class='fa-stack fa-lg socialEye'><i class='fa fa-cogs fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li> 
         $.ajaxSetup({
             beforeSend: function (xhr) {
                 xhr.setRequestHeader('Authorization', "Basic " + btoa(localStorage['user'] + ":" + localStorage['token']));
@@ -87,13 +88,110 @@ function Manager() {
 
 
         function initializeWidgets (){
-            var div = document.createElement('div');
+            var widgets = getUserWidgets();
+            var div;
+            var widgetAux;
+            altoBarra = 44*(widgets.length + 3);
+            $.each(widgets, function (i, item) {
+                if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
+                    div = document.createElement('div');
+                    div.className = 'container'+item.pk;
+                    widgetAux = eval(item.fields.widget_name);
+                    widgetAux.idWidget = item.pk;
+                    widgetAux.ping(widgetAux.idWidget);
+                    div.innerHTML = widgetAux.loadWidget();
+                    $('body').append(div);
+                    widgetAux.onReady();
+                }
+                $("#menu").append("<li class='socialEyeWidget socialEye' id='widgetList"+item.pk+"'>  <a class='widgetIcon' id='widget"+item.pk+"' title='"+item.fields.widget_title+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.fields.widget_icon+" fa-stack-1x '></i></span></a> </li>");
+                $("#widget"+item.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+                $("#widget"+item.pk).click(function (e) {
+                     widgetAux = eval(item.fields.widget_name);
+                     if($(".container"+item.pk).length == 0){
+                         div = document.createElement('div');
+                         div.className = 'container'+item.pk;
+                         widgetAux.idWidget = item.pk;
+                         widgetAux.ping(widgetAux.idWidget);
+                         div.innerHTML = widgetAux.loadWidget();
+                         $('body').append(div);
+                         widgetAux.onReady();
+                         $("#widget"+item.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+                     }
+                     else{
+                         widgetAux.close();
+                         widgetAux = null;
+                     }
+                });
+            });
+
+            $("#menu").append(" <li class='socialEyeWidget socialEye'>  <a id='configuraciones' class='socialEye' title='Configuraciones'><span class='fa-stack fa-lg socialEye'><i class='fa fa-cogs fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li>");
+            
+            $("#configuraciones").click(function () {
+                if($("#boxConfig").length == 0){
+                    $("#configuraciones").css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+                    $("body").append(crearBoxConfiguraciones());
+                    $("#cerrarBoxConfig").on("click", function (event) {
+                        $("#boxConfig").remove();
+                        $("#configuraciones").removeAttr('style');
+                    });
+                    $(".widgetCheck").click(function () {
+                        widgetId = this.id.substring(11, this.id.length);
+                        if(this.checked){
+                            addUserWidget(widgetId);
+                            widgetActual = getWidget(widgetId);
+                            iconPos =  $("#menu li").length - 3;
+                            $("#menu li:eq("+iconPos+")").after("<li class='socialEyeWidget socialEye' id='widgetList"+widgetId+"' style='display: list-item;'>  <a class='widgetIcon' id='widget"+widgetId+"' title='"+widgetActual.fields.widget_name+"'><span class='fa-stack fa-lg'><i class='fa fa-"+widgetActual.fields.widget_icon+" fa-stack-1x '></i></span></a> </li>");
+                            altoBarra = altoBarra + 44;
+                        }
+                        else{
+                            $('#widgetList'+widgetId).remove();
+                            removeUserWidget(widgetId);
+                            altoBarra = altoBarra - 44;
+                        }
+                        $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
+                    });
+               }
+               else{
+                   $("#boxConfig").remove();
+                   $("#configuraciones").removeAttr('style');
+               }
+          });
+
+        $("#cerrarSesion").click(function () {
+            var widgetsUsuario = getUserWidgets();
+            var widgetAux;
+            $.each(widgetsUsuario, function (i, item) {
+                if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
+                    if($(".container"+item.pk).length != 0){
+                        widgetAux = eval(item.fields.widget_name);
+                        widgetAux.close();
+                    }
+                }
+            });
+            deleteSession();
+            setTimeout(function () {  //Delay porque quedaba la barra a medio cerrar cuando aparecia el mensaje de saludo.
+                $(".socialEyeWidget").hide('fast');
+                $("#socialEyeBar").animate({height: "42px"}, "500");
+                activo = 0;
+            }, 350);
+
+        });
+
+            /*var div = document.createElement('div');
             div.className = 'container'+1;
             comentarios.idWidget = 1;
             comentarios.ping(comentarios.idWidget);
             div.innerHTML = comentarios.loadWidget();
             $('body').append(div);
             comentarios.onReady();
+
+            var div2 = document.createElement('div');
+            div2.className = 'container'+2;
+            usuarios.idWidget = 2;
+            usuarios.ping(usuarios.idWidget);
+            div2.innerHTML = usuarios.loadWidget();
+            $('body').append(div2);
+            usuarios.onReady();*/
             //$.ajax({
             //    url: "http://127.0.0.1:8000/widgetRest/widget/", // the endpoint
             //    type: "GET", // http method
@@ -129,7 +227,7 @@ function Manager() {
                     activo = 0;
                 }
                 else {
-                    $("#socialEyeBar").animate({height: "310px"}, "500");
+                    $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
                     activo = 1;
                     $(".socialEyeWidget").show('slow');
                 }
@@ -177,7 +275,7 @@ function Manager() {
                             });
                             $("#registrationButton").click(function () {
                                 $.ajax({
-                                    url: "https://127.0.0.1:8000/widgetRest/registration/", // the endpoint
+                                    url: "http://127.0.0.1:8000/widgetRest/registration/", // the endpoint
                                     type: "POST", // http method
                                     async: false,
                                     data: {
@@ -206,20 +304,34 @@ function Manager() {
 
         });
 
-        $("#cerrarSesion").click(function () {
-            cerrarBoxes();
-            deleteSession();
-            setTimeout(function () {  //Delay porque quedaba la barra a medio cerrar cuando aparecia el mensaje de saludo.
-                $(".socialEyeWidget").hide('fast');
-                $("#socialEyeBar").animate({height: "42px"}, "500");
-                activo = 0;
-            }, 350);
 
+
+
+    }
+
+    function crearBoxConfiguraciones(){
+        var allWidgets;
+        var userWidgets;
+        var boxConfig = "<div id='boxConfig' class='socialEyeContainer' style='z-index: 999999999999999999;'>";
+        boxConfig += "<button type='button' class='close' id='cerrarBoxConfig' aria-hidden='true'>&times;</button>";
+        boxConfig += "<h2 class='socialEyeForm-signin-heading'>Configuración</h2>";
+        boxConfig += "<ul id='listaWidgets'>";
+        allWidgets = getWidgets();
+        userWidgets = getUserWidgets();
+        idsWidgets = getIdsWidgets(userWidgets);
+        $.each(allWidgets, function (i, item) {
+            boxConfig += "<li> <a class='widgetIcon' title='"+item.widget_title+": "+item.description+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.widget_icon+" fa-stack-1x '></i></span></a>";
+            if($.inArray(item.pk, idsWidgets) != -1){
+                boxConfig += "<input type='checkbox' id='widgetCheck"+item.pk+"' class='widgetCheck' checked>";
+            }
+            else{
+                boxConfig += "<input type='checkbox' id='widgetCheck"+item.pk+"' class='widgetCheck'>";
+            }
+            boxConfig += "</li>";
         });
-
-
-
-
+        boxConfig += "</ul>";
+        boxConfig += "</div>";
+        return boxConfig;
     }
 
     function crearBoxLogin() {
@@ -254,22 +366,141 @@ function Manager() {
     function deleteSession() {
         var dominio = window.location.hostname;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/logout/", // the endpoint
+            url: "http://127.0.0.1:8000/widgetRest/logout/", // the endpoint
             type: "POST", // http method
             data: {
                 url: dominio,
             }, // data sent with the post request
             // handle a successful response
             success: function (data) {
+                alert("Hasta luego "+ localStorage['username']);
                 localStorage.removeItem('user');
                 localStorage.removeItem('token');
                 localStorage.removeItem('userName');
-                alert("Hasta luego");
             },
             error: function (xhr, errmsg, err) {
                 alert("Hubo un error al cerrar la sesión");
             }
         });
+    }
+
+    function getUserWidgets(){
+        var data;
+        $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/widgetsByUser/", // the endpoint
+            type: "GET", // http method
+            dataType: 'json',
+            async: false,
+            data : {
+            }, // data sent with the post request
+
+            // handle a successful response
+            success: function (response) {
+                data = response
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+                alert("Error al cargar los comentarios");
+
+            }
+        });
+        return data;
+    }
+
+    function getWidgets(){
+        var data;
+        $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/widget/", // the endpoint
+            type: "GET", // http method
+            dataType: 'json',
+            async: false,
+            data : {
+            }, // data sent with the post request
+
+            // handle a successful response
+            success: function (response) {
+                data = response
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+                alert("Error al cargar los comentarios");
+
+            }
+        });
+        return data;
+    }
+
+    function getWidget(idWidget){
+        var data;
+        $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/getWidget/", // the endpoint
+            type: "GET", // http method
+            async: false,
+            data : {idWidget: idWidget
+            }, // data sent with the post request
+
+            // handle a successful response
+            success: function (response) {
+                data = response
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+                alert("Error al cargar los comentarios");
+
+            }
+        });
+        return data[0];
+    }
+    
+    function getIdsWidgets(widgets){
+        var result = [];
+        $.each(widgets, function (i, item) {
+             result.push(item.pk);
+        });
+        return result;
+    }
+
+    function addUserWidget(idWidget){
+        $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/addUserWidget/", // the endpoint
+            type: "POST", // http method
+            async: false,
+            data: {
+                idWidget: idWidget
+            }, // data sent with the post request
+
+            // handle a successful response
+            success: function () {
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+                alert("Error al enviar el objeto");
+            }
+        });    
+    }
+
+    function removeUserWidget(idWidget){
+        $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/removeUserWidget/", // the endpoint
+            type: "POST", // http method
+            async: false,
+            data: {
+                idWidget: idWidget
+            }, // data sent with the post request
+
+            // handle a successful response
+            success: function () {
+            },
+
+            // handle a non-successful response
+            error: function (xhr, errmsg, err) {
+                alert("Error al enviar el objeto");
+            }
+        });    
     }
 
 }

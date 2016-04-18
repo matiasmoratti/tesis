@@ -1,5 +1,6 @@
 var comentarios = new Widget();
-
+comentarios.descripcion = "Permite realizar comentarios entre los usuarios sobre una web en particular.";
+comentarios.icono = "commenting";
 comentarios.loadWidget = function () {
     var commentBox = "<div class='detailBox socialEye' id='comentariosGenerales'>";
     commentBox += "<div class='titleBox socialEye'>";
@@ -9,7 +10,7 @@ comentarios.loadWidget = function () {
     commentBox += "<div class='actionBox socialEye'>";
     commentBox += "<ul id='listaComentariosGenerales' class='commentList socialEye'>";
     //Creo los objetos
-    data = comentarios.getObjects();
+    data = comentarios.getObjectsInUrl(window.location.href);
     $.each(data, function (i, item) {
         commentBox += "<li class='socialEye'><div class='commentText socialEye'>";
         commentBox += "<span class='date sub-text socialEye'>" + item.username + " dijo el " + item.date + "</span>";
@@ -45,7 +46,6 @@ comentarios.onReady = function () {
         if ($("#textoComentarioGeneral").val() != "") {
             var c = {};
             c['texto'] = $("#textoComentarioGeneral").val();
-            cAsJson = JSON.stringify(c);
             //Funcion del framework que guarda los objetos
             result = comentarios.saveObject(c);
             if (result == true) {
@@ -56,7 +56,7 @@ comentarios.onReady = function () {
                 var hs = d.getHours();
                 var mins = d.getMinutes();
                 var secs = d.getSeconds();
-                span.innerHTML = getUser() + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
+                span.innerHTML = comentarios.getUser() + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
                 parrafo.innerHTML = $("#textoComentarioGeneral").val();
                 var divComentario = document.createElement('div');
                 divComentario.setAttribute('class', 'commentText');
@@ -69,8 +69,6 @@ comentarios.onReady = function () {
                 $("#textoComentarioGeneral").val("");
                 $('#listaComentariosGenerales').animate({scrollTop: $('#listaComentariosGenerales')[0].scrollHeight});
             }
-
-
         }
 
         return false;
