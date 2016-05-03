@@ -3,6 +3,8 @@ function Widget(){
     this.descripcion;
     this.icono;
     this.intervalPing;
+    this.tittle;
+    this.interface = new WidgetInterface();
     
     this.getUser =  function() {
         return localStorage['username'];
@@ -317,8 +319,53 @@ function Widget(){
         return result;
     }
 
+    this.addPrincipalBox = function(idElement){
+        $(".container"+this.idWidget).append(this.interface.getPrincipalBox(this.idWidget,this.tittle,idElement));
+    }
 
+    this.getForm = function(idElement){
+        return this.interface.getForm(this.idWidget,idElement);
+    }
 
+    this.getInput = function(type,idElement){
+        return this.interface.getInput(this.idWidget,type,idElement);
+    }
 
+    this.getTextArea = function(idElement){
+        return this.interface.getTextArea(this.idWidget,idElement);
+    }
+
+    this.getPrincipalBox = function(idElement,tittle){
+        return this.interface.getPrincipalBox(this.idWidget,tittle,idElement);
+    }
+
+    this.getPrincipalList = function(idElement){
+        return this.interface.getPrincipalList(this.idWidget,idElement);
+    }
+    this.getPrincipalBody = function(idElement){
+        return this.interface.getPrincipalBody(this.idWidget,idElement);
+    }
+    this.getLi = function(idElement){
+        return this.interface.getLi(this.idWidget,idElement);
+    }
+
+    this.getButton = function(idElement){
+        return this.interface.getButton(this.idWidget,idElement);
+    }
+    this.getButtonWithoutStyle = function(idElement){
+        return this.interface.getButtonWithoutStyle(this.idWidget,idElement);
+    }
+    this.getDiv = function(idElement){
+        return this.interface.getDiv(this.idWidget,idElement);
+    }
+    this.getSpan = function(idElement){
+        return this.interface.getSpan(this.idWidget,idElement);
+    }
+    this.getP = function(idElement){
+        return this.interface.getP(this.idWidget,idElement);
+    }
+    this.getA = function(idElement){
+        return this.interface.getA(this.idWidget,idElement);
+    }
 
 }

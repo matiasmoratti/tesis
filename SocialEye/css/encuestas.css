@@ -1,4 +1,4 @@
-#divEncuestas{
+.container4{
             z-index: 9999999999;
             width:350px;
             position: fixed;
@@ -10,7 +10,19 @@
             background-color:#fdfdfd;
 }
 
-#crearEncuesta{
+#4divEncuestas{
+            z-index: 9999999999;
+            width:350px;
+            position: fixed;
+            margin: 0 auto;
+            top: 0;
+            left: 60%;
+            border:1px solid #bbb;
+            margin:50px;
+            background-color:#fdfdfd;
+}
+
+#4crearEncuesta{
    position: absolute;
    margin-left: 5px;
 }

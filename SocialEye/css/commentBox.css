@@ -84,3 +84,17 @@
     margin-top: 5px;
     position: center;
 }
+
+.iconoComentarioEspecifico{
+    position:absolute;
+    top:0;
+    z-index: 9999999999999999;
+}
+
+.specificBox{
+            width:400px;
+            position: absolute;
+            border:1px solid #bbb;
+            background-color:#fdfdfd;
+            z-index: 99999999999999999999;
+          }
