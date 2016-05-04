@@ -25,11 +25,13 @@
 // @resource   encuestas file:///home/matias/Tesis/ambiente/bin/SocialEye/css/encuestas.css
 // @resource   chats file:///home/matias/Tesis/ambiente/bin/SocialEye/css/chats.css
 // @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/comentarios.js
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/comentariosEspecificos.js
 // @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/usuarios.js
 // @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/encuestas.js
 // @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/chats.js
 // @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/common.js
 // @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/latest-v2.js
+// @require   file:///home/matias/Tesis/ambiente/bin/SocialEye/js/widgetInterface.js
 // @resource   video file:///home/matias/Tesis/ambiente/bin/SocialEye/css/main.css
 // ==/UserScript==
 
@@ -50,6 +52,7 @@ function Manager() {
     var debateGeneralA = 0;
     var comentariosA = 0;
     var altoBarra;
+    var widgetsInitialized = false;
 
     this.iniciarScript = function () {
 
@@ -93,29 +96,14 @@ function Manager() {
             var widgetAux;
             altoBarra = 44*(widgets.length + 3);
             $.each(widgets, function (i, item) {
-                if((item.pk == 1) || (item.pk == 2) || (item.pk == 4)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
-                    div = document.createElement('div');
-                    div.className = 'container'+item.pk;
-                    widgetAux = eval(item.fields.widget_name);
-                    widgetAux.idWidget = item.pk;
-                    widgetAux.ping(widgetAux.idWidget);
-                    div.innerHTML = widgetAux.loadWidget();
-                    $('body').append(div);
-                    widgetAux.onReady();
-                }
                 $("#menu").append("<li class='socialEyeWidget socialEye' id='widgetList"+item.pk+"'>  <a class='widgetIcon' id='widget"+item.pk+"' title='"+item.fields.widget_title+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.fields.widget_icon+" fa-stack-1x '></i></span></a> </li>");
-                $("#widget"+item.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+               // if((item.pk == 1) || (item.pk == 2) || (item.pk == 4)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
+                     runWidget(item);
+               // }
                 $("#widget"+item.pk).click(function (e) {
                      widgetAux = eval(item.fields.widget_name);
                      if($(".container"+item.pk).length == 0){
-                         div = document.createElement('div');
-                         div.className = 'container'+item.pk;
-                         widgetAux.idWidget = item.pk;
-                         widgetAux.ping(widgetAux.idWidget);
-                         div.innerHTML = widgetAux.loadWidget();
-                         $('body').append(div);
-                         widgetAux.onReady();
-                         $("#widget"+item.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+                         runWidget(item);
                      }
                      else{
                          widgetAux.close();
@@ -183,64 +171,49 @@ function Manager() {
             var widgetsUsuario = getUserWidgets();
             var widgetAux;
             $.each(widgetsUsuario, function (i, item) {
-                if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
+               // if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
                     if($(".container"+item.pk).length != 0){
-                        $('#widgetList'+item.pk).remove();
                         widgetAux = eval(item.fields.widget_name);
                         widgetAux.close();
                     }
-                }
-                $('#configuraciones').remove();
-                $('#cerrarSesion').remove();
-                if($("#boxConfig").length != 0){
-                     $('#boxConfig').remove();
-                }
+             //   }
+                $('#widgetList'+item.pk).remove();
             });
+            $('#configuraciones').remove();
+            $('#cerrarSesion').remove();
+            if($("#boxConfig").length != 0){
+                $('#boxConfig').remove();
+            }
+
+            $(".socialEyeWidget").hide('slow');
+            $("#socialEyeBar").animate({height: "42px"}, "500");
+            activo = 0;
             deleteSession();
-            setTimeout(function () {  //Delay porque quedaba la barra a medio cerrar cuando aparecia el mensaje de saludo.
-                $(".socialEyeWidget").hide('fast');
-                $("#socialEyeBar").animate({height: "42px"}, "500");
-                activo = 0;
-            }, 350);
 
         });
 
-            /*var div = document.createElement('div');
-            div.className = 'container'+1;
-            comentarios.idWidget = 1;
-            comentarios.ping(comentarios.idWidget);
-            div.innerHTML = comentarios.loadWidget();
-            $('body').append(div);
-            comentarios.onReady();
+            widgetsInitialized = true;
 
-            var div2 = document.createElement('div');
-            div2.className = 'container'+2;
-            usuarios.idWidget = 2;
-            usuarios.ping(usuarios.idWidget);
-            div2.innerHTML = usuarios.loadWidget();
-            $('body').append(div2);
-            usuarios.onReady();*/
-            //$.ajax({
-            //    url: "http://127.0.0.1:8000/widgetRest/widget/", // the endpoint
-            //    type: "GET", // http method
-            //    async: false,
-            //
-            //    // handle a successful response
-            //    success: function (data) {
-            //        $.each(data, function (i, item) {
-            //            $("#menu").append("<li class='socialEyeWidget socialEye'>  <a class='widgetIcon' id=widget'"+item.id+"' title='"+item.widget_name+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.widget_icon+" fa-stack-1x '></i></span></a> </li>");
-            //        });
-            //
-            //
-            //    },
-            //
-            //    // handle a non-successful response
-            //    error: function (xhr, errmsg, err) {
-            //        alert("No se pudieron inicializar los widgets");
-            //    }
-            //});
+        }
+        
+        function runWidget(widget){
+              var div;
+              var widgetAux;
+              div = document.createElement('div');
+              div.className = 'container'+widget.pk;
+              widgetAux = eval(widget.fields.widget_name);
+              widgetAux.idWidget = widget.pk;
+              widgetAux.ping(widgetAux.idWidget);
+              if((item.pk == 2) || (item.pk == 3)){ //MOMENTANEO POR LOS QUE TODAVIA NO IMPLEMENTAN LA INTERFAZ DEL FRAMEWORK             
+                div.innerHTML = widgetAux.loadWidget();
+              }
+              else{
+                div.appendChild(widgetAux.loadWidget());
+              }
 
-
+              $('body').append(div);
+              widgetAux.onReady();
+              $("#widget"+widget.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
         }
 
 
@@ -249,12 +222,35 @@ function Manager() {
                 $("#boxRegistro").remove();
             }
             if (typeof localStorage['user'] != "undefined") {
+                if(!widgetsInitialized){
+                     initializeWidgets();
+                }
+                var widgetsUsuario = getUserWidgets();
+                var widgetAux;
                 if (activo) {
-                    $(".socialEyeWidget").hide('fast');
+                    $(".socialEyeWidget").hide('slow');
                     $("#socialEyeBar").animate({height: "42px"}, "500");
+                    $.each(widgetsUsuario, function (i, item) {
+                        if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
+                            if($(".container"+item.pk).length != 0){
+                                widgetAux = eval(item.fields.widget_name);
+                                widgetAux.close();
+                            }
+                        }
+
+                    });
+                    if($("#boxConfig").length != 0){
+                        $('#boxConfig').remove();
+                        $("#configuraciones").removeAttr('style');
+                    }
                     activo = 0;
                 }
                 else {
+                    $.each(widgetsUsuario, function (i, item) {
+                        if((item.pk == 1) || (item.pk == 2) || (item.pk == 4)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
+                            runWidget(item);
+                        }
+                    });
                     $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
                     activo = 1;
                     $(".socialEyeWidget").show('slow');
@@ -284,6 +280,9 @@ function Manager() {
                                     localStorage.setItem('username', $("#user").val());
                                     $("#boxLogin").remove();
                                     initializeWidgets();
+                                    $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
+                                    activo = 1;
+                                    $(".socialEyeWidget").show('slow');
                                 }
                                 else {
                                     alert("Usuario o contraseña inválidos");
@@ -401,7 +400,9 @@ function Manager() {
             }, // data sent with the post request
             // handle a successful response
             success: function (data) {
-                alert("Hasta luego "+ localStorage['username']);
+                setTimeout(function () {
+                    alert("Hasta luego "+ localStorage['username']);
+                }, 400);
                 localStorage.removeItem('user');
                 localStorage.removeItem('token');
                 localStorage.removeItem('userName');

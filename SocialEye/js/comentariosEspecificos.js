@@ -6,29 +6,13 @@ especificos.loadWidget = function () {
     data = especificos.getObjectsInUrl(window.location.href, params);
     var commentIcon;
     $.each(data, function (i, item) {
-        commentIcon = "<a class='socialEye iconoComentarioEspecifico' title='Mostrar comentarios' style='position:absolute; top:"+item.element.positionTop+"; left:"+item.element.positionLeft+"'>";
-        commentIcon += "<span class='fa-stack fa-lg socialEye'>";
-        commentIcon += "<i id='"+item.element.tag+"' class='fa fa-comments fa-stack-1x socialEye iconoClick'>";
-        commentIcon += "</i></span></a>"; 
-        tagElement = document.evaluate(item.element.tag, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-        $(tagElement).append(commentIcon);
+        $("#socialEyeContainer").append(getCommentIcon(item));
     });
     return "";
 }
 
-especificos.onReady = function (){
-        $(".iconoComentarioEspecifico").on("click", showSpecificBox);      
-        $(".cerrarEspecifico").on('click',function (e) {
-            var tag = e.target.id.substr(17, e.target.id.length);
-            $("#specificBox" + tag).remove();
-            commentIcon = "<a class='socialEye iconoComentarioEspecifico' title='Mostrar comentarios'>";
-            commentIcon += "<span class='fa-stack fa-lg socialEye'>";
-            commentIcon += "<i id='"+tag+"' class='fa fa-comments fa-stack-1x socialEye iconoClick'>";
-            commentIcon += "</i></span></a>"; 
-            tagElement = document.evaluate(tag, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-            $(tagElement).append(commentIcon);
-            return false;
-        });
+especificos.onReady = function (){    
+       $('body').on("click", '.iconoComentarioEspecifico', showSpecificBox);
         changeClickListeners();
 }
 
@@ -73,6 +57,7 @@ function showSpecificBox(e){
         else{
             tagAux = e.target.id;
         }
+
         params = {};
         params.tag = tagAux;
         params.tipo = 'commentBox';
@@ -81,20 +66,24 @@ function showSpecificBox(e){
             obj = {};
             obj.tag = tagAux;
             obj.tipo = 'commentBox';
-            obj.positionLeft = e.pageX + 'px';
-            obj.positionTop = e.pageY + 'px';
+            obj.positionLeft = e.pageX;
+            obj.positionTop = e.pageY;
             especificos.saveObject(obj);
             params = {};
             params.tag = tagAux;
             params.tipo = 'commentBox';
             boxObject = especificos.getObjectInUrl(window.location.href, params);
+            $("#socialEyeContainer").append(getCommentIcon(boxObject));
         }
-        var tagElement = document.evaluate(tagAux, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-        $(tagElement).append(getSpecificBox(tagAux));
+        $("#socialEyeContainer").append(getSpecificBox(tagAux));
 
         boxElement = document.getElementById("specificBox" + tagAux);
-        boxElement.style.left = boxObject.element.positionLeft;
-        boxElement.style.top = boxObject.element.positionTop;
+
+        positionLeft = boxObject.element.positionLeft + 25;
+        positionTop = boxObject.element.positionTop + 25;
+
+        boxElement.style.left = positionLeft + 'px';
+        boxElement.style.top = positionTop + 'px';
 
         $(".agregarComentarioEspecifico").on('click',function (e) {
             var tag = e.target.id.substr(17, e.target.id.length);
@@ -138,6 +127,14 @@ function showSpecificBox(e){
             var boxElement = document.getElementById('specificBox' + tag);
             $(boxElement).remove();
         });
+}
+
+function getCommentIcon(item){
+    var commentIcon = "<a class='socialEye iconoComentarioEspecifico' title='Mostrar comentarios' style='position:absolute; top:"+item.element.positionTop+"px; left:"+item.element.positionLeft+"px'>";
+    commentIcon += "<span class='fa-stack fa-lg socialEye'>";
+    commentIcon += "<i id='"+item.element.tag+"' class='fa fa-comments fa-stack-1x socialEye iconoClick'>";
+    commentIcon += "</i></span></a>"; 
+    return commentIcon;
 }
 
 
