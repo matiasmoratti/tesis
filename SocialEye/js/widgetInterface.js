@@ -1,6 +1,6 @@
 function WidgetInterface(){
 
-    this.getPrincipalBox = function(idWidget,title,idElement){
+    this.getPrincipalBox = function(idWidget,title,idElement,widgetObject){
         divPrincipal = document.createElement("div");
         divPrincipal.classList.add( "detailBox", "socialEye", idWidget);
         if (!(typeof idElement === 'undefined'))
@@ -15,6 +15,12 @@ function WidgetInterface(){
         boton.classList.add( "close", "botonCerrar", 'socialEye', 'cerrar'+idWidget);
         boton['aria-hidden'] = "true";
         boton.innerHTML = '&times;';
+        $(boton).on('click',function (e) {
+            widgetObject.onCloseWidget();
+            clearInterval(widgetObject.intervalPing);
+            $("#container"+widgetObject.idWidget).remove();
+            $("#widget"+widgetObject.idWidget).removeAttr('style');
+        });
         divTitulo.appendChild(label);
         divTitulo.appendChild(boton);
         divPrincipal.appendChild(divTitulo);

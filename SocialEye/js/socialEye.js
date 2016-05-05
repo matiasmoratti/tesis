@@ -41,7 +41,7 @@ function Widget(){
     };
 
     this.openWidget = function () {
-       $(".container"+this.idWidget).show();
+       $("#container"+this.idWidget).show();
     }
 
     this.onCloseWidget = function (){
@@ -54,14 +54,14 @@ function Widget(){
     };
 
     this.inyectHTML = function (html){
-            $('.container'+this.idWidget).append(html);
+            $('#container'+this.idWidget).append(html);
     }
 
 
     this.close = function (){
         this.onCloseWidget();
         clearInterval(this.intervalPing);
-        $(".container"+this.idWidget).remove();
+        $("#container"+this.idWidget).remove();
         $("#widget"+this.idWidget).removeAttr('style');
     }
 
@@ -319,8 +319,12 @@ function Widget(){
         return result;
     }
 
+    this.getWidgetContainer = function(){
+        return $("#container" + this.idWidget);
+    }
+
     this.addPrincipalBox = function(idElement){
-        $(".container"+this.idWidget).append(this.interface.getPrincipalBox(this.idWidget,this.tittle,idElement));
+        $("#container"+this.idWidget).append(this.interface.getPrincipalBox(this.idWidget,this.tittle,idElement));
     }
 
     this.getForm = function(idElement){
@@ -336,7 +340,7 @@ function Widget(){
     }
 
     this.getPrincipalBox = function(idElement,title){
-        return this.interface.getPrincipalBox(this.idWidget,title,idElement);
+        return principalBox = this.interface.getPrincipalBox(this.idWidget,title,idElement,this);
     }
 
     this.getBox = function(idElement,title){

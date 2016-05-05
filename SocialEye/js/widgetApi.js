@@ -104,7 +104,7 @@ function Manager() {
                // }
                 $("#widget"+item.pk).click(function (e) {
                      widgetAux = eval(item.fields.widget_name);
-                     if($(".container"+item.pk).length == 0){
+                     if($("#container"+item.pk).length == 0){
                          runWidget(item);
                      }
                      else{
@@ -134,9 +134,9 @@ function Manager() {
                             altoBarra = altoBarra + 44;
                             $("#widget"+widgetId).click(function (e) {
                                 widgetAux = eval(widgetActual.fields.widget_name);
-                                if($(".container"+widgetId).length == 0){
+                                if($("#container"+widgetId).length == 0){
                                     div = document.createElement('div');
-                                    div.className = 'container'+widgetId;
+                                    div.setAttribute('id', 'container' + widgetId);
                                     widgetAux.idWidget = widgetId;
                                     widgetAux.ping(widgetAux.idWidget);
                                     div.innerHTML = widgetAux.loadWidget();
@@ -154,7 +154,7 @@ function Manager() {
                             $('#widgetList'+widgetId).remove();
                             removeUserWidget(widgetId);
                             altoBarra = altoBarra - 44;
-                            if($(".container"+widgetId).length != 0){
+                            if($("#container"+widgetId).length != 0){
                                 $('#widgetList'+widgetId).remove();
                                 widgetAux = eval(widgetActual.fields.widget_name);
                                 widgetAux.close();
@@ -174,7 +174,7 @@ function Manager() {
             var widgetAux;
             $.each(widgetsUsuario, function (i, item) {
                // if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
-                    if($(".container"+item.pk).length != 0){
+                    if($("#container"+item.pk).length != 0){
                         widgetAux = eval(item.fields.widget_name);
                         widgetAux.close();
                     }
@@ -202,7 +202,8 @@ function Manager() {
               var div;
               var widgetAux;
               div = document.createElement('div');
-              div.className = 'container'+widget.pk;
+              div.setAttribute('id', 'container' + widget.pk);
+              $('body').append(div);
               widgetAux = eval(widget.fields.widget_name);
               widgetAux.idWidget = widget.pk;
               widgetAux.ping(widgetAux.idWidget);
@@ -213,7 +214,6 @@ function Manager() {
                 div.appendChild(widgetAux.loadWidget());
               }
 
-              $('body').append(div);
               widgetAux.onReady();
               $("#widget"+widget.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
         }
@@ -234,7 +234,7 @@ function Manager() {
                     $("#socialEyeBar").animate({height: "42px"}, "500");
                     $.each(widgetsUsuario, function (i, item) {
                         if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
-                            if($(".container"+item.pk).length != 0){
+                            if($("#container"+item.pk).length != 0){
                                 widgetAux = eval(item.fields.widget_name);
                                 widgetAux.close();
                             }

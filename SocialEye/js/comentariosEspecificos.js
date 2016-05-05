@@ -6,46 +6,15 @@ especificos.loadWidget = function () {
     data = especificos.getObjectsInUrl(window.location.href, params);
     var commentIcon;
     $.each(data, function (i, item) {
-        $("#socialEyeContainer").append(getCommentIcon(item));
+        $(especificos.getWidgetContainer()).append(getCommentIcon(item));
     });
-    return "";
+    return null;
 }
 
 especificos.onReady = function (){    
        $('body').on("click", '.iconoComentarioEspecifico', showSpecificBox);
         changeClickListeners();
 }
-
-/*function getSpecificBox(tag){
-        var commentBox = "<div class='specificBox socialEye' id='specificBox" + tag + "'>";
-        commentBox += "<div class='titleBox'>";
-        commentBox += "<label> Comentarios relacionados </label>";
-        commentBox += "<button type='button' class='close botonCerrar cerrarEspecifico' id='cerrarComentario" + tag + "' aria-hidden='true'>&times;</button>";
-        commentBox += "</div>";
-        commentBox += "<div class='actionBox'>";
-        commentBox += "<ul id='listaComentario" + tag + "' class='commentList'>";
-        params = {};
-        params.tag = tag;
-        params.tipo = 'comment';
-        data = especificos.getObjectsInUrl(window.location.href, params);
-        $.each(data, function (i, item) {
-            commentBox += "<li><div class='commentText'>";
-            commentBox += "<span class='date sub-text'>" + item.username + " dijo el " + item.date + "</span>";
-            commentBox += "<p>" + item.element.texto + "</p>";
-            commentBox += "</div>";
-            commentBox += "</li>";
-        });
-        commentBox += "<li>";
-        commentBox += "</li>";
-        commentBox += "</ul>";
-        commentBox += "<form class='form-inline' role='form'>";
-        commentBox += "<textarea class='form-control' id='textoComentario" + tag + "' type='text' placeholder='Escribe un comentario' ></textarea>";
-        commentBox += "<button type = 'button' id='agregarComentario" + tag + "' class='btn btn-primary agregarComentarioEspecifico'>Agregar</button>";
-        commentBox += "</form>";
-        commentBox += "</div>";
-        commentBox += "</div>";
-        return commentBox;
-}*/
 
 function showSpecificBox(e){
         var tagAux;
@@ -73,7 +42,7 @@ function showSpecificBox(e){
             params.tag = tagAux;
             params.tipo = 'commentBox';
             boxObject = especificos.getObjectInUrl(window.location.href, params);
-            $("#socialEyeContainer").append(getCommentIcon(boxObject));
+            $(especificos.getWidgetContainer()).append(getCommentIcon(boxObject));
         }
         boxAux = especificos.getBox(tagAux, "Comentarios relacionados");
         boxAux.classList.add('specificBox');
@@ -123,7 +92,7 @@ function showSpecificBox(e){
         bodyAux.appendChild(formAux);
         boxAux.appendChild(bodyAux);
 
-        $("#socialEyeContainer").append(boxAux);
+        $(especificos.getWidgetContainer()).append(boxAux);
 
         $(".agregarComentarioEspecifico").on('click',function (e) {
             var tag = e.target.id.substr(especificos.idWidget.toString().length + 17);

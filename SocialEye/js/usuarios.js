@@ -278,7 +278,6 @@ function mostrarChat(otroUsuario){
 	}); 
 
 	setInterval(function () {
-		alert("hola");
 		if(usuarios.isUserConnectedInWidget(usuarioChatActual) == false){
 			$('#textoComentarioChat').prop("disabled", true);
 			$("#call"+ usuarioChatActual).prop('onclick',null).off('click');
