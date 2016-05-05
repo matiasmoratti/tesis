@@ -16,7 +16,7 @@ especificos.onReady = function (){
         changeClickListeners();
 }
 
-function getSpecificBox(tag){
+/*function getSpecificBox(tag){
         var commentBox = "<div class='specificBox socialEye' id='specificBox" + tag + "'>";
         commentBox += "<div class='titleBox'>";
         commentBox += "<label> Comentarios relacionados </label>";
@@ -45,7 +45,7 @@ function getSpecificBox(tag){
         commentBox += "</div>";
         commentBox += "</div>";
         return commentBox;
-}
+}*/
 
 function showSpecificBox(e){
         var tagAux;
@@ -75,20 +75,60 @@ function showSpecificBox(e){
             boxObject = especificos.getObjectInUrl(window.location.href, params);
             $("#socialEyeContainer").append(getCommentIcon(boxObject));
         }
-        $("#socialEyeContainer").append(getSpecificBox(tagAux));
+        boxAux = especificos.getBox(tagAux, "Comentarios relacionados");
+        boxAux.classList.add('specificBox');
 
-        boxElement = document.getElementById("specificBox" + tagAux);
+       // boxElement = document.getElementById("specificBox" + tagAux);
 
         positionLeft = boxObject.element.positionLeft + 25;
         positionTop = boxObject.element.positionTop + 25;
 
-        boxElement.style.left = positionLeft + 'px';
-        boxElement.style.top = positionTop + 'px';
+     //   boxElement.style.left = positionLeft + 'px';
+    //    boxElement.style.top = positionTop + 'px';
+        boxAux.style.left = positionLeft + 'px';
+        boxAux.style.top = positionTop + 'px';
+
+        bodyAux = especificos.getPrincipalBody("bodyComentario" + tagAux);
+        listaAux = especificos.getPrincipalList("listaComentario" + tagAux);
+
+        //Creo los objetos
+        params = {};
+        params.tag = tagAux;
+        params.tipo = 'comment';
+        datosComentarios = especificos.getObjectsInUrl(window.location.href, params);
+        $.each(datosComentarios, function (i, item) {
+            li = comentarios.getLi();
+            div = comentarios.getDiv();
+            div.classList.add('commentText');
+            span = comentarios.getSpan();
+            span.classList.add('date','sub-text');
+            span.innerHTML=item.username + " dijo el " + item.date;
+            p = comentarios.getP();
+            p.innerHTML=item.element.texto;
+            div.appendChild(span);
+            div.appendChild(p);
+            li.appendChild(div);
+            listaAux.appendChild(li);
+        });
+
+        bodyAux.appendChild(listaAux);
+        formAux = especificos.getForm('');
+        textareaAux =especificos.getTextArea('textoComentario' + tagAux);
+        textareaAux.placeholder = 'Escribe un comentario...';
+        buttnAux = especificos.getButton('agregarComentario' + tagAux);
+        buttnAux.classList.add('agregarComentarioEspecifico');
+        buttnAux.innerHTML='Agregar';
+        formAux.appendChild(textareaAux);
+        formAux.appendChild(buttnAux);
+        bodyAux.appendChild(formAux);
+        boxAux.appendChild(bodyAux);
+
+        $("#socialEyeContainer").append(boxAux);
 
         $(".agregarComentarioEspecifico").on('click',function (e) {
-            var tag = e.target.id.substr(17, e.target.id.length);
+            var tag = e.target.id.substr(especificos.idWidget.toString().length + 17);
             var usuarioComentario = especificos.getUser();
-            var textoComentarioTag = document.getElementById("textoComentario" + tag);
+            var textoComentarioTag = especificos.getWidgetElement("textoComentario" + tag);
             if (textoComentarioTag.value != "") {
                 obj = {}
                 obj['texto'] = textoComentarioTag.value;
@@ -96,36 +136,28 @@ function showSpecificBox(e){
                 obj['tag'] = tag;
                 result = especificos.saveObject(obj);
                 if (result == true) {
-                    //Creo los objetos
-                    var parrafo = document.createElement('p');
-                    parrafo.innerHTML = textoComentarioTag.value;
-                    var span = document.createElement('span');
+                    var parrafo = comentarios.getP();
+                    var span = comentarios.getSpan();
                     span.setAttribute('class', 'date sub-text');
                     var d = new Date();
                     var hs = d.getHours();
                     var mins = d.getMinutes();
                     var secs = d.getSeconds();
                     span.innerHTML = usuarioComentario + " dijo el " + $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
-                    var divComentario = document.createElement('div');
+                    parrafo.innerHTML = textoComentarioTag.value;
+                    var divComentario = especificos.getDiv();
                     divComentario.setAttribute('class', 'commentText');
-                    var lineaComentario = document.createElement('li');
+                    var lineaComentario = especificos.getLi();
                     //Uno los objetos
                     divComentario.appendChild(span);
                     divComentario.appendChild(parrafo);
                     lineaComentario.appendChild(divComentario);
-                    var listaComentarioTag = document.getElementById("listaComentario" + tag);
-                    $(listaComentarioTag).append(lineaComentario);
+                    $(especificos.getWidgetElement("listaComentario" + tag)).append(lineaComentario);
                     $(textoComentarioTag).val("");
-                    $(listaComentarioTag).animate({scrollTop: $(listaComentarioTag)[0].scrollHeight});
+                    $(especificos.getWidgetElement("listaComentario" + tag)).animate({scrollTop: $(especificos.getWidgetElement("listaComentario" + tag))[0].scrollHeight});
                 }
             }
             return false;
-        });
-
-        $(".cerrarEspecifico").on('click',function (e) {
-            var tag = e.target.id.substr(16, e.target.id.length);
-            var boxElement = document.getElementById('specificBox' + tag);
-            $(boxElement).remove();
         });
 }
 

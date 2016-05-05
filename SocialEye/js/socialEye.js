@@ -335,8 +335,12 @@ function Widget(){
         return this.interface.getTextArea(this.idWidget,idElement);
     }
 
-    this.getPrincipalBox = function(idElement,tittle){
-        return this.interface.getPrincipalBox(this.idWidget,tittle,idElement);
+    this.getPrincipalBox = function(idElement,title){
+        return this.interface.getPrincipalBox(this.idWidget,title,idElement);
+    }
+
+    this.getBox = function(idElement,title){
+        return this.interface.getBox(this.idWidget,title,idElement);
     }
 
     this.getPrincipalList = function(idElement){
@@ -366,6 +370,9 @@ function Widget(){
     }
     this.getA = function(idElement){
         return this.interface.getA(this.idWidget,idElement);
+    }
+    this.getWidgetElement = function(idElement){
+        return document.getElementById(this.idWidget + idElement);
     }
 
 }

@@ -1,6 +1,6 @@
 function WidgetInterface(){
 
-    this.getPrincipalBox = function(idWidget,tittle,idElement){
+    this.getPrincipalBox = function(idWidget,title,idElement){
         divPrincipal = document.createElement("div");
         divPrincipal.classList.add( "detailBox", "socialEye", idWidget);
         if (!(typeof idElement === 'undefined'))
@@ -10,7 +10,7 @@ function WidgetInterface(){
         divTitulo.setAttribute('id', "titulo"+idWidget);
         label = document.createElement("label");
         label.classname='socialEye';
-        label.innerHTML = tittle;
+        label.innerHTML = title;
         boton = document.createElement("button");
         boton.classList.add( "close", "botonCerrar", 'socialEye', 'cerrar'+idWidget);
         boton['aria-hidden'] = "true";
@@ -116,5 +116,29 @@ function WidgetInterface(){
             anchor.setAttribute('id', idWidget+idElement);
         anchor.classList.add('socialEye');
         return anchor;
+    }
+
+    this.getBox = function(idWidget,title,idElement){
+        divPrincipal = document.createElement("div");
+        divPrincipal.classList.add("socialEye", idWidget);
+        if (!(typeof idElement === 'undefined'))
+            divPrincipal.setAttribute('id', idWidget+idElement);
+        divTitulo = document.createElement("div");
+        divTitulo.classList.add( "titleBox", "socialEye");
+        divTitulo.setAttribute('id', "titulo"+idWidget);
+        label = document.createElement("label");
+        label.classname='socialEye';
+        label.innerHTML = title;
+        boton = document.createElement("button");
+        boton.classList.add( "close", 'socialEye', 'cerrar'+idWidget + idElement);
+        boton['aria-hidden'] = "true";
+        boton.innerHTML = '&times;';
+        divTitulo.appendChild(label);
+        divTitulo.appendChild(boton);
+        divPrincipal.appendChild(divTitulo);
+        $(boton).on('click',function (e) {
+            document.getElementById(idWidget + idElement).remove();
+        });
+        return divPrincipal;
     }
 }
