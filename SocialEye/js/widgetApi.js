@@ -87,6 +87,8 @@ function Manager() {
                 xhr.setRequestHeader('Authorization', "Basic " + btoa(localStorage['user'] + ":" + localStorage['token']));
             }
         });
+        
+        $("body").append("<div id='socialEyeContainer'> </div>");
 
 
 
@@ -204,7 +206,7 @@ function Manager() {
               widgetAux = eval(widget.fields.widget_name);
               widgetAux.idWidget = widget.pk;
               widgetAux.ping(widgetAux.idWidget);
-              if((item.pk == 2) || (item.pk == 3)){ //MOMENTANEO POR LOS QUE TODAVIA NO IMPLEMENTAN LA INTERFAZ DEL FRAMEWORK             
+              if((widget.pk == 2) || (widget.pk == 3)){ //MOMENTANEO POR LOS QUE TODAVIA NO IMPLEMENTAN LA INTERFAZ DEL FRAMEWORK             
                 div.innerHTML = widgetAux.loadWidget();
               }
               else{
