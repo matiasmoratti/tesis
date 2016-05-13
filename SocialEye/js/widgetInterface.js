@@ -124,6 +124,23 @@ function WidgetInterface(){
         return anchor;
     }
 
+    this.getI = function(idWidget,idElement){
+        tagI = document.createElement("i");
+        if (!(typeof idElement === 'undefined'))
+            tagI.setAttribute('id', idWidget+idElement);
+        tagI.classList.add('socialEye');
+        return tagI;
+    }
+
+    this.getLabel = function(idWidget,idElement,text){
+        tagLabel = document.createElement("label");
+        if (!(typeof idElement === 'undefined'))
+            tagLabel.setAttribute('id', idWidget+idElement);
+        tagLabel.classList.add('socialEye');
+        tagLabel.innerHTML = text;
+        return tagLabel;
+    }
+
     this.getBox = function(idWidget,title,idElement){
         divPrincipal = document.createElement("div");
         divPrincipal.classList.add("socialEye", idWidget);

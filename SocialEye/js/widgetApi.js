@@ -52,7 +52,7 @@ function Manager() {
     var debateGeneralA = 0;
     var comentariosA = 0;
     var altoBarra;
-    var widgetsInitialized = false;
+    var toolInitialized = false;
 
     this.iniciarScript = function () {
 
@@ -79,7 +79,7 @@ function Manager() {
 
         $("head").append("<link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet'>");
 
-        $("body").append(" <div id='socialEyeBar' class='socialEye'> <ul class='socialEyeNavStyle nav-pills nav-stacked socialEye' id='menu'>   <li class='active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li></ul> </div> ");
+        $("body").append(" <div id='socialEyeBar' class='socialEye'> <ul class='socialEyeNavStyle nav-pills nav-stacked socialEye' id='menu'>   <li class='active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li>  <li class='socialEyeWidget socialEye'>  <a id='configuraciones' class='socialEye' title='Configuraciones'><span class='fa-stack fa-lg socialEye'><i class='fa fa-cogs fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li></ul> </div> ");
 
         //PARTE BORRADA DEL APPEND AL MENU  <li class='socialEyeWidget socialEye'>  <a id='debateGeneral' class='socialEye' title='Debate general'><span class='fa-stack fa-lg socialEye'><i class='fa fa-commenting fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='comentarios' title='Comentar contenido'><span class='fa-stack fa-lg'><i class='fa fa-comments fa-stack-1x '></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetUsuarios' class='socialEye' title='Contactos'><span class='fa-stack fa-lg socialEye'><i class='fa fa-users fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'> <a id='widgetEncuestas' class='socialEye' title='Encuestas'><span class='fa-stack fa-lg'><i class='fa fa-question-circle fa-stack-1x socialEye'></i></span></a></li> <li class='socialEyeWidget socialEye'>  <a id='chats' class='socialEye' title='Chats'><span class='fa-stack fa-lg socialEye'><i class='fa fa-weixin fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget socialEye'>  <a id='configuraciones' class='socialEye' title='Configuraciones'><span class='fa-stack fa-lg socialEye'><i class='fa fa-cogs fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li> 
         $.ajaxSetup({
@@ -87,35 +87,9 @@ function Manager() {
                 xhr.setRequestHeader('Authorization', "Basic " + btoa(localStorage['user'] + ":" + localStorage['token']));
             }
         });
-        
-        $("body").append("<div id='socialEyeContainer'> </div>");
+                
+        function initializeTool(){
 
-
-
-        function initializeWidgets (){
-            var widgets = getUserWidgets();
-            var div;
-            var widgetAux;
-            altoBarra = 44*(widgets.length + 3);
-            $.each(widgets, function (i, item) {
-                $("#menu").append("<li class='socialEyeWidget socialEye' id='widgetList"+item.pk+"'>  <a class='widgetIcon' id='widget"+item.pk+"' title='"+item.fields.widget_title+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.fields.widget_icon+" fa-stack-1x '></i></span></a> </li>");
-               // if((item.pk == 1) || (item.pk == 2) || (item.pk == 4)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
-                     runWidget(item);
-               // }
-                $("#widget"+item.pk).click(function (e) {
-                     widgetAux = eval(item.fields.widget_name);
-                     if($("#container"+item.pk).length == 0){
-                         runWidget(item);
-                     }
-                     else{
-                         widgetAux.close();
-                         widgetAux = null;
-                     }
-                });
-            });
-
-            $("#menu").append(" <li class='socialEyeWidget socialEye'>  <a id='configuraciones' class='socialEye' title='Configuraciones'><span class='fa-stack fa-lg socialEye'><i class='fa fa-cogs fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li>");
-            
             $("#configuraciones").click(function () {
                 if($("#boxConfig").length == 0){
                     $("#configuraciones").css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
@@ -168,7 +142,8 @@ function Manager() {
                    $("#configuraciones").removeAttr('style');
                }
           });
-
+            
+            
         $("#cerrarSesion").click(function () {
             var widgetsUsuario = getUserWidgets();
             var widgetAux;
@@ -181,8 +156,7 @@ function Manager() {
              //   }
                 $('#widgetList'+item.pk).remove();
             });
-            $('#configuraciones').remove();
-            $('#cerrarSesion').remove();
+
             if($("#boxConfig").length != 0){
                 $('#boxConfig').remove();
             }
@@ -193,9 +167,39 @@ function Manager() {
             deleteSession();
 
         });
+            
+          toolInitialized = true;
+        }
+        
+        function loadUserWidgets(){
+            var widgets = getUserWidgets(); 
+            var widgetAux;
+            $.each(widgets, function (i, item) {
+                $("#menu li:eq(0)").after("<li class='socialEyeWidget socialEye' id='widgetList"+item.pk+"'>  <a class='widgetIcon' id='widget"+item.pk+"' title='"+item.fields.widget_title+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.fields.widget_icon+" fa-stack-1x '></i></span></a> </li>");
+                $("#widget"+item.pk).click(function (e) {
+                    widgetAux = eval(item.fields.widget_name);
+                    if($("#container"+item.pk).length == 0){
+                        runWidget(item);
+                    }
+                    else{
+                        widgetAux.close();
+                        widgetAux = null;
+                    }
+                });
+            }); 
+        }
 
-            widgetsInitialized = true;
 
+        function initializeWidgets (){
+            var widgets = getUserWidgets();
+            altoBarra = 44*(widgets.length + 3);
+            $.each(widgets, function (i, item) {
+                     runWidget(item);
+            });
+            
+            $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
+            activo = 1;
+            $(".socialEyeWidget").show('slow');
         }
         
         function runWidget(widget){
@@ -207,13 +211,14 @@ function Manager() {
               widgetAux = eval(widget.fields.widget_name);
               widgetAux.idWidget = widget.pk;
               widgetAux.ping(widgetAux.idWidget);
-              if((widget.pk == 2) || (widget.pk == 3)){ //MOMENTANEO POR LOS QUE TODAVIA NO IMPLEMENTAN LA INTERFAZ DEL FRAMEWORK             
-                div.innerHTML = widgetAux.loadWidget();
+             // if(widget.pk == 2){ //MOMENTANEO POR LOS QUE TODAVIA NO IMPLEMENTAN LA INTERFAZ DEL FRAMEWORK             
+            //   div.innerHTML = widgetAux.loadWidget();
+             // }
+            //  else{
+                if(widgetAux.loadWidget() != null){
+                    div.appendChild(widgetAux.loadWidget());
+          //      }               
               }
-              else{
-                div.appendChild(widgetAux.loadWidget());
-              }
-
               widgetAux.onReady();
               $("#widget"+widget.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
         }
@@ -224,8 +229,9 @@ function Manager() {
                 $("#boxRegistro").remove();
             }
             if (typeof localStorage['user'] != "undefined") {
-                if(!widgetsInitialized){
-                     initializeWidgets();
+                if(!toolInitialized){
+                     initializeTool();
+                     loadUserWidgets();
                 }
                 var widgetsUsuario = getUserWidgets();
                 var widgetAux;
@@ -233,11 +239,9 @@ function Manager() {
                     $(".socialEyeWidget").hide('slow');
                     $("#socialEyeBar").animate({height: "42px"}, "500");
                     $.each(widgetsUsuario, function (i, item) {
-                        if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
-                            if($("#container"+item.pk).length != 0){
+                        if($("#container"+item.pk).length != 0){                  
                                 widgetAux = eval(item.fields.widget_name);
                                 widgetAux.close();
-                            }
                         }
 
                     });
@@ -248,14 +252,7 @@ function Manager() {
                     activo = 0;
                 }
                 else {
-                    $.each(widgetsUsuario, function (i, item) {
-                        if((item.pk == 1) || (item.pk == 2) || (item.pk == 4)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
-                            runWidget(item);
-                        }
-                    });
-                    $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
-                    activo = 1;
-                    $(".socialEyeWidget").show('slow');
+                    initializeWidgets();
                 }
             }
             else {
@@ -281,10 +278,11 @@ function Manager() {
                                     localStorage.setItem('user', response.user);
                                     localStorage.setItem('username', $("#user").val());
                                     $("#boxLogin").remove();
+                                    if(!toolInitialized){
+                                        initializeTool();
+                                    }
+                                    loadUserWidgets();
                                     initializeWidgets();
-                                    $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
-                                    activo = 1;
-                                    $(".socialEyeWidget").show('slow');
                                 }
                                 else {
                                     alert("Usuario o contraseña inválidos");

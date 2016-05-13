@@ -375,6 +375,12 @@ function Widget(){
     this.getA = function(idElement){
         return this.interface.getA(this.idWidget,idElement);
     }
+    this.getI = function(idElement){
+        return this.interface.getI(this.idWidget,idElement);
+    }
+    this.getLabel = function(idElement,text){
+        return this.interface.getLabel(this.idWidget,idElement,text);
+    }
     this.getWidgetElement = function(idElement){
         return document.getElementById(this.idWidget + idElement);
     }
