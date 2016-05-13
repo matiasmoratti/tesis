@@ -95,7 +95,7 @@ def objects(request):
         ele.widget = Widget.objects.get(pk=request.POST['idWidget'])
         ele.element =json.loads(request.POST['data'])
         ele.save()
-        return HttpResponse()
+        return HttpResponse(ele.id)
 
     # if a GET (or any other method) we'll create a blank form
     else:

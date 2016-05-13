@@ -9,7 +9,11 @@ var votosResultados;
 var idEncuestaActual;
 var numeroActualResultado;
 var votosAGuardar;
-var porcentajes;
+var preguntas;
+var numPregunta;
+var opciones;
+var idOpcion;
+var idOpcionActual;
 
 encuestas.loadWidget = function () {
 
@@ -28,19 +32,7 @@ encuestas.loadWidget = function () {
     data = encuestas.getObjects(params);
     $.each(data, function (i, item) {
         elementosEncuestas[item.id]=item.element;
-        var li = encuestas.getLi();
-        var btnn = encuestas.getButtonWithoutStyle(item.id);
-        btnn.classList.add('list-group-item', 'filaEncuesta');
-        var div = encuestas.getDiv();
-        div.classList.add('tituloEncuesta');
-        div.innerHTML=item.element.description;
-        var divSubtitulo = encuestas.getDiv();
-        divSubtitulo.classList.add('subtituloEncuesta');
-        divSubtitulo.innerHTML="creada por " + item.username + " el "+ item.date;
-        btnn.appendChild(div);
-        btnn.appendChild(divSubtitulo);
-        li.appendChild(btnn);
-        listaEncuestas.appendChild(li);
+        listaEncuestas.appendChild(agregarFilaAEncuesta(item));
     });
     encuestasBody.appendChild(listaEncuestas);
     encuestasBox.appendChild(encuestasBody);
@@ -88,9 +80,20 @@ encuestas.onReady = function () {
 
     });
 
-    //$(document.body).on('click', '#verResultados' ,function(){
-    //    $("#resultados").show();
-    //});
+    $(document.body).on('click','#agregarEncuesta', function (e) {
+        if ($("#titEncuesta").val() != '') {
+            var seGuardo=enviarEncuesta(preguntas);
+            if (seGuardo==true) {
+                bootbox.alert('La encuesta ha sido guardado');
+                $("#encueste").modal('hide');
+            }
+            //$("#tituloPregunta").val("");
+            //$( "#modalCrearEncuesta").empty();
+
+        } else {
+            bootbox.alert('Usted debe escribir el titulo de la encuesta');
+        }
+    });
 
 
     $(document.body).on('click', '#'+encuestas.idWidget+'crearEncuesta' ,function(){
@@ -110,6 +113,42 @@ encuestas.onReady = function () {
 
     $(document.body).on('click', '#cerrarEncuestas' ,function(){
         encuestas.close();
+    });
+
+    $(document.body).on('hidden.bs.modal', "#encueste", function () {
+        $("#encueste").remove();
+    });
+
+    $(document.body).on('hidden.bs.modal',"#modalOpcion", function () {
+        $("#modalOpcion").remove();
+    });
+
+    $(document.body).on('hidden.bs.modal',".botonCerrarOpcion", function () {
+        $("#modalOpcion").remove();
+    });
+
+    $(document.body).on('hidden.bs.modal',"#vote", function () {
+        $("#vote").remove();
+    });
+
+    $(document.body).on('click',"#guardarOpcion",function(e){
+            preguntas[idOpcionActual] = {};
+            preguntas[idOpcionActual].options = [];
+        $(".inputOpcion").each(function(index, element) {
+            cortado = $.trim($(element).val());
+            $(element).val(cortado);
+            if($(element).val()!="") {
+                var opcion = {};
+                opcion.opcion = $(element).val();
+                opcion.id = idOpcion;
+                idOpcion++;
+                preguntas[idOpcionActual].options.push(opcion);
+            }
+        });
+        if (preguntas[idOpcionActual].options.length<2)
+            bootbox.alert("Usted debe ingresar al menos dos opciones ");
+        else
+            $("#modalOpcion").modal('hide');
     });
 
 
@@ -161,6 +200,40 @@ function modalVotacion(){
     modal+="<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12' id='barraResultados' style='margin-left: 5px;'>";
     modal+="</div>";
     modal+="<button type='button' id='siguiente' class='btn btn-default' style='margin-left:20px'>Siguiente</button>";
+    modal+="</div>";
+    return modal;
+}
+
+function modalAgregarOpcion(){
+    var modal="<div class='modal fade' id='modalOpcion' tabindex='-1' role='dialog' aria-hidden='true'>";
+    modal+="<div class='modal-dialog'>";
+    modal+="<div class='panel panel-primary'>";
+    modal+="<div class='panel-heading'>";
+    modal+="<button type='button' class='close botonCerrarOpcion' data-dismiss='modal' aria-hidden='true'>*</button>";
+    modal+="</div>";
+    modal+="<div class='modal-body'>";
+    modal+="<div class='container'>";
+	modal+="<div class='row'>"
+	modal+="<input type='hidden' name='count' value='1' />";
+    modal+="<div class='control-group tituloOpciones' id='fields'>";
+    modal+="<h4 class='control-label' for='field1'>Ingrese las posibles opciones de respuesta</h4>";
+    modal+="<div class='controls' id='profs'>";
+    modal+="<form class='input-append'>";
+    modal+="<div id='field'><input autocomplete='off' class='input form-control inputOpcion' id='field1' name='prof1' type='text' placeholder='Escriba la opcion' data-items='8'/><button id='b1' class='btn add-more' type='button'>+</button></div>";
+    modal+="</form>";
+    modal+="<br>";
+    modal+="<small>Presione + para agregar otra opcion </small>";
+    modal+="</div>";
+    modal+="</div>";
+    modal+="<div class='modal-footer footerOpcion'>";
+    modal+="<button id='guardarOpcion' type='button' class='btn btn-success btn-vote'>Guardar opciones</button>";
+    modal+="<button type='button' class='btn btn-default btn-close botonCerrarOpcion' data-dismiss='modal'>Cerrar</button>";
+    modal+="</div>";
+    modal+="</div>";
+	modal+="</div>";
+    modal+="</div>";
+    modal+="</div>";
+    modal+="</div>";
     modal+="</div>";
     return modal;
 }
@@ -247,26 +320,72 @@ function siguienteResultado(){
 }
 
 function enviarEncuesta(preguntas) {
+    var hayAlMenosUna = false;
     var inputs = $('#divPreguntas').find('input');
+    var pasoValidacion = true;
     $.each(inputs, function (index, value) {
-        preguntas[index+1].pregunta = $(value).val();
+        var cortado = $.trim($(value).val());
+        if (cortado ==""){
+            if (!(typeof preguntas[index+1]==="undefined") && !(typeof preguntas[index+1].options==="undefined")) {
+                if (preguntas[index+1].options.length > 1) {
+                    bootbox.alert("El titulo de la pregunta esta vacio pero contiene al menos dos opciones como respuesta");
+                    pasoValidacion = false;
+                }
+            }
+
+        }
+        else {
+            if ((typeof preguntas[index+1]==="undefined") || (typeof preguntas[index+1].options==="undefined")) {
+                bootbox.alert("La pregunta no posee opciones de respuesta");
+                pasoValidacion = false;
+            }
+            else{
+                if (preguntas[index+1].options.length<2) {
+                    bootbox.alert("La pregunta debe poseer al menos opciones de respuesta");
+                    pasoValidacion = false;
+                }
+                else {
+                    preguntas[index + 1].pregunta = $(value).val();
+                    hayAlMenosUna = true;
+                    pasoValidacion = true;
+                }
+            }
+        }
     });
+    if (hayAlMenosUna==false) {
+        if (pasoValidacion==true)
+            bootbox.alert("La encuesta debe tener al menos una pregunta");
+        return false;
+    }
     var encues = {};
     encues.description = $("#titEncuesta").val();
     encues.preguntas = preguntas;
     encues.tipo = "encuesta";
-    encuestas.saveObject(encues);
+    idAgregado=encuestas.saveObject(encues);
+    var item = {};
+    item.username = localStorage['username'];
+    var d = new Date();
+    var hs = d.getHours();
+    var mins = d.getMinutes();
+    var secs = d.getSeconds();
+    item.date = $.datepicker.formatDate('dd-mm-yy', d) + " " + hs + ":" + mins + ":" + secs;
+    item.id = idAgregado;
+    item.element = {};
+    item.element.description = $("#titEncuesta").val();
+    item.element.preguntas = preguntas;
+    lista=encuestas.getWidgetElement('listaEncuestas');
+    elementosEncuestas[item.id]=item.element;
+    lista.appendChild(agregarFilaAEncuesta(item));
+    return true;
 }
 
 
 
 function crearModalEncuesta() {
-    var preguntas={};
-    var numPregunta = 1;
-    var numOpcion = 1;
-    var encuestaPropia = [];
-    var opciones = [];
-    var idOpcion = 0;
+    preguntas={};
+    numPregunta = 1;
+    opciones = [];
+    idOpcion = 0;
     //modal = "<div id='modalCrearEncuesta' class='container'>";
     //modal+="<div class='row'>";
     modal="<div class='modal fade' id='encueste' tabindex='-1' role='dialog' aria-labelledby='voteLabel' aria-hidden='true'>";
@@ -307,42 +426,34 @@ function crearModalEncuesta() {
         $("#divPreguntas").append("<a id='" + numPregunta + "' title='Nueva opción' class='agregarOpcion'><i class='fa fa-plus fa-stack-1x' id='iconoMas'> </i></a></div>");
     });
     $(document.body).on('click', '.agregarOpcion' ,function(){
-        var id = this.id;
-        bootbox.prompt("Ingrese la opción de la pregunta", function (result) {
-            if (result) {
-                if (typeof(preguntas[id]) === "undefined") {
-                    preguntas[id] = {};
-                    preguntas[id].options = [];
-                }
-                var opcion = {};
-                opcion.opcion = result;
-                opcion.id = idOpcion;
-                idOpcion++;
-                preguntas[id].options.push(opcion);
-                //opciones.push(opcion);
-                //preguntas[id].push(opcion);
 
-            }
-            else {
-                if (result !== null) {
-                    bootbox.alert("Usted no ha ingresado ninguna opcion");
-                    return false;
-                }
-            }
-        });
+        encuestas.inyectHTML(modalAgregarOpcion());
+        $("#modalOpcion").modal("show");
+        // Para el modal de agregar opcion
+    idOpcionActual = this.id;
+    var next = 1;
+    $(".add-more").click(function(e){
+        e.preventDefault();
+        var addto = "#field" + next;
+        var addRemove = "#field" + (next);
+        next = next + 1;
+        var newIn = '<input autocomplete="off" class="input form-control inputOpcion" placeholder="Escriba la opcion" id="field' + next + '" name="field' + next + '" type="text">';
+        var newInput = $(newIn);
+        var removeBtn = '<button id="remove' + (next - 1) + '" class="btn btn-danger remove-me" >-</button></div><div id="field">';
+        var removeButton = $(removeBtn);
+        $(addto).after(newInput);
+        $(addRemove).after(removeButton);
+        $("#field" + next).attr('data-source',$(addto).attr('data-source'));
+        $("#count").val(next);
+
+            $('.remove-me').click(function(e){
+                e.preventDefault();
+                var fieldNum = this.id.charAt(this.id.length-1);
+                var fieldID = "#field" + fieldNum;
+                $(this).remove();
+                $(fieldID).remove();
+            });
     });
-
-    $(document.body).on('click','#agregarEncuesta', function (e) {
-        if ($("#titEncuesta").val() != '') {
-            enviarEncuesta(preguntas);
-            bootbox.alert('La encuesta ha sido guardado');
-            $('#encueste').modal('toggle');
-            $("#tituloPregunta").val("");
-            //$( "#modalCrearEncuesta").empty();
-
-        } else {
-            bootbox.alert('Usted debe escribir el titulo de la encuesta');
-        }
     });
 
     $(document.body).on('click', '.cerrarCrear' ,function(){
@@ -350,9 +461,6 @@ function crearModalEncuesta() {
         $("#encueste").modal('hide');
     });
 
-    $("#encueste").on('hidden.bs.modal', function () {
-        $("#encueste").remove();
-    });
 
 
 }
@@ -373,6 +481,21 @@ function getOriginalId(idWidget,id){
 
 }
 
+function agregarFilaAEncuesta(item){
+    var li = encuestas.getLi();
+    var btnn = encuestas.getButtonWithoutStyle(item.id);
+    btnn.classList.add('list-group-item', 'filaEncuesta');
+    var div = encuestas.getDiv();
+    div.classList.add('tituloEncuesta');
+    div.innerHTML=item.element.description;
+    var divSubtitulo = encuestas.getDiv();
+    divSubtitulo.classList.add('subtituloEncuesta');
+    divSubtitulo.innerHTML="creada por " + item.username + " el "+ item.date;
+    btnn.appendChild(div);
+    btnn.appendChild(divSubtitulo);
+    li.appendChild(btnn);
+    return li;
+}
 
 
 

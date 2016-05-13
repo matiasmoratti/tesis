@@ -1,4 +1,16 @@
-.container4{
+/*.container4{*/
+            /*z-index: 9999999999;*/
+            /*width:350px;*/
+            /*position: fixed;*/
+            /*margin: 0 auto;*/
+            /*top: 0;*/
+            /*left: 60%;*/
+            /*border:1px solid #bbb;*/
+            /*margin:50px;*/
+            /*background-color:#fdfdfd;*/
+/*}*/
+
+#container4,#4divEncuestas{
             z-index: 9999999999;
             width:350px;
             position: fixed;
@@ -10,25 +22,13 @@
             background-color:#fdfdfd;
 }
 
-#4divEncuestas{
-            z-index: 9999999999;
-            width:350px;
-            position: fixed;
-            margin: 0 auto;
-            top: 0;
-            left: 60%;
-            border:1px solid #bbb;
-            margin:50px;
-            background-color:#fdfdfd;
-}
-
-#4crearEncuesta{
-   position: absolute;
-   margin-left: 5px;
-}
+/*#container4{*/
+   /*position: absolute;*/
+   /*margin-left: 5px;*/
+/*}*/
 
 #vote{
-    z-index: 99999999999;
+    z-index: 99999999999999;
 }
 
 .tituloEncuesta{
@@ -129,3 +129,39 @@ input[type="radio"]{
 .opcion{
     font-size: 20px;
 }
+
+#encueste{
+    z-index: 999999999999;
+}
+
+#modalOpcion{
+    z-index: 999999999999999;
+}
+
+
+* {
+  .border-radius(0) !important;
+}
+
+#field {
+    margin-bottom:20px;
+    width: 40%;
+}
+
+.footerOpcion {
+    width: 40%;
+    height: 40%;
+}
+
+#guardarOpcion {
+    width: 40%;
+    height: 40%;
+}
+
+.tituloOpciones {
+    margin-right: 20px;
+}
+
+
+
+

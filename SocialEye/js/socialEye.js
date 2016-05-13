@@ -66,7 +66,7 @@ function Widget(){
     }
 
     this.saveObject = function (data){
-        var success = false;
+        var idAgregado=0;
         $.ajax({
             url: "http://127.0.0.1:8000/widgetRest/objects/", // the endpoint
             type: "POST", // http method
@@ -78,8 +78,8 @@ function Widget(){
             }, // data sent with the post request
 
             // handle a successful response
-            success: function () {
-                success = true;
+            success: function (data) {
+                idAgregado = data;
 
             },
 
@@ -88,7 +88,7 @@ function Widget(){
                 alert("Error al enviar el objeto");
             }
         });
-        return success;
+        return idAgregado;
     }
 
     this.updateObject = function (object, params){
