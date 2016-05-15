@@ -21,7 +21,7 @@ encuestas.loadWidget = function () {
     anchor = encuestas.getA('crearEncuesta');
     anchor.tittle = 'Crear Encuesta';
     span = encuestas.getSpan();
-    span.classList.add('fa', 'fa-plus','fa-stack-1x');
+    span.classList.add('addEncuesta','fa', 'fa-plus','fa-stack-1x');
     anchor.appendChild(span);
     $(encuestasBox).find('#titulo'+encuestas.idWidget).append(anchor);
     var encuestasBody = encuestas.getPrincipalBody();
@@ -115,6 +115,14 @@ encuestas.onReady = function () {
         encuestas.close();
     });
 
+    $(document.body).on('click', '.eliminarPregunta' ,function(){
+        id=this.id.split("eliminar")[1];
+        $("#divPregunta"+id).remove();
+        delete preguntas[id];
+        debugger;
+        //$(document.body).remove($("#pregunta"+id));
+    });
+
     $(document.body).on('hidden.bs.modal', "#encueste", function () {
         $("#encueste").remove();
     });
@@ -132,9 +140,17 @@ encuestas.onReady = function () {
     });
 
     $(document.body).on('click',"#guardarOpcion",function(e){
+        var num = 0;
+        $(".inputOpcion").each(function(index, element) {
+            cortado = $.trim($(element).val());
+            $(element).val(cortado);
+            if($(element).val()!="")
+                num++;
+        });
+        if (num >=2){
             preguntas[idOpcionActual] = {};
             preguntas[idOpcionActual].options = [];
-        $(".inputOpcion").each(function(index, element) {
+            $(".inputOpcion").each(function(index, element) {
             cortado = $.trim($(element).val());
             $(element).val(cortado);
             if($(element).val()!="") {
@@ -144,11 +160,11 @@ encuestas.onReady = function () {
                 idOpcion++;
                 preguntas[idOpcionActual].options.push(opcion);
             }
-        });
-        if (preguntas[idOpcionActual].options.length<2)
-            bootbox.alert("Usted debe ingresar al menos dos opciones ");
-        else
+         });
             $("#modalOpcion").modal('hide');
+        }
+        else
+            bootbox.alert("Usted debe ingresar al menos dos opciones ");
     });
 
 
@@ -204,7 +220,7 @@ function modalVotacion(){
     return modal;
 }
 
-function modalAgregarOpcion(){
+function modalAgregarOpcion(idPreguntaSeleccionada){
     var modal="<div class='modal fade' id='modalOpcion' tabindex='-1' role='dialog' aria-hidden='true'>";
     modal+="<div class='modal-dialog'>";
     modal+="<div class='panel panel-primary'>";
@@ -218,12 +234,36 @@ function modalAgregarOpcion(){
     modal+="<div class='control-group tituloOpciones' id='fields'>";
     modal+="<h4 class='control-label' for='field1'>Ingrese las posibles opciones de respuesta</h4>";
     modal+="<div class='controls' id='profs'>";
-    modal+="<form class='input-append'>";
-    modal+="<div id='field'><input autocomplete='off' class='input form-control inputOpcion' id='field1' name='prof1' type='text' placeholder='Escriba la opcion' data-items='8'/><button id='b1' class='btn add-more' type='button'>+</button></div>";
-    modal+="</form>";
-    modal+="<br>";
-    modal+="<small>Presione + para agregar otra opcion </small>";
-    modal+="</div>";
+    if (typeof preguntas[idPreguntaSeleccionada] === "undefined") {
+        modal += "<form class='input-append'>";
+        modal += "<div id='field'><input autocomplete='off' class='input form-control inputOpcion' id='field1' name='prof1' type='text' placeholder='Escriba la opcion' data-items='8'/><button id='b1' class='btn add-more' type='button'>+</button></div>";
+        modal += "</form>";
+        modal += "<br>";
+        modal += "<small>Presione + para agregar otra opcion </small>";
+        modal += "</div>";
+    }
+    else {
+        var next = 0;
+       $.each(preguntas[idPreguntaSeleccionada].options, function (index, option) {
+           next += 1;
+           if (next ==1){
+               modal += "<form class='input-append'>";
+            modal += "<div id='field'><input autocomplete='off' value='"+option.opcion+"' class='input form-control inputOpcion' id='field1' name='prof1' type='text' placeholder='Escriba la opcion' data-items='8'/><button id='b1' class='btn add-more' type='button'>+</button>";
+            modal+="</div>";
+            modal += "</form>";
+           }
+           else {
+               modal += "<form class='input-append'>";
+            modal += "<div id='field"+next+"'><input autocomplete='off' value='"+option.opcion+"' class='input form-control inputOpcion' id='field' name='prof1' type='text' placeholder='Escriba la opcion' data-items='8'/><button id='b1' class='btn add-more' type='button'>+</button>";
+            modal += "<button id='remove" + next + "' class='btn btn-danger remove-me' >-</button></div><div id='field'>";
+            modal+="</div>";
+            modal += "</form>";
+           }
+       });
+         modal += "<br>";
+            modal += "<small>Presione + para agregar otra opcion </small>";
+            modal += "</div>";
+    }
     modal+="</div>";
     modal+="<div class='modal-footer footerOpcion'>";
     modal+="<button id='guardarOpcion' type='button' class='btn btn-success btn-vote'>Guardar opciones</button>";
@@ -422,12 +462,19 @@ function crearModalEncuesta() {
     $('#encueste').modal('show');
     $("#agregarPregunta").on('click', function (e) {
         numPregunta++;
-        $("#divPreguntas").append("<br><br><br><div><input type='text' id='pregunta" + numPregunta + "' class='form-control inputPregunta' placeholder='Ingrese una pregunta'/>");
-        $("#divPreguntas").append("<a id='" + numPregunta + "' title='Nueva opción' class='agregarOpcion'><i class='fa fa-plus fa-stack-1x' id='iconoMas'> </i></a></div>");
+        div = "<div id='divPregunta"+numPregunta+"'><br><br><br><input type='text' id='pregunta" + numPregunta + "' class='form-control inputPregunta' placeholder='Ingrese una pregunta'/>";
+        div+= "<a id='" + numPregunta + "' title='Nueva opción' class='agregarOpcion'><i class='fa fa-plus fa-stack-1x' id='iconoMas'> </i></a>";
+        div+="<br>";
+        div+="<a id='eliminar" + numPregunta + "' title='Eliminar Opcion' class='eliminarPregunta'><i class='fa fa-remove fa-stack-1x' id='iconoMenos'> </i></a></div>";
+        $("#divPreguntas").append(div);
+        //$("#divPreguntas").append("<br><br><br><div id='divPregunta"+numPregunta+"'><input type='text' id='pregunta" + numPregunta + "' class='form-control inputPregunta' placeholder='Ingrese una pregunta'/>");
+        //$("#divPreguntas").append("<a id='" + numPregunta + "' title='Nueva opción' class='agregarOpcion'><i class='fa fa-plus fa-stack-1x' id='iconoMas'> </i></a>");
+        //$("#divPreguntas").append("<br>");
+        //$("#divPreguntas").append("<a id='eliminar" + numPregunta + "' title='Eliminar Opcion' class='eliminarPregunta'><i class='fa fa-remove fa-stack-1x' id='iconoMenos'> </i></a></div>");
     });
     $(document.body).on('click', '.agregarOpcion' ,function(){
 
-        encuestas.inyectHTML(modalAgregarOpcion());
+        encuestas.inyectHTML(modalAgregarOpcion(this.id));
         $("#modalOpcion").modal("show");
         // Para el modal de agregar opcion
     idOpcionActual = this.id;
@@ -446,15 +493,27 @@ function crearModalEncuesta() {
         $("#field" + next).attr('data-source',$(addto).attr('data-source'));
         $("#count").val(next);
 
-            $('.remove-me').click(function(e){
+            //$('.remove-me').click(function(e){
+            //    debugger;
+            //    e.preventDefault();
+            //    debugger;
+            //    var fieldNum = this.id.charAt(this.id.length-1);
+            //    var fieldID = "#field" + fieldNum;
+            //    debugger;
+            //    $(this).remove();
+            //    debugger;
+            //    $(fieldID).remove();
+            //});
+    });
+    });
+
+    $(document.body).on('click','.remove-me',function(e){
                 e.preventDefault();
                 var fieldNum = this.id.charAt(this.id.length-1);
                 var fieldID = "#field" + fieldNum;
                 $(this).remove();
                 $(fieldID).remove();
             });
-    });
-    });
 
     $(document.body).on('click', '.cerrarCrear' ,function(){
         $("#tituloPregunta").val("");

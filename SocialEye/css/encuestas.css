@@ -14,6 +14,7 @@
             z-index: 9999999999;
             width:350px;
             position: fixed;
+    position: absolute;
             margin: 0 auto;
             top: 0;
             left: 60%;
@@ -22,11 +23,10 @@
             background-color:#fdfdfd;
 }
 
-/*#container4{*/
-   /*position: absolute;*/
-   /*margin-left: 5px;*/
-/*}*/
 
+.addEncuesta{
+    left:30% !important;
+}
 #vote{
     z-index: 99999999999999;
 }
@@ -93,6 +93,14 @@
 
 #iconoMas{
     font-size: 20px;
+}
+
+#iconoMenos{
+    font-size: 20px;
+}
+
+.eliminarPregunta{
+    color: red;
 }
 
 #agregarPregunta{
