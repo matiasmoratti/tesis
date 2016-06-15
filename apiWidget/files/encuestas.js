@@ -29,6 +29,7 @@ encuestas.loadWidget = function () {
     params = {};
     params['tipo'] = "encuesta";
     data = encuestas.getObjects(params);
+    debugger;
     $.each(data, function (i, item) {
         elementosEncuestas[item.id]=item.element;
         listaEncuestas.appendChild(agregarFilaAEncuesta(item));
@@ -36,27 +37,6 @@ encuestas.loadWidget = function () {
     encuestasBody.appendChild(listaEncuestas);
     encuestasBox.appendChild(encuestasBody);
     return encuestasBox;
-
-
-    //var listaEncuestas = "<div class='detailBox' id='divEncuestas'>";
-    //listaEncuestas += "<div class='titleBox socialEye' id='tituloListaEncuestas'>";
-    //listaEncuestas += "<label class=> Encuestas activas en: " + window.location.hostname + "</label>";
-    //listaEncuestas += "<a id='crearEncuesta' title='Crear Encuesta'><span  class='fa fa-plus fa-stack-1x'></span></a>";
-    //listaEncuestas += "<button class='close botonCerrar' id='cerrarEncuestas' aria-hidden='true'>&times;</button>";
-    //listaEncuestas += "</div>";
-    //listaEncuestas += "<div class='actionBox'>";
-    //listaEncuestas += "<ul id='listaEncuestas' class='commentList socialEye'>";
-    ////Creo los objetos
-    //params = {};
-    //params['tipo'] = "encuesta";
-    //data = encuestas.getObjects(params);
-    //$.each(data, function (i, item) {
-    //    elementosEncuestas[item.id]=item.element;
-    //    listaEncuestas += "<li><button type='button' id='"+item.id+ "' class='list-group-item socialEye filaEncuesta'> <div class='tituloEncuesta'>" + item.element.description + "</div>  <div class='subtituloEncuesta'> creada por " + item.username + " el "+ item.date+ "  </div> </button></li>";
-    //});
-    //listaEncuestas += "</div>";
-    //listaEncuestas += "</div>";
-    //return listaEncuestas;
 };
 
 //encuestas.onCloseWidget = function (){
@@ -65,6 +45,7 @@ encuestas.loadWidget = function () {
 encuestas.onReady = function () {
     $(document.body).on('click', '.filaEncuesta' ,function(){
         idEncuestaActual=getOriginalId(encuestas.idWidget,this.id);
+        debugger;
         encuestas.inyectHTML(modalVotacion());
         votosResultados = {} ;
         $("#votar").prop( "disabled", false );
@@ -535,6 +516,8 @@ $(document.body).on('click', '#siguiente' ,function(){
 
 function getOriginalId(idWidget,id){
     sNumber = id.toString();
+    debugger;
+    alert(sNumber.split(idWidget)[1]);
     return sNumber.split(idWidget)[1];
 
 }
@@ -554,14 +537,3 @@ function agregarFilaAEncuesta(item){
     li.appendChild(btnn);
     return li;
 }
-
-
-
-
-
-
-
-
-
-
-

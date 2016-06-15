@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Social Eye</title>
+
+
+    {% load staticfiles %}
+
+    <!-- jQuery -->
+    <script src="{% static "js/jquery.js" %}"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static "js/bootstrap.min.js" %}"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="{% static "js/jquery.easing.min.js" %}"></script>
+    <script src="{% static "js/jquery.fittext.js" %}"></script>
+    <script src="{% static "js/wow.min.js" %}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static "js/creative.js" %}"></script>
+
+    <script src="{% static "js/bootbox.min.js" %}"></script>
+    <script src="{% static "js/widgets.js" %}"></script>
+    {% load bootstrap3 %}
+    {% load bootstrap %}
+    {% load i18n %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" type="text/css">
+    <link rel="stylesheet" href="{% static "css/widgets.css" %}" type="text/css">
+
+    <!-- Custom Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+          rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic'
+          rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static "font-awesome/css/font-awesome.min.css" %}" type="text/css">
+
+    <!-- Plugin CSS -->
+    <link rel="stylesheet" href="{% static "css/animate.min.css" %}" type="text/css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static "css/creative.css" %}" type="text/css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body id="page-top">
+
+{% include "navbar.html" %}
+
+<header>
+    <div class="header-content">
+        {# Display django.contrib.messages as Bootstrap alerts #}
+        {% bootstrap_messages %}
+        {#        {% if messages %}#}
+        {#            <ul class="messages">#}
+        {#                {% for message in messages %}#}
+        {#                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>#}
+        {#                {% endfor %}#}
+        {#            </ul>#}
+        {#        {% endif %}#}
+        <div class="header-content-inner">
+            <div id="login">
+                <h1>Mis Widgets</h1>
+                {% if object_list %}
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>Titulo</th>
+                                <th>Descripcion</th>
+                                <th>Icono</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for widget in object_list %}
+                                <tr>
+                                    <td>{{ widget.widget_title }}</td>
+                                    <td>{{ widget.description }}</td>
+                                    <td>{{ widget.widget_icon }}</td>
+                                    <td><a href="edit/{{  widget.id  }}" class="editLink"><i class="glyphicon glyphicon-wrench edit"></i></a> <a href="{% url 'remove' %}?id={{  widget.id  }}" class="removeLink"><i class="glyphicon glyphicon-remove-circle delete"></i></a></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    Usted no posee widgets agregados
+                {% endif %}
+            </div>
+
+            <div class="text-center">
+
+                <button class="btn btn-info"><i class="glyphicon glyphicon-floppy-save"></i><a href="newWidget">Nuevo Widget</a></button>
+
+            </div>
+        </div>
+    </div>
+</header>
+
+
+</body>
+</html>

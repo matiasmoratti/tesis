@@ -11,9 +11,11 @@ from django.contrib.postgres.fields import JSONField
 class Widget(models.Model):
     widget_name = models.CharField(max_length=200, unique=True)
     widget_title = models.CharField(max_length=200)
-    users = models.ManyToManyField(User)
+    users = models.ManyToManyField(User,related_name='widgets')
     widget_icon = models.CharField(max_length=200, unique=True)
     description = models.CharField(max_length=500)
+    file = models.FileField(upload_to='.')
+    owner = models.ForeignKey(User,related_name='owners')
 
 class Element(models.Model):
     widget = models.ForeignKey(Widget, on_delete=models.CASCADE)

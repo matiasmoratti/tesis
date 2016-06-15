@@ -1,0 +1,15 @@
+td,th
+{
+    text-align:center;
+    vertical-align:middle;
+}
+
+.edit
+{
+    color:green;
+}
+
+.delete
+{
+    color:red;
+}

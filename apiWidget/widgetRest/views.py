@@ -1,33 +1,29 @@
-from django.shortcuts import render
-from django.contrib.auth import authenticate, login as auth_login, logout as log_out
-from django.views.decorators.csrf import csrf_exempt
-from .forms import CommentForm, SpecificCommentForm
-from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
-from django.utils import timezone
-from .forms import UserForm
-from .models import User, Comment, Widget, Element, SpecificComment, UserActiveUrl, Poll, PollQuestion, Vote, PollQuestionOption, Chat, \
-    ChatMessage
-from django.core import serializers
 import datetime
-import math
-from django.db import IntegrityError
-from datetime import timedelta
-from django.core.exceptions import ObjectDoesNotExist
-from tokenapi.decorators import token_required
-from tokenapi.http import JsonResponse, JsonError
-from django.db.models import Q
-from django.core.exceptions import MultipleObjectsReturned
 import json
+import os
+from datetime import timedelta
+
+from django.contrib import messages
+from django.contrib.auth import authenticate, login as auth_login, logout as log_out
+from django.contrib.auth.decorators import login_required
+from django.core import serializers
+from django.core.files.base import ContentFile
+from django.db import IntegrityError
+from django.db.models import Q
+from django.shortcuts import redirect
+from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.list import ListView
+from tokenapi.decorators import token_required
+
+from .forms import LoginForm,UserCreationForm,WidgetForm
+from .models import User, Widget, Element, SpecificComment, UserActiveUrl, Poll, PollQuestion, Vote, PollQuestionOption, Chat
 
 # Create your views here.
 
 from django.http import HttpResponse, HttpResponseBadRequest
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
 
 
 # @csrf_exempt
@@ -142,6 +138,15 @@ def updateObject(request):
         return HttpResponse()
 
 
+@csrf_exempt
+@token_required
+def scripts(request):
+    if request.method == 'GET':
+        widgets = list(Widget.objects.all().values('widget_title'))
+        wAsJson = json.dumps(widgets)
+        return HttpResponse(wAsJson, content_type='json')
+
+
 
 @csrf_exempt
 @token_required
@@ -154,7 +159,7 @@ def widget(request):
         except IntegrityError:
             return HttpResponseBadRequest()
     else:
-        widgets = list(Widget.objects.all().values('pk','widget_name','widget_icon','widget_title', 'description'))
+        widgets = list(Widget.objects.all().values('pk','widget_name','widget_icon','widget_title', 'description','file'))
         wAsJson = json.dumps(widgets)
         return HttpResponse(wAsJson, content_type='json')
 
@@ -207,8 +212,23 @@ def addUserWidget(request):
         user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
         user = User.objects.get(pk=user_id)
         widget = Widget.objects.get(pk=request.POST['idWidget'])
-        user.widget_set.add(widget)
+        user.widgets.add(widget)
         return HttpResponse()
+
+@csrf_exempt
+def framework(request):
+    if request.method == 'GET':
+        with open('/Users/ferminrecalt/Documents/TesisGit/apiWidget/files/socialEye.js', 'r') as f:
+            ar=f.read();
+        return HttpResponse(ar)
+
+@csrf_exempt
+def interface(request):
+    if request.method == 'GET':
+        with open('/Users/ferminrecalt/Documents/TesisGit/apiWidget/files/widgetInterface.js', 'r') as f:
+            ar=f.read();
+        return HttpResponse(ar)
+
 
 @csrf_exempt
 @token_required
@@ -217,7 +237,7 @@ def removeUserWidget(request):
         user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
         user = User.objects.get(pk=user_id)
         widget = Widget.objects.get(pk=request.POST['idWidget'])
-        user.widget_set.remove(widget)
+        user.widgets.remove(widget)
         return HttpResponse()
 
 @csrf_exempt
@@ -226,9 +246,114 @@ def widgetsByUser(request):
     if request.method == 'GET':
         user_id = get_user_pk(request.META.get('HTTP_AUTHORIZATION'))
         user = User.objects.get(pk=user_id)
-        widgets = list(user.widget_set.all())
-        widgets_as_json = serializers.serialize('json', widgets, fields=('pk', 'widget_icon', 'widget_name', 'description', 'widget_title'))
+        widgets = list(user.widgets.all())
+        for w in widgets:
+            data=w.file.read()
+            w.file = data
+        widgets_as_json = serializers.serialize('json', widgets, fields=('pk', 'widget_icon', 'widget_name', 'description', 'widget_title','file'))
         return HttpResponse(widgets_as_json, content_type='json')
+
+
+def index(request):
+    return render(request, 'index.html')
+
+def register(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = UserCreationForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            form.save()
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return redirect('index')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = UserCreationForm()
+
+    return render(request, 'register.html', {'userCreationForm': form })
+
+
+
+
+def loginWeb(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = LoginForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                auth_login(request, user)
+                return redirect('index')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = LoginForm()
+    return render(request, 'login.html', {'loginForm': form })
+
+
+@login_required
+def newWidget(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = WidgetForm(request.POST,request.FILES)
+        # check whether it's valid:
+        if form.is_valid():
+            # filename = form.cleaned_data['title']
+            # filename = filename +'.js'
+            # # save the uploaded file inside that folder.
+            # full_filename = os.path.join('/Users/ferminrecalt/Desktop/', 'Files', filename)
+            # fout = open(full_filename, 'wb+')
+            # # Iterate through the chunks.
+            # file_content = ContentFile(form.cleaned_data['file'].read())
+            # for chunk in file_content.chunks():
+            #     fout.write(chunk)
+            # fout.close()
+            w = Widget();
+            w.file =form.cleaned_data['file']
+            w.widget_name=form.cleaned_data['title']
+            w.widget_title=form.cleaned_data['title']
+            w.description=form.cleaned_data['descripcion']
+            w.widget_icon=form.cleaned_data['icon']
+            user = User.objects.only('id').get(id=request.user.id)
+            w.owner=user
+            w.save()
+            messages.success(request, 'El widget se ha guardado correctamente',fail_silently=True)
+            return redirect('widget-list')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = WidgetForm()
+    return render(request, 'newWidget.html', {'uploadForm': form })
+
+@login_required
+def remove(request):
+    if request.method == 'GET':
+        id = request.GET['id']
+        Widget.objects.filter(id=id).delete()
+        messages.success(request, 'El widget se ha eliminado correctamente',fail_silently=True)
+        return redirect('widget-list')
+
+
+class WidgetListView(ListView):
+
+    model = Widget
+    template_name = 'widget_list.html'
+
+    def get_queryset(self):
+        qs = super(WidgetListView, self).get_queryset()
+        return qs.filter(owner=self.request.user.id)
+    # def get_context_data(self, **kwargs):
+    #     qs = super(WidgetListView, self).get_queryset()
+    #     return qs.filter(owner=self.request.user.id)
 
 @csrf_exempt
 @token_required
@@ -401,3 +526,4 @@ def saveMessage(request):
         chat = Chat.objects.get(Q(user1=user_id, user2=otroUsuario) | Q(user1=otroUsuario, user2=user_id))
         chat.chatmessage_set.create(text=request.POST['message'], userName=usuarioActual.username)
         return HttpResponse()
+
