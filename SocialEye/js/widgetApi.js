@@ -24,15 +24,12 @@
 // @resource   listaUsuarios file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/listaUsuarios.css
 // @resource   encuestas file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/encuestas.css
 // @resource   chats file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/chats.css
-// @require  file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/comentarios.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/usuarios.js
-// @require  file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/encuestas.js
 // @require  file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/chats.js
 // @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/common.js
 // @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/latest-v2.js
 // @resource   video file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/css/main.css
 // @require  file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/widgetInterface.js
-// @require   file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/socialEye.js
+// @require  file:////Users/ferminrecalt/Documents/TesisGit/SocialEye/js/socialEye.js
 // ==/UserScript==
 
 
@@ -87,7 +84,7 @@ function Manager() {
                 xhr.setRequestHeader('Authorization', "Basic " + btoa(localStorage['user'] + ":" + localStorage['token']));
             }
         });
-                
+
         function initializeTool(){
 
             $("#configuraciones").click(function () {
@@ -132,47 +129,47 @@ function Manager() {
                                 $('#widgetList'+widgetId).remove();
                                 widgetAux = eval(widgetActual.fields.widget_name);
                                 widgetAux.close();
-                            }                
+                            }
                         }
                         $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
                     });
-               }
-               else{
-                   $("#boxConfig").remove();
-                   $("#configuraciones").removeAttr('style');
-               }
-          });
-            
-            
-        $("#cerrarSesion").click(function () {
-            var widgetsUsuario = getUserWidgets();
-            var widgetAux;
-            $.each(widgetsUsuario, function (i, item) {
-               // if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
+                }
+                else{
+                    $("#boxConfig").remove();
+                    $("#configuraciones").removeAttr('style');
+                }
+            });
+
+
+            $("#cerrarSesion").click(function () {
+                var widgetsUsuario = getUserWidgets();
+                var widgetAux;
+                $.each(widgetsUsuario, function (i, item) {
+                    // if((item.pk == 1) || (item.pk == 2)){ //CONDICION MOMENTANEA AL NO ESTAR IMPLEMENTADOS TODOS LOS WIDGETS
                     if($("#container"+item.pk).length != 0){
                         widgetAux = eval(item.fields.widget_name);
                         widgetAux.close();
                     }
-             //   }
-                $('#widgetList'+item.pk).remove();
+                    //   }
+                    $('#widgetList'+item.pk).remove();
+                });
+
+                if($("#boxConfig").length != 0){
+                    $('#boxConfig').remove();
+                }
+
+                $(".socialEyeWidget").hide('slow');
+                $("#socialEyeBar").animate({height: "42px"}, "500");
+                activo = 0;
+                deleteSession();
+
             });
 
-            if($("#boxConfig").length != 0){
-                $('#boxConfig').remove();
-            }
-
-            $(".socialEyeWidget").hide('slow');
-            $("#socialEyeBar").animate({height: "42px"}, "500");
-            activo = 0;
-            deleteSession();
-
-        });
-            
-          toolInitialized = true;
+            toolInitialized = true;
         }
-        
+
         function loadUserWidgets(){
-            var widgets = getUserWidgets(); 
+            var widgets = getUserWidgets();
             var widgetAux;
             $.each(widgets, function (i, item) {
                 $("#menu li:eq(0)").after("<li class='socialEyeWidget socialEye' id='widgetList"+item.pk+"'>  <a class='widgetIcon' id='widget"+item.pk+"' title='"+item.fields.widget_title+"'><span class='fa-stack fa-lg'><i class='fa fa-"+item.fields.widget_icon+" fa-stack-1x '></i></span></a> </li>");
@@ -186,7 +183,7 @@ function Manager() {
                         widgetAux = null;
                     }
                 });
-            }); 
+            });
         }
 
 
@@ -194,33 +191,43 @@ function Manager() {
             var widgets = getUserWidgets();
             altoBarra = 44*(widgets.length + 3);
             $.each(widgets, function (i, item) {
-                     runWidget(item);
+                runWidget(item);
             });
-            
+
             $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
             activo = 1;
             $(".socialEyeWidget").show('slow');
         }
-        
+
         function runWidget(widget){
-              var div;
-              var widgetAux;
-              div = document.createElement('div');
-              div.setAttribute('id', 'container' + widget.pk);
-              $('body').append(div);
-              widgetAux = eval(widget.fields.widget_name);
-              widgetAux.idWidget = widget.pk;
-              widgetAux.ping(widgetAux.idWidget);
-             // if(widget.pk == 2){ //MOMENTANEO POR LOS QUE TODAVIA NO IMPLEMENTAN LA INTERFAZ DEL FRAMEWORK             
+            var archivo = widget.fields.file;
+            $(function () {
+                $('<script>')
+                    .attr('type', 'text/javascript')
+                    .text(archivo)
+                    .appendTo('head');
+            })
+            debugger;
+            var div;
+            var widgetAux;
+            div = document.createElement('div');
+            div.setAttribute('id', 'container' + widget.pk);
+            $('body').append(div);
+            widgetAux = eval(widget.fields.widget_name);
+            widgetAux.idWidget = widget.pk;
+            widgetAux.ping(widgetAux.idWidget);
+            // if(widget.pk == 2){ //MOMENTANEO POR LOS QUE TODAVIA NO IMPLEMENTAN LA INTERFAZ DEL FRAMEWORK
             //   div.innerHTML = widgetAux.loadWidget();
-             // }
+            // }
             //  else{
-                if(widgetAux.loadWidget() != null){
-                    div.appendChild(widgetAux.loadWidget());
-          //      }               
-              }
-              widgetAux.onReady();
-              $("#widget"+widget.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+            debugger;
+            if(widgetAux.loadWidget() != null){
+                div.appendChild(widgetAux.loadWidget());
+                //      }
+            }
+            debugger;
+            widgetAux.onReady();
+            $("#widget"+widget.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
         }
 
 
@@ -230,8 +237,8 @@ function Manager() {
             }
             if (typeof localStorage['user'] != "undefined") {
                 if(!toolInitialized){
-                     initializeTool();
-                     loadUserWidgets();
+                    initializeTool();
+                    loadUserWidgets();
                 }
                 var widgetsUsuario = getUserWidgets();
                 var widgetAux;
@@ -239,9 +246,9 @@ function Manager() {
                     $(".socialEyeWidget").hide('slow');
                     $("#socialEyeBar").animate({height: "42px"}, "500");
                     $.each(widgetsUsuario, function (i, item) {
-                        if($("#container"+item.pk).length != 0){                  
-                                widgetAux = eval(item.fields.widget_name);
-                                widgetAux.close();
+                        if($("#container"+item.pk).length != 0){
+                            widgetAux = eval(item.fields.widget_name);
+                            widgetAux.close();
                         }
 
                     });
@@ -278,6 +285,7 @@ function Manager() {
                                     localStorage.setItem('user', response.user);
                                     localStorage.setItem('username', $("#user").val());
                                     $("#boxLogin").remove();
+                                    //importScripts();
                                     if(!toolInitialized){
                                         initializeTool();
                                     }
@@ -483,11 +491,11 @@ function Manager() {
         });
         return data[0];
     }
-    
+
     function getIdsWidgets(widgets){
         var result = [];
         $.each(widgets, function (i, item) {
-             result.push(item.pk);
+            result.push(item.pk);
         });
         return result;
     }
@@ -509,7 +517,7 @@ function Manager() {
             error: function (xhr, errmsg, err) {
                 alert("Error al enviar el objeto");
             }
-        });    
+        });
     }
 
     function removeUserWidget(idWidget){
@@ -529,13 +537,62 @@ function Manager() {
             error: function (xhr, errmsg, err) {
                 alert("Error al enviar el objeto");
             }
-        });    
+        });
     }
+}
 
+function cargarFramework(){
+    $.ajaxSetup({
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', "Basic " + btoa(localStorage['user'] + ":" + localStorage['token']));
+            }
+        });
+    $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/framework/", // the endpoint
+            type: "GET", // http method
+            async: false,
+            success: function (data) {
+                $(function () {
+                $('<script>')
+                    .attr('type', 'text/javascript')
+                    .text(data)
+                    .appendTo('head');
+            })
+            },
+            error: function (request, status, error) {
+                alert(error);
+            }
+        });
+}
+
+function cargarInterface(){
+    $.ajax({
+            url: "http://127.0.0.1:8000/widgetRest/interface/", // the endpoint
+            type: "GET", // http method
+            async: false,
+            success: function (data) {
+                $(function () {
+                $('<script>')
+                    .attr('type', 'text/javascript')
+                    .text(data)
+                    .appendTo('head');
+            })
+            },
+            error: function (request, status, error) {
+                alert(error);
+            }
+        });
 }
 
 
 $(document).ready(function () {
+    $.ajaxSetup({
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', "Basic " + btoa(localStorage['user'] + ":" + localStorage['token']));
+            }
+        });
+    cargarInterface();
+    cargarFramework();
     M = new Manager();
     M.iniciarScript();
     //V = new Llamada();
