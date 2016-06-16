@@ -37,9 +37,9 @@ function Manager() {
                             $("#menu li:eq("+iconPos+")").after("<li class='socialEyeWidget socialEye' id='widgetList"+widgetId+"' style='display: list-item;'>  <a class='widgetIcon' id='widget"+widgetId+"' title='"+widgetActual.fields.widget_name+"'><span class='fa-stack fa-lg'><i class='fa fa-"+widgetActual.fields.widget_icon+" fa-stack-1x '></i></span></a> </li>");
                             altoBarra = altoBarra + 44;
                             $("#widget"+widgetId).click(function (e) {
-                                widgetAux = eval(widgetActual.fields.widget_name);
-                                if($("#container"+widgetId).length == 0)
-                                    runWidget(widgetActual);                              
+                                if($("#container"+widgetId).length == 0){
+                                    runWidget(widgetActual);                                
+                                }
                                 else{
                                     widgetAux.close();
                                     widgetAux = null;
@@ -123,12 +123,9 @@ function Manager() {
         }
         
         function runWidget(widget){
-               var archivo = widget.fields.file;
-               $(function () {
-                $('<script>')
-                    .attr('type', 'text/javascript')
-                    .text(archivo)
-                    .appendTo('head');
+              var archivo = widget.fields.file;
+              $(function () {
+                $('<script>').attr('type', 'text/javascript').text(archivo).appendTo('head');
               });
               var div;
               var widgetAux;

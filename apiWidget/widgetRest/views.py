@@ -169,7 +169,9 @@ def getWidget(request):
     if request.method == 'GET':
         try:
             widget = Widget.objects.get(pk=request.GET['idWidget'])
-            widgetAsJson = serializers.serialize('json', [widget])
+            data = widget.file.read()
+            widget.file = data
+            widgetAsJson = serializers.serialize('json', [widget], fields=('pk', 'widget_icon', 'widget_name', 'description', 'widget_title','file'))
             return HttpResponse(widgetAsJson, content_type='json')
         except Widget.DoesNotExist:
             return HttpResponseBadRequest()

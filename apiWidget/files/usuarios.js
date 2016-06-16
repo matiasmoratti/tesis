@@ -121,10 +121,10 @@ function chatClick(e){
 }
 
 function getChatMessage(textMessage){
-    li = comentarios.getLi();
-    div = comentarios.getDiv();
+    li = usuarios.getLi();
+    div = usuarios.getDiv();
     div.classList.add('commentText');
-    span = comentarios.getSpan();
+    span = usuarios.getSpan();
     span.classList.add('date','sub-text');
     span.innerHTML= textMessage;
     div.appendChild(span);

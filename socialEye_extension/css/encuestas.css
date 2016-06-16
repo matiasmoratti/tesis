@@ -169,3 +169,13 @@ input[type="radio"]{
 .tituloOpciones {
     margin-right: 20px;
 }
+
+.divCrearEncuesta{
+    position: absolute;
+    left: 80%;
+    bottom: 93%;
+}
+
+
+
+
