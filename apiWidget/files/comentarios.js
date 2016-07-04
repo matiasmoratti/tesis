@@ -13,7 +13,7 @@ comentarios.loadWidget = function () {
         div = comentarios.getDiv();
         div.classList.add('commentText');
         span = comentarios.getSpan();
-        span.classList.add('date','sub-text');
+        span.classList.add('sub-text');
         span.innerHTML=item.username + " dijo el " + item.date;
         p = comentarios.getP();
         p.innerHTML=item.element.texto;
@@ -27,7 +27,7 @@ comentarios.loadWidget = function () {
     form=comentarios.getForm('');
     textarea=comentarios.getTextArea('textoComentarioGeneral');
     textarea.placeholder = 'Escriba su comentario...';
-    buttn=comentarios.getButton('agregarComentarioGeneral');
+    buttn=comentarios.getSubmitButton('agregarComentarioGeneral');
     buttn.innerHTML='Agregar';
     form.appendChild(textarea);
     form.appendChild(buttn);

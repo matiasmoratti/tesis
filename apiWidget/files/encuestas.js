@@ -73,7 +73,7 @@ encuestas.onReady = function () {
     $(document.body).on('click', '.filaEncuesta' ,function(){
         idEncuestaActual=getOriginalId(encuestas.idWidget,this.id);
         encuestas.inyectHTML(modalVotacion());
-        votosResultados = {} ;
+        votosResultados = {};
         $("#votar").prop( "disabled", false );
         votosAGuardar = [];
         votos={};
@@ -548,8 +548,7 @@ function getOriginalId(idWidget,id){
 
 function agregarFilaAEncuesta(item){
     var li = encuestas.getLi();
-    var btnn = encuestas.getButtonWithoutStyle(item.id);
-    btnn.classList.add('list-group-item', 'filaEncuesta');
+    var btnn = encuestas.getListButton(item.id);
     var div = encuestas.getDiv();
     div.classList.add('tituloEncuesta');
     div.innerHTML=item.element.description;

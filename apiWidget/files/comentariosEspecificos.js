@@ -16,6 +16,10 @@ especificos.onReady = function (){
         changeClickListeners();
 }
 
+especificos.onCloseWidget = function(){
+    revertClickListeners();
+}
+
 function showSpecificBox(e){
         var tagAux;
         var boxElement;
@@ -35,8 +39,8 @@ function showSpecificBox(e){
             obj = {};
             obj.tag = tagAux;
             obj.tipo = 'commentBox';
-            obj.positionLeft = e.pageX;
-            obj.positionTop = e.pageY;
+            obj.positionLeft = e.pageX - 10;
+            obj.positionTop = e.pageY - 10;
             especificos.saveObject(obj);
             params = {};
             params.tag = tagAux;
@@ -49,8 +53,8 @@ function showSpecificBox(e){
 
        // boxElement = document.getElementById("specificBox" + tagAux);
 
-        positionLeft = boxObject.element.positionLeft + 25;
-        positionTop = boxObject.element.positionTop + 25;
+        positionLeft = boxObject.element.positionLeft - 25;
+        positionTop = boxObject.element.positionTop - 25;
 
      //   boxElement.style.left = positionLeft + 'px';
     //    boxElement.style.top = positionTop + 'px';
@@ -70,7 +74,7 @@ function showSpecificBox(e){
             div = especificos.getDiv();
             div.classList.add('commentText');
             span = especificos.getSpan();
-            span.classList.add('date','sub-text');
+            span.classList.add('sub-text');
             span.innerHTML=item.username + " dijo el " + item.date;
             p = especificos.getP();
             p.innerHTML=item.element.texto;
@@ -84,7 +88,7 @@ function showSpecificBox(e){
         formAux = especificos.getForm('');
         textareaAux =especificos.getTextArea('textoComentario' + tagAux);
         textareaAux.placeholder = 'Escribe un comentario...';
-        buttnAux = especificos.getButton('agregarComentario' + tagAux);
+        buttnAux = especificos.getSubmitButton('agregarComentario' + tagAux);
         buttnAux.classList.add('agregarComentarioEspecifico');
         buttnAux.innerHTML='Agregar';
         formAux.appendChild(textareaAux);
@@ -107,7 +111,7 @@ function showSpecificBox(e){
                 if (result != 0) {
                     var parrafo = especificos.getP();
                     var span = especificos.getSpan();
-                    span.setAttribute('class', 'date sub-text');
+                    span.setAttribute('class', 'sub-text');
                     var d = new Date();
                     var hs = d.getHours();
                     var mins = d.getMinutes();
@@ -168,5 +172,13 @@ function changeClickListeners() {
                         showSpecificBox(e);
                     }
                 }           
+        }
+}
+
+function revertClickListeners() {
+        var all = toArray(document.getElementsByTagName('a')).concat(toArray(document.getElementsByTagName('div')));
+        for (var i = 0, max = all.length; i < max; i++) {
+            if(!($(all[i]).parents().hasClass('socialEye')))
+                all[i].onclick = all[i]._onclick;
         }
 }

@@ -8,21 +8,13 @@
             margin:50px;
             background-color:#fdfdfd;
             z-index: 99999999999999999999;
+            border-radius: 4px;
 }
 
 #comentariosGenerales{
     z-index: 99999999999999999999;
 }
 		 
-.titleBox {
-    background-color:#fdfdfd;
-    padding:10px;
-}
-.titleBox label{
-  color:#444;
-  margin:0;
-  display:inline-block;
-}
 .commentBox {
     padding:10px;
     border-top:1px dotted #bbb;
@@ -44,6 +36,7 @@
     list-style:none;
     max-height:200px;
     overflow:auto;
+    margin:0px 0px 10px 0px;
 }
 .commentList li {
     margin:0;
@@ -64,6 +57,7 @@
 }
 .commentText p {
     margin:0;
+    color:black;
 }
 .sub-text {
     color:#aaa;
@@ -90,6 +84,12 @@
     position:absolute;
     top:0;
     z-index: 9999999999999999;
+    cursor: pointer;
+    color: grey;
+}
+
+.iconoComentarioEspecifico:hover{
+    color: #337ab7;
 }
 
 .specificBox{

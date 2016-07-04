@@ -12,7 +12,7 @@ function WidgetInterface(){
         label.classname='socialEye';
         label.innerHTML = title;
         boton = document.createElement("button");
-        boton.classList.add( "close", "botonCerrar", 'socialEye', 'cerrar'+idWidget);
+        boton.classList.add("botonCerrar", 'socialEye', 'cerrar'+idWidget);
         boton['aria-hidden'] = "true";
         boton.innerHTML = '&times;';
         $(boton).on('click',function (e) {
@@ -55,16 +55,17 @@ function WidgetInterface(){
         form = document.createElement("form");
         if (!(typeof idElement === 'undefined'))
             form.setAttribute('id', idWidget+idElement);
-        form.classList.add( "form-inline", "socialEye","form"+idWidget);
+        form.classList.add("socialEye","form"+idWidget);
         return form;
     }
 
     this.getInput = function(idWidget,type,idElement) {
-        input = document.createElement("form");
+        input = document.createElement("input");
         input.type = type;
         if (!(typeof idElement === 'undefined'))
             input.setAttribute('id', idWidget+idElement);
         input.classname='input'+idWidget;
+        input.classList.add('socialEyeInput'+type,'socialEye');
         return input;
     }
 
@@ -77,19 +78,19 @@ function WidgetInterface(){
         return textarea;
     }
 
-    this.getButton = function(idWidget,idElement){
+    this.getSubmitButton = function(idWidget,idElement){
         buttn = document.createElement("button");
         if (!(typeof idElement === 'undefined'))
             buttn.setAttribute('id', idWidget+idElement);
-        buttn.classList.add('btn', 'btn-primary', 'socialEye',"button"+idWidget);
+        buttn.classList.add('submitButton','socialEye',"button"+idWidget);
         return buttn;
     }
 
-    this.getButtonWithoutStyle = function(idWidget,idElement){
+    this.getListButton = function(idWidget,idElement){
         buttn = document.createElement("button");
         if (!(typeof idElement === 'undefined'))
-            buttn.setAttribute('id', idWidget+""+idElement);
-        buttn.classList.add('socialEye',"button"+idWidget);
+            buttn.setAttribute('id', idWidget+idElement);
+        buttn.classList.add('listButton','socialEye',"button"+idWidget);
         return buttn;
     }
 
@@ -164,7 +165,7 @@ function WidgetInterface(){
         label.innerHTML = title;
         boton = document.createElement("button");
         boton.setAttribute('id', 'cerrar'+idWidget + idElement);
-        boton.classList.add( "close", 'botonCerrar', 'socialEye', 'cerrar'+idWidget + idElement);
+        boton.classList.add('botonCerrar', 'socialEye', 'cerrar'+idWidget + idElement);
         boton['aria-hidden'] = "true";
         boton.innerHTML = '&times;';
         divTitulo.appendChild(label);

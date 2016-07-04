@@ -1,80 +1,221 @@
-/*.container{*/
-            /*width:400px;*/
-            /*position: fixed;*/
-            /*border:1px solid #bbb;*/
-            /*margin:50px;*/
-            /*background-color:#fdfdfd;*/
-            /*z-index: 99999999999999999999;*/
-          /*}*/
+.socialEye{
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    box-sizing: border-box;
+}
 
-/*.titleBox {*/
-    /*background-color:#fdfdfd;*/
-    /*padding:10px;*/
-/*}*/
-/*.titleBox label{*/
-  /*color:#444;*/
-  /*margin:0;*/
-  /*display:inline-block;*/
-/*}*/
-/*.commentBox {*/
-    /*padding:10px;*/
-    /*border-top:1px dotted #bbb;*/
-/*}*/
-/*.commentBox .form-group:first-child, .actionBox .form-group:first-child {*/
-    /*width:80%;*/
-/*}*/
-/*.commentBox .form-group:nth-child(2), .actionBox .form-group:nth-child(2) {*/
-    /*width:25%;*/
-/*}*/
-/*.actionBox .form-group * {*/
-    /*width:100%;*/
-/*}*/
-/*.taskDescription {*/
-    /*margin-top:10px 0;*/
-/*}*/
-/*.commentList {*/
-    /*padding:0;*/
-    /*list-style:none;*/
-    /*max-height:200px;*/
-    /*overflow:auto;*/
-/*}*/
-/*.commentList li {*/
-    /*margin:0;*/
-    /*margin-top:10px;*/
-/*}*/
-/*.commentList li > div {*/
-    /*display:table-cell;*/
-/*}*/
-/*.commenterImage {*/
-    /*width:30px;*/
-    /*margin-right:5px;*/
-    /*height:100%;*/
-    /*float:left;*/
-/*}*/
-/*.commenterImage img {*/
-    /*width:100%;*/
-    /*border-radius:50%;*/
-/*}*/
-/*.commentText p {*/
-    /*margin:0;*/
-/*}*/
-/*.sub-text {*/
-    /*color:#aaa;*/
-    /*font-family:verdana;*/
-    /*font-size:11px;*/
-/*}*/
-/*.actionBox {*/
-   /*border-top:1px dotted #bbb;*/
-   /*padding:10px;*/
-/*}*/
+.socialEye textarea{
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    resize: none;
+    overflow: auto;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+    -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
 
-/*.form-inline .form-control{*/
-    /*resize:none;*/
-    /*width: 100%;*/
-/*}*/
+.socialEye input{
+    border-radius: 4px;
+}
+
+.socialEye form{
+    margin: 0;
+}
+
+.titleBox{
+    font-size: 17px;
+    color: #337ab7;
+    font-style: italic;
+    padding:10px;
+    font-weight: bold;
+}
+
+.botonCerrar{
+    -webkit-appearance: none;
+    padding: 0;
+    cursor: pointer;
+    background: 0 0;
+    border: 0;
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    top: 0;
+    margin-right: 0;
+    left: 94% !important;
+    float: right;
+    font-size: 21px;
+    line-height: 1;
+    color: #000;
+    font-weight: bold;
+}
+
+.submitButton, .loginButton, .registrationButton{
+    margin-top: 10px;
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #2e6da4;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 0.25em;
+    border: none;
+    width: auto;
+}
+
+.socialEyeInputtext, .socialEyeInputpassword{
+    width: 170px;
+}
+
+.submitButton:hover, .listButton:hover, .loginButton:hover, .registrationButton:hover{
+    border-left: 3px solid red;
+    color: #FFF;
+    background-color: #0095ff;
+    box-shadow: inset 0 1px 0 #66bfff;
+}
+
+.listButton{
+    background-color: #337ab7;
+    border-radius: 4px;
+    width: 100%;
+    padding: 0;
+    margin:0;
+}
+
+.submitButton, .listButton{
+    display: inline-block;
+    position: relative;
+    vertical-align: middle;
+    border: 1px solid transparent;
+    cursor: pointer;
+    outline: none;
+    touch-action: manipulation;
+    transition: all .1s ease-in;
+}
+
+#socialEyeBar{
+    z-index: 999999999999999999999;
+    position: fixed;
+    margin: 0 auto;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    background: #000;
+    width: 50px;
+    height: 45px;
+    box-sizing: border-box;
+    font-size: 14px;
+    border-radius: 4px;
+}
 
 
-/*.form-inline button{*/
-    /*margin-top: 5px;*/
-    /*position: center;*/
-/*}*/
+.socialEyeList{
+    position: absolute;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    margin-top: 2px;
+    width: 40px;
+    height: 40px;
+}
+
+.socialEyeIcon{
+    float:none;
+    margin: 0 0 0.5em 0;
+}
+
+.socialEyeIcon a{
+    display: block;
+    cursor:pointer;
+    border-radius: 4px;
+    background-color: #337ab7;
+    color: #fff !important;
+    outline: none;
+    touch-action: manipulation;
+    transition: all .1s ease-in;
+}
+
+.socialEyeIcon a:hover{
+    border-left: red 2px solid;
+    color: #fff;
+    background-color: #0095ff;
+    box-shadow: inset 0 1px 0 #66bfff;
+}
+
+.socialEyeWidget, .socialEyeIcon{
+    float: none;
+    margin-bottom: 0.5em;
+}
+  
+.socialEyeWidget a{
+    display: block;
+    text-decoration: none;
+    cursor:pointer;
+    border-radius: 4px;
+    color: #999999 !important;
+}
+
+.socialEyeWidget a span{       
+    padding-left: 0px !important;
+    margin-left: 0px !important;
+}
+
+ 
+.socialEyeWidget a:hover {
+    text-decoration: none;
+    border-left: red 2px solid;
+    color: #fff !important;
+    background: rgba(255,255,255,0.2) !important;
+}
+ 
+
+.socialEyeWidget{
+    display: none;
+}
+
+.boxLogin, .boxRegistro{
+   width: 200px !important;
+}
+
+.boxLogin input,button{
+    display:block !important;
+    margin-bottom: 5% !important;
+}
+
+.buttonRegistrarse{
+    font-size: 10px;
+    background:none!important;
+    border:none; 
+    padding:0!important;
+    border-bottom:1px solid #444; 
+    cursor: pointer;
+}
+
+.boxRegistro input,button{
+    display:block !important;
+    margin-bottom: 5% !important;
+}
+
+.configuracionesIcon{
+    color: #337ab7;
+}
+
+.boxConfiguraciones{
+    width: 150px !important;
+}
+
+.bodyConfiguraciones{
+    text-align: center;
+}

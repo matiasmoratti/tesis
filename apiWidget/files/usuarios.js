@@ -24,7 +24,7 @@ usuarios.loadWidget = function () {
     enChat = usuarios.getUsersConnectedInWidget();
     $.each(enChat, function (i, item) { 
         if(item.userName != usuarios.getUser()){
-          userButton = usuarios.getButton(item.userName);
+          userButton = usuarios.getListButton(item.userName);
           userButton.classList.add('usuarioChat');
           userSpan = usuarios.getSpan();
           userSpan.classList.add('fa-stack', 'fa-lg');
@@ -57,7 +57,7 @@ usuarios.onReady = function(){
         $.each(enChat, function (i, item) { //Agrego nuevos usuarios conectados
             idsEnChat.push(item.userName);
             if( (item.userName != usuarios.getUser()) && (usuarios.getWidgetElement(item.userName) == null) ){
-                userButton = usuarios.getButton(item.userName);
+                userButton = usuarios.getListButton(item.userName);
                 userButton.classList.add('usuarioChat');
                 userSpan = usuarios.getSpan();
                 userSpan.classList.add('fa-stack', 'fa-lg');
@@ -125,7 +125,7 @@ function getChatMessage(textMessage){
     div = usuarios.getDiv();
     div.classList.add('commentText');
     span = usuarios.getSpan();
-    span.classList.add('date','sub-text');
+    span.classList.add('sub-text');
     span.innerHTML= textMessage;
     div.appendChild(span);
     li.appendChild(div);
@@ -170,7 +170,7 @@ function mostrarChat(otroUsuario){
             div.classList.add('commentText');
             if((lastUserWriting == null) || (lastUserWriting != item.userName)){
                 span = usuarios.getSpan();
-                span.classList.add('date','sub-text', 'userIcon');
+                span.classList.add('sub-text', 'userIcon');
                 span.innerHTML=item.userName + " dijo: "; 
                 div.appendChild(span);
             }
@@ -244,7 +244,7 @@ function mostrarChat(otroUsuario){
                 div.classList.add('commentText');
                 if(lastWrite){
                     span = usuarios.getSpan();
-                    span.classList.add('date','sub-text');
+                    span.classList.add('sub-text');
                     span.innerHTML=usuarioChatActual + " dijo: ";
                     div.appendChild(span);
                 }          
@@ -290,7 +290,7 @@ function mostrarChat(otroUsuario){
             div.classList.add('commentText');
             if(!lastWrite){
                 span = usuarios.getSpan();
-                span.classList.add('date','sub-text');
+                span.classList.add('sub-text');
                 span.innerHTML=usuarios.getUser() + " dijo: ";
                 div.appendChild(span);
             }
@@ -454,7 +454,7 @@ function SocketConnection(){
     var localPeerConnection;
     var remotePeerConnection;
     var total = '';
-    var socket = io.connect('https://localhost:2013', {secure: true});
+    var socket = io.connect('https://127.0.0.1:2013', {secure: true});
     var pc = null;
     var candidatoCreado = false;
     var candidatoAgregado = false;

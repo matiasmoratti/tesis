@@ -5,10 +5,52 @@ function Widget(){
     this.intervalPing;
     this.tittle;
     this.interface = new WidgetInterface();
-    
+
+    this.getIdWidget = function(){
+        return this.idWidget;
+    }
+
+    this.setIdWidget = function(id){
+        this.idWidget = id;
+    }
+
+    this.getDescription = function(){
+        return this.descripcion;
+    }
+
+    this.setDescription = function(descripcion){
+        this.descripcion = descripcion;
+    }
+
+    this.getIcon = function(){
+        return this.icono;
+    }
+
+    this.setIcon = function(icono){
+        this.icono = icono;
+    }
+
+    this.getTitle = function(){
+        return this.tittle;
+    }
+
+    this.setTitle = function(title){
+        this.tittle = title;
+    }
+
+    this.getInterface = function(){
+        return this.interface;
+    }
+
+    this.setInterface = function(interface){
+        this.interface = interface;
+    }
+
     this.getUser =  function() {
         return localStorage['username'];
     }
+
+
 
     this.ping = function(idWidget){ //Encontrar otra solución para no repetir (me rompí el coco ya)
         $.ajax({
@@ -357,12 +399,14 @@ function Widget(){
         return this.interface.getLi(this.idWidget,idElement);
     }
 
-    this.getButton = function(idElement){
-        return this.interface.getButton(this.idWidget,idElement);
+    this.getSubmitButton = function(idElement){
+        return this.interface.getSubmitButton(this.idWidget,idElement);
     }
-    this.getButtonWithoutStyle = function(idElement){
-        return this.interface.getButtonWithoutStyle(this.idWidget,idElement);
+
+    this.getListButton = function(idElement){
+        return this.interface.getListButton(this.idWidget,idElement);
     }
+
     this.getDiv = function(idElement){
         return this.interface.getDiv(this.idWidget,idElement);
     }

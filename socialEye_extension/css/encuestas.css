@@ -25,18 +25,22 @@
 
 
 .addEncuesta{
-    left:30% !important;
+    left:30px !important;
+    cursor: pointer;
+    color: #337ab7;
 }
 #vote{
     z-index: 99999999999999;
 }
 
 .tituloEncuesta{
+    font-size: 18px;
    font-weight: bold;
 }
 
 .subtituloEncuesta{
-    color: grey;
+    font-size: 10px;
+    color: white;
     font-style: italic;
 }
 
@@ -119,15 +123,6 @@
 
 .bootbox.modal {
     z-index: 9999999999999;
-}
-
-.botonCerrar{
-    position: absolute;
-    top: 0;
-    margin-right: 0;
-    width: 20px;
-    height: 20px;
-    left: 95%;
 }
 
 input[type="radio"]{
