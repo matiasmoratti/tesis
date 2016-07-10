@@ -88,7 +88,7 @@ function WidgetInterface(){
     this.getButtonWithoutStyle = function(idWidget,idElement){
         buttn = document.createElement("button");
         if (!(typeof idElement === 'undefined'))
-            buttn.setAttribute('id', idWidget+""+idElement);
+            buttn.setAttribute('id', idWidget+idElement);
         buttn.classList.add('socialEye',"button"+idWidget);
         return buttn;
     }

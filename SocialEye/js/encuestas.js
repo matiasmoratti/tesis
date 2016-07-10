@@ -535,13 +535,13 @@ $(document.body).on('click', '#siguiente' ,function(){
 
 function getOriginalId(idWidget,id){
     sNumber = id.toString();
-    return sNumber.split(idWidget)[1];
+    return sNumber.split("encuesta")[1];
 
 }
 
 function agregarFilaAEncuesta(item){
     var li = encuestas.getLi();
-    var btnn = encuestas.getButtonWithoutStyle(item.id);
+    var btnn = encuestas.getButtonWithoutStyle("encuesta"+item.id);
     btnn.classList.add('list-group-item', 'filaEncuesta');
     var div = encuestas.getDiv();
     div.classList.add('tituloEncuesta');
@@ -554,14 +554,3 @@ function agregarFilaAEncuesta(item){
     li.appendChild(btnn);
     return li;
 }
-
-
-
-
-
-
-
-
-
-
-
