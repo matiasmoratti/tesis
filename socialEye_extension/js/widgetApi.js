@@ -27,6 +27,7 @@ function Manager() {
                 if ((widgetConfiguraciones == null) || ($(widgetConfiguraciones.getWidgetElement('boxConfiguraciones')).length == 0)) {
                     div = document.createElement('div');
                     div.setAttribute('id', 'container999');
+                    div.classList.add('socialEye');
                     $("body").append(div);
                     div.appendChild(crearBoxConfiguraciones());
                     $('.cerrar'+widgetConfiguraciones.getIdWidget()).on('click',function (e) {
@@ -141,6 +142,7 @@ function Manager() {
               var widgetAux;
               div = document.createElement('div');
               div.setAttribute('id', 'container' + widget.pk);
+              div.classList.add('socialEye');
               $('body').append(div);
               widgetAux = eval(widget.fields.widget_name);
               widgetAux.idWidget = widget.pk;
@@ -192,6 +194,7 @@ function Manager() {
                 if ((widgetLogin == null) || ($(widgetLogin.getWidgetElement('boxLogin')).length == 0)) {
                     div = document.createElement('div');
                     div.setAttribute('id', 'container0');
+                    div.classList.add('socialEye');
                     $("body").append(div);
                     div.appendChild(crearBoxLogin());
                     $('.cerrar'+widgetLogin.getIdWidget()).on('click',function (e) {
@@ -235,6 +238,7 @@ function Manager() {
                         if ((widgetRegistro == null) || ($(widgetRegistro.getWidgetElement('boxRegistro')).length == 0)) {
                             div = document.createElement('div');
                             div.setAttribute('id', 'container99');
+                            div.classList.add('socialEye');
                             $("body").append(div);
                             div.appendChild(crearBoxRegistro());
                             $('.cerrar'+widgetRegistro.getIdWidget()).on('click',function (e) {

@@ -48,9 +48,6 @@
     background-color: #99CCFF;
 }
 
-#encueste{
-    z-index: 999999999999;
-}
 
 .modal-body:not(.two-col) { padding:0px }
 .glyphicon { margin-right:5px; }
@@ -97,6 +94,7 @@
 
 #iconoMas{
     font-size: 20px;
+    color: #337ab7 !important;
 }
 
 #iconoMenos{
@@ -104,11 +102,12 @@
 }
 
 .eliminarPregunta{
-    color: red;
+    color: red !important;
 }
 
 #agregarPregunta{
     float: right;
+    color: #337ab7 !important;
 }
 
 #agregarEncuesta{
@@ -133,14 +132,13 @@ input[type="radio"]{
     font-size: 20px;
 }
 
-#encueste{
+#encueste, #modalOpcion{
     z-index: 999999999999;
+    display: block;
+    padding-right: 15px;
+    background-color: transparent;
+    width: 100%;
 }
-
-#modalOpcion{
-    z-index: 999999999999999;
-}
-
 
 * {
   .border-radius(0) !important;

@@ -35,7 +35,7 @@ encuestas.loadWidget = function () {
     //Creo los objetos
     params = {};
     params['tipo'] = "encuesta";
-    data = encuestas.getObjects(params);
+    data = encuestas.getObjectsInUrl(window.location.hostname, params);
     $.each(data, function (i, item) {
         elementosEncuestas[item.id]=item.element;
         listaEncuestas.appendChild(agregarFilaAEncuesta(item));
@@ -72,7 +72,7 @@ encuestas.loadWidget = function () {
 encuestas.onReady = function () {
     $(document.body).on('click', '.filaEncuesta' ,function(){
         idEncuestaActual=getOriginalId(encuestas.idWidget,this.id);
-        encuestas.inyectHTML(modalVotacion());
+        $(encuestas.getWidgetContainer()).append(modalVotacion());
         votosResultados = {};
         $("#votar").prop( "disabled", false );
         votosAGuardar = [];
@@ -81,7 +81,7 @@ encuestas.onReady = function () {
         numeroActualResultado=1;
         numPreguntaEncuesta=0;
         questions = elementosEncuestas[idEncuestaActual].preguntas;
-        $('#vote').modal('show');
+        $("#vote").modal('show');
         siguientePregunta();
 
     });
@@ -90,7 +90,7 @@ encuestas.onReady = function () {
         if ($("#titEncuesta").val() != '') {
             var seGuardo=enviarEncuesta(preguntas);
             if (seGuardo==true) {
-                bootbox.alert('La encuesta ha sido guardado');
+                bootbox.alert('La encuesta ha sido creada');
                 $("#encueste").modal('hide');
             }
             //$("#tituloPregunta").val("");
@@ -125,7 +125,6 @@ encuestas.onReady = function () {
         id=this.id.split("eliminar")[1];
         $("#divPregunta"+id).remove();
         delete preguntas[id];
-        debugger;
         //$(document.body).remove($("#pregunta"+id));
     });
 
@@ -207,7 +206,7 @@ function modalVotacion(){
     modal+="<div class='modal-dialog'>";
     modal+="<div class='panel panel-primary'>";
     modal+="<div class='panel-heading'>";
-    modal+="<button type='button' class='close botonCerrar' data-dismiss='modal' aria-hidden='true'>*</button>";
+    modal+="<button class='botonCerrar' data-dismiss='modal' aria-hidden='true'>*</button>";
     modal+="<h4 id='tituloPregunta' class='panel-title' id='voteLabel'><span class='glyphicon glyphicon-arrow-right'></span></h4>";
     modal+="</div>";
     modal+="<div class='modal-body'>";
@@ -230,9 +229,11 @@ function modalAgregarOpcion(idPreguntaSeleccionada){
     var modal="<div class='modal fade' id='modalOpcion' tabindex='-1' role='dialog' aria-hidden='true'>";
     modal+="<div class='modal-dialog'>";
     modal+="<div class='panel panel-primary'>";
-    modal+="<div class='panel-heading'>";
-    modal+="<button type='button' class='close botonCerrarOpcion' data-dismiss='modal' aria-hidden='true'>*</button>";
+    modal+="<div class='titleBox'>";
+    modal+="<button class='botonCerrar botonCerrarOpcion' data-dismiss='modal' aria-hidden='true'>*</button>";
+    modal+="<label>Nueva opción</label>";
     modal+="</div>";
+    modal+="<div  class='actionBox'>";
     modal+="<div class='modal-body'>";
     modal+="<div class='container'>";
     modal+="<div class='row'>"
@@ -242,7 +243,7 @@ function modalAgregarOpcion(idPreguntaSeleccionada){
     modal+="<div class='controls' id='profs'>";
     if (typeof preguntas[idPreguntaSeleccionada] === "undefined") {
         modal += "<form class='input-append'>";
-        modal += "<div id='field'><input autocomplete='off' class='input form-control inputOpcion' id='field1' name='prof1' type='text' placeholder='Escriba la opcion' data-items='8'/><button id='b1' class='btn add-more' type='button'>+</button></div>";
+        modal += "<div id='field'><input autocomplete='off' class='input form-control inputOpcion' id='field1' name='prof1' type='text' placeholder='Escriba la opcion' data-items='8'/><a id='b1' title='Nueva opción' class='agregarOpcion'><i class='fa fa-plus fa-stack-1x'> </i></a></div>";
         modal += "</form>";
         modal += "<br>";
         modal += "<small>Presione + para agregar otra opcion </small>";
@@ -274,6 +275,7 @@ function modalAgregarOpcion(idPreguntaSeleccionada){
     modal+="<div class='modal-footer footerOpcion'>";
     modal+="<button id='guardarOpcion' type='button' class='btn btn-success btn-vote'>Guardar opciones</button>";
     modal+="<button type='button' class='btn btn-default btn-close botonCerrarOpcion' data-dismiss='modal'>Cerrar</button>";
+    modal+="</div>";
     modal+="</div>";
     modal+="</div>";
     modal+="</div>";
@@ -437,22 +439,22 @@ function crearModalEncuesta() {
     modal="<div class='modal fade' id='encueste' tabindex='-1' role='dialog' aria-labelledby='voteLabel' aria-hidden='true'>";
     modal+="<div class='modal-dialog'>";
     modal+="<div class='panel panel-primary'>";
-    modal+="<div class='panel-heading' id='divNuevaEncuesta'>";
-    modal+="<button type='button' class='close cerrarCrear'>x</button>";
-    modal+="<h3>Nueva encuesta</h3>";
+    modal+="<div class='titleBox' id='divNuevaEncuesta'>";
+    modal+="<button class='botonCerrar cerrarCrear'>x</button>";
+    modal+="<label>Nueva encuesta</label>";
     modal+="</div>";
-    modal+="<br>";
+    modal+="<div  class='actionBox'>";
     modal+="<div  class='modal-body'>";
     modal+="<form  id='formEncuesta'>";
     modal+="<input type='text'  id='titEncuesta' class='form-control inputEncuesta' placeholder='Ingrese el título de la encuesta'/>";
     modal+= "<a id='agregarPregunta' title='Nueva pregunta'><i class='fa fa-question-circle fa-stack-1x' id='iconoPregunta'> </i></a>";
     modal+= "</div>";
-    modal+= "<div id='divPreguntas' class='form-group'>";
-    modal+="<br><br><br><br>";
+    modal+= "<div id='divPreguntas'>";
+    modal+="<br><br>";
     modal+= "<input type='text' id='pregunta" + numPregunta + "' class='form-control inputPregunta' placeholder='Ingrese una pregunta'/>";
     modal+= "<a id='" + numPregunta + "' title='Nueva opción' class='agregarOpcion'><i class='fa fa-plus fa-stack-1x' id='iconoMas'> </i></a>";
     modal+= "</div><br><br>";
-    modal+= "<div id='divBotonNuevaEncuesta'><button id='agregarEncuesta' class='btn btn-primary'>Crear Encuesta</button><div>";
+    modal+= "<div id='divBotonNuevaEncuesta'><button id='agregarEncuesta' class='submitButton'>Crear Encuesta</button><div>";
     modal+= "</form>";
     modal+="</div>";
     modal+="<div class='modal-body'>";
@@ -461,14 +463,15 @@ function crearModalEncuesta() {
     modal+="</div>";
     modal+="</div>";
     modal+="</div>";
+    modal+="</div>";
     //modal+="</div>";
     //modal+="</div>";
 
-    encuestas.inyectHTML(modal);
+    $(encuestas.getWidgetContainer()).append(modal);
     $('#encueste').modal('show');
     $("#agregarPregunta").on('click', function (e) {
         numPregunta++;
-        div = "<div id='divPregunta"+numPregunta+"'><br><br><br><input type='text' id='pregunta" + numPregunta + "' class='form-control inputPregunta' placeholder='Ingrese una pregunta'/>";
+        div = "<div id='divPregunta"+numPregunta+"'><br><br><input type='text' id='pregunta" + numPregunta + "' class='form-control inputPregunta' placeholder='Ingrese una pregunta'/>";
         div+= "<a id='" + numPregunta + "' title='Nueva opción' class='agregarOpcion'><i class='fa fa-plus fa-stack-1x' id='iconoMas'> </i></a>";
         div+="<br>";
         div+="<a id='eliminar" + numPregunta + "' title='Eliminar Opcion' class='eliminarPregunta'><i class='fa fa-remove fa-stack-1x' id='iconoMenos'> </i></a></div>";
@@ -480,7 +483,7 @@ function crearModalEncuesta() {
     });
     $(document.body).on('click', '.agregarOpcion' ,function(){
 
-        encuestas.inyectHTML(modalAgregarOpcion(this.id));
+        $(encuestas.getWidgetContainer()).append(modalAgregarOpcion(this.id));
         $("#modalOpcion").modal("show");
         // Para el modal de agregar opcion
     idOpcionActual = this.id;
@@ -542,13 +545,14 @@ $(document.body).on('click', '#siguiente' ,function(){
 
 function getOriginalId(idWidget,id){
     sNumber = id.toString();
-    return sNumber.split(idWidget)[1];
+    return sNumber.split("encuesta")[1];
 
 }
 
 function agregarFilaAEncuesta(item){
     var li = encuestas.getLi();
-    var btnn = encuestas.getListButton(item.id);
+    var btnn = encuestas.getListButton("encuesta"+item.id);
+    btnn.classList.add('filaEncuesta');
     var div = encuestas.getDiv();
     div.classList.add('tituloEncuesta');
     div.innerHTML=item.element.description;

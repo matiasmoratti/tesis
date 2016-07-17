@@ -218,12 +218,19 @@ function Widget(){
 
     this.getObjectsInUrl = function (url, params){
         var data;
+        var urlAux = url;
+        console.log(url);
+        //La url enviada no contiene http/https, por lo que es un nombre de dominio o una url inválida.
+        if((url.indexOf("http://") == -1) && (url.indexOf("https://") == -1)){
+            var href = window.location.href;
+            urlAux = href.split("/", 3).join("/") + "/";
+        }
         $.ajax({
             url: "https://127.0.0.1:8000/widgetRest/objects/", // the endpoint
             type: "GET", // http method
             dataType: 'json',
             async: false,
-            data : {url : url,
+            data : {url : urlAux,
                 idWidget : this.idWidget,
                 params : JSON.stringify(params)
             }, // data sent with the post request
@@ -245,12 +252,20 @@ function Widget(){
 
     this.getObjectInUrl = function (url, params){
         var data;
+        var urlAux = url;
+        console.log(url);
+        //La url enviada no contiene http/https, por lo que es un nombre de dominio o una url inválida.
+        if((url.indexOf("http://") == -1) && (url.indexOf("https://") == -1)){
+            var href = window.location.href;
+            urlAux = href.split("/", 3).join("/") + "/";
+        }
+        console.log(urlAux);
         $.ajax({
             url: "https://127.0.0.1:8000/widgetRest/objects/", // the endpoint
             type: "GET", // http method
             dataType: 'json',
             async: false,
-            data : {url : url,
+            data : {url : urlAux,
                 idWidget : this.idWidget,
                 params : JSON.stringify(params)
             }, // data sent with the post request

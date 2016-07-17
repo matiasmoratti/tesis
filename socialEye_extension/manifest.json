@@ -10,8 +10,8 @@
     "default_popup": "popup.html"
   },
   "content_scripts": [{
-    "js": [ "js/jquery-2.1.4.min.js","js/jquery-ui.min.js","js/sidebar_menu.js","js/widgetInterface.js","js/socialEye.js","js/widgetApi.js", "js/socket.io.js", "js/latest-v2.js"],
-    "css": ["css/jquery-ui.min.css","css/login.css","css/main.css","css/chats.css","css/socialEye.css","css/commentBox.css","css/encuestas.css","css/listaUsuarios.css"],
+    "js": [ "js/jquery-2.1.4.min.js","js/jquery-ui.min.js","js/bootstrap.min.js","js/bootbox.min.js","js/widgetInterface.js","js/socialEye.js","js/widgetApi.js", "js/socket.io.js", "js/latest-v2.js"],
+    "css": ["css/jquery-ui.min.css","css/login.css","css/main.css","css/socialEye.css","css/bootstrap.min.css","css/bootstrap-theme.min.css","css/commentBox.css","css/encuestas.css","css/listaUsuarios.css"],
      "matches": ["<all_urls>"]
   }],
   "permissions": [

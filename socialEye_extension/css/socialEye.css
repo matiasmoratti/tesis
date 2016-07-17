@@ -72,6 +72,8 @@
     padding: 0.25em;
     border: none;
     width: auto;
+    font-size: 15px;
+    margin-bottom: 0 !important;
 }
 
 .socialEyeInputtext, .socialEyeInputpassword{
