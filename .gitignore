@@ -1,5 +1,3 @@
 .DS_Store
-apiWidget/.idea/apiWidget.iml
-apiWidget/.idea/misc.xml
-apiWidget/.idea/workspace.xml
-apiWidget/apiWidget/.DS_Store
+/apiWidget/.idea/
+/apiWidget/apiWidget/.DS_Store
