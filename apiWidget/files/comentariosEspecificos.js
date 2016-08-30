@@ -3,15 +3,12 @@ var especificos = new Widget();
 especificos.loadWidget = function () {
     params = {};
     params.tipo = 'commentBox';
-    data = especificos.getObjectsInUrl(window.location.href, params);
-    var commentIcon;
-    $.each(data, function (i, item) {
-        $(especificos.getWidgetContainer()).append(getCommentIcon(item));
-    });
-    return null;
+    items = especificos.getObjectsInUrl(window.location.href, params);
+    var data = {items : items};
+    return data;
 }
 
-especificos.onReady = function (){    
+especificos.onReady = function (){
        $('body').on("click", '.iconoComentarioEspecifico', showSpecificBox);
         changeClickListeners();
 }
@@ -138,7 +135,7 @@ function getCommentIcon(item){
     var commentIcon = "<a class='socialEye iconoComentarioEspecifico' title='Mostrar comentarios' style='position:absolute; top:"+item.element.positionTop+"px; left:"+item.element.positionLeft+"px'>";
     commentIcon += "<span class='fa-stack fa-lg socialEye'>";
     commentIcon += "<i id='"+item.element.tag+"' class='fa fa-comments fa-stack-1x socialEye iconoClick'>";
-    commentIcon += "</i></span></a>"; 
+    commentIcon += "</i></span></a>";
     return commentIcon;
 }
 
@@ -163,15 +160,15 @@ function toArray(arraylike) {
 
 function changeClickListeners() {
         var all = toArray(document.getElementsByTagName('a')).concat(toArray(document.getElementsByTagName('div')));
-        for (var i = 0, max = all.length; i < max; i++) {  
+        for (var i = 0, max = all.length; i < max; i++) {
                 all[i]._onclick = all[i].onclick;
-                all[i].onclick = function (e) {    
-                    if(!($(e.target).parents().hasClass('socialEye'))){               
+                all[i].onclick = function (e) {
+                    if(!($(e.target).parents().hasClass('socialEye'))){
                         e.stopPropagation();
                         e.preventDefault();
                         showSpecificBox(e);
                     }
-                }           
+                }
         }
 }
 

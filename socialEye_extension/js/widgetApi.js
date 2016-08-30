@@ -11,6 +11,10 @@ function Manager() {
 
     this.iniciarScript = function () {
 
+      // _.templateSettings = {
+      //   interpolate: /\{\{(.+?)\}\}/g
+      // };
+
         $("head").append("<link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet'>");
 
         $("body").append(" <div id='socialEyeBar' class='socialEyeBar socialEye'> <ul class='socialEyeList socialEye' id='socialEyeList'>   <li class='socialEyeIcon active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li>  <li class='socialEyeWidget socialEye'>  <a id='configuraciones' class='socialEye' title='Configuraciones'><span class='fa-stack fa-lg socialEye'><i class='fa fa-cogs fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li></ul> </div> ");
@@ -20,7 +24,7 @@ function Manager() {
                 xhr.setRequestHeader('Authorization', "Basic " + btoa(localStorage['user'] + ":" + localStorage['token']));
             }
         });
-                
+
         function initializeTool(){
 
             $("#configuraciones").click(function () {
@@ -45,7 +49,7 @@ function Manager() {
                             altoBarra = altoBarra + 44;
                             $("#widget"+widgetId).click(function (e) {
                                 if($("#container"+widgetId).length == 0){
-                                    runWidget(widgetActual);                                
+                                    runWidget(widgetActual);
                                 }
                                 else{
                                     widgetAux.close();
@@ -61,7 +65,7 @@ function Manager() {
                                 $('#widgetList'+widgetId).remove();
                                 widgetAux = eval(widgetActual.fields.widget_name);
                                 widgetAux.close();
-                            }                
+                            }
                         }
                         $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
                     });
@@ -72,8 +76,8 @@ function Manager() {
                     $("#configuraciones").removeAttr('style');
                }
           });
-            
-            
+
+
         $("#cerrarSesion").click(function () {
             var widgetsUsuario = getUserWidgets();
             var widgetAux;
@@ -98,10 +102,10 @@ function Manager() {
             deleteSession();
 
         });
-            
+
           toolInitialized = true;
         }
-        
+
         function loadUserWidgets(){
             var widgets = getUserWidgets();
             var widgetAux;
@@ -117,7 +121,7 @@ function Manager() {
                         widgetAux = null;
                     }
                 });
-            }); 
+            });
         }
 
 
@@ -127,14 +131,15 @@ function Manager() {
             $.each(widgets, function (i, item) {
                      runWidget(item);
             });
-            
+
             $("#socialEyeBar").animate({height: ""+altoBarra+"px"}, "500");
             activo = 1;
             $(".socialEyeWidget").show('slow');
         }
-        
+
         function runWidget(widget){
-              var archivo = widget.fields.file;
+              var archivo = widget.fields.fileJS;
+              widget.filesHTML = widget.fields.filesHTML;
               $(function () {
                 $('<script>').attr('type', 'text/javascript').text(archivo).appendTo('head');
               });
@@ -147,9 +152,15 @@ function Manager() {
               widgetAux = eval(widget.fields.widget_name);
               widgetAux.idWidget = widget.pk;
               widgetAux.ping(widgetAux.idWidget);
-
-              if(widgetAux.loadWidget() != null){
-                    div.appendChild(widgetAux.loadWidget());
+              var load = widgetAux.loadWidget();
+              if(load != null){
+                  widget.filesHTML.forEach(function(item,index){
+                    if (item.name ==load.name){
+                      var template = _.template(item.data);
+                      var test = template(load.data);
+                      $(div).html(test);
+                    }
+                  });
               }
 
               widgetAux.onReady();
@@ -173,7 +184,7 @@ function Manager() {
                     $(".socialEyeWidget").hide('slow');
                     $("#socialEyeBar").animate({height: "45px"}, "500");
                     $.each(widgetsUsuario, function (i, item) {
-                        if($("#container"+item.pk).length != 0){                  
+                        if($("#container"+item.pk).length != 0){
                                 widgetAux = eval(item.fields.widget_name);
                                 widgetAux.close();
                         }
@@ -283,14 +294,14 @@ function Manager() {
 
     function crearBoxConfiguraciones(){
         var allWidgets;
-        var userWidgets;        
+        var userWidgets;
         widgetConfiguraciones = new Widget();
         widgetConfiguraciones.setIdWidget(999);
         boxConfiguraciones = widgetConfiguraciones.getPrincipalBox('boxConfiguraciones','Configuraciones');
         boxConfiguraciones.classList.add('boxConfiguraciones');
         bodyConfiguraciones = widgetConfiguraciones.getPrincipalBody('bodyConfiguraciones');
         bodyConfiguraciones.classList.add('bodyConfiguraciones');
-        listaConfiguraciones = widgetConfiguraciones.getPrincipalList('listaConfiguraciones');    
+        listaConfiguraciones = widgetConfiguraciones.getPrincipalList('listaConfiguraciones');
         allWidgets = getWidgets();
         userWidgets = getUserWidgets();
         idsWidgets = getIdsWidgets(userWidgets);
@@ -347,7 +358,7 @@ function Manager() {
         formLogin.appendChild(passInput);
         formLogin.appendChild(div);
         bodyLogin.appendChild(formLogin);
-        boxLogin.appendChild(bodyLogin);  
+        boxLogin.appendChild(bodyLogin);
         return boxLogin;
     }
 
@@ -374,7 +385,7 @@ function Manager() {
         formRegistro.appendChild(passInput);
         formRegistro.appendChild(div);
         bodyRegistro.appendChild(formRegistro);
-        boxRegistro.appendChild(bodyRegistro);  
+        boxRegistro.appendChild(bodyRegistro);
         return boxRegistro;
     }
 
@@ -472,7 +483,7 @@ function Manager() {
         });
         return data[0];
     }
-    
+
     function getIdsWidgets(widgets){
         var result = [];
         $.each(widgets, function (i, item) {
@@ -498,7 +509,7 @@ function Manager() {
             error: function (xhr, errmsg, err) {
                 alert("Error al enviar el objeto");
             }
-        });    
+        });
     }
 
     function removeUserWidget(idWidget){
@@ -518,7 +529,7 @@ function Manager() {
             error: function (xhr, errmsg, err) {
                 alert("Error al enviar el objeto");
             }
-        });    
+        });
     }
 
 }

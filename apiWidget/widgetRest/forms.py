@@ -32,7 +32,7 @@ class UserCreationForm(UserCreationForm):
 class WidgetForm(forms.Form):
     title = forms.CharField(max_length=50,required=True)
     descripcion = forms.CharField(max_length=250,required=True)
-    file = forms.FileField(required=True)
+    file = forms.FileField(label="Widget project",required=True)
     icon = forms.CharField(max_length=200,required=True)
 
 

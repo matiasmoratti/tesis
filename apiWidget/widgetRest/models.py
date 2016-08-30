@@ -14,7 +14,8 @@ class Widget(models.Model):
     users = models.ManyToManyField(User,related_name='widgets')
     widget_icon = models.CharField(max_length=200, unique=True)
     description = models.CharField(max_length=500)
-    file = models.FileField(upload_to='.')
+    fileJS = models.CharField(max_length=200)
+    filesHTML = JSONField(default = {})
     owner = models.ForeignKey(User,related_name='owners')
 
 class Element(models.Model):

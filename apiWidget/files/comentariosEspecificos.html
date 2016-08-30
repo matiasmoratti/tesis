@@ -1,0 +1,6 @@
+<% _.each(items, function(item) { %>
+  <a class='socialEye iconoComentarioEspecifico' title='Mostrar comentarios' style='position:absolute; top:<%= item.element.positionTop %>px; left:<%= item.element.positionLeft %>px'>
+  <span class='fa-stack fa-lg socialEye'>
+  <i id='<%= item.element.tag %>' class='fa fa-comments fa-stack-1x socialEye iconoClick'>
+</i></span></a>
+  <% }); %>

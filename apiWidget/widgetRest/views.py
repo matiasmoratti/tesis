@@ -1,6 +1,7 @@
 import datetime
 import json
 import os
+import zipfile
 from datetime import timedelta
 
 from django.contrib import messages
@@ -110,7 +111,7 @@ def objects(request):
             for key,value in par.iteritems():
                 kwargsjson[ key ] = value
             kwargs['element__contains'] = kwargsjson
-        objects = list(Element.objects.filter(**kwargs).values('id','username','date','element'))
+        objects = list(reversed(Element.objects.filter(**kwargs).values('id','username','date','element')))
         objects_as_json = json.dumps(objects)
         return HttpResponse(objects_as_json, content_type='json')
 
@@ -159,7 +160,7 @@ def widget(request):
         except IntegrityError:
             return HttpResponseBadRequest()
     else:
-        widgets = list(Widget.objects.all().values('pk','widget_name','widget_icon','widget_title', 'description','file'))
+        widgets = list(Widget.objects.all().values('pk','widget_name','widget_icon','widget_title', 'description','fileJS','filesHTML'))
         wAsJson = json.dumps(widgets)
         return HttpResponse(wAsJson, content_type='json')
 
@@ -169,9 +170,16 @@ def getWidget(request):
     if request.method == 'GET':
         try:
             widget = Widget.objects.get(pk=request.GET['idWidget'])
-            data = widget.file.read()
-            widget.file = data
-            widgetAsJson = serializers.serialize('json', [widget], fields=('pk', 'widget_icon', 'widget_name', 'description', 'widget_title','file'))
+            data=open('files/'+widget.fileJS).read()
+            widget.fileJS = data
+            htmlFiles = []
+            for f in widget.filesHTML:
+                file = {}
+                file['name'] = f
+                file['data'] = open('files/'+f).read()
+                htmlFiles.append(file)
+            widget.filesHTML = htmlFiles
+            widgetAsJson = serializers.serialize('json', [widget], fields=('pk', 'widget_icon', 'widget_name', 'description', 'widget_title','fileJS','filesHTML'))
             return HttpResponse(widgetAsJson, content_type='json')
         except Widget.DoesNotExist:
             return HttpResponseBadRequest()
@@ -250,9 +258,16 @@ def widgetsByUser(request):
         user = User.objects.get(pk=user_id)
         widgets = list(user.widgets.all())
         for w in widgets:
-            data=w.file.read()
-            w.file = data
-        widgets_as_json = serializers.serialize('json', widgets, fields=('pk', 'widget_icon', 'widget_name', 'description', 'widget_title','file'))
+            data=open('files/'+w.fileJS).read()
+            w.fileJS = data
+            htmlFiles = []
+            for f in w.filesHTML:
+                file = {}
+                file['name'] = f
+                file['data'] = open('files/'+f).read()
+                htmlFiles.append(file)
+            w.filesHTML = htmlFiles
+        widgets_as_json = serializers.serialize('json', widgets, fields=('pk', 'widget_icon', 'widget_name', 'description', 'widget_title','fileJS','filesHTML'))
         return HttpResponse(widgets_as_json, content_type='json')
 
 
@@ -309,18 +324,27 @@ def newWidget(request):
         form = WidgetForm(request.POST,request.FILES)
         # check whether it's valid:
         if form.is_valid():
-            # filename = form.cleaned_data['title']
-            # filename = filename +'.js'
-            # # save the uploaded file inside that folder.
-            # full_filename = os.path.join('/Users/ferminrecalt/Desktop/', 'Files', filename)
-            # fout = open(full_filename, 'wb+')
-            # # Iterate through the chunks.
-            # file_content = ContentFile(form.cleaned_data['file'].read())
-            # for chunk in file_content.chunks():
-            #     fout.write(chunk)
-            # fout.close()
-            w = Widget();
-            w.file =form.cleaned_data['file']
+            w = Widget()
+            content = form.cleaned_data['file']
+            unzipped = zipfile.ZipFile(content)
+            htmlFiles = []
+            for item in unzipped.namelist():
+                if item.endswith('.js'):
+                    with open('files/'+item, 'w') as fs:
+                        filecontent = unzipped.open(item).read()
+                        fs.write(filecontent)
+                        fs.closed
+                        w.fileJS =item
+                else:
+                    if item.endswith('.html'):
+                        with open('files/'+item, 'w') as fh:
+                            filecontent = unzipped.open(item).read()
+                            fh.write(filecontent)
+                            fh.closed
+                            htmlFiles.append(item)
+
+
+            w.filesHTML = htmlFiles
             w.widget_name=form.cleaned_data['title']
             w.widget_title=form.cleaned_data['title']
             w.description=form.cleaned_data['descripcion']

@@ -5,7 +5,7 @@ function Widget(){
     this.intervalPing;
     this.tittle;
     this.interface = new WidgetInterface();
-
+    this.filesHTML;
     this.getIdWidget = function(){
         return this.idWidget;
     }
@@ -343,12 +343,12 @@ function Widget(){
         var data;
         var connected = false;
         data = this.getUsersConnected();
-        $.each(data, function (i, item) {    
+        $.each(data, function (i, item) {
             if(item.userName == userName){
                 connected = true;
                 return false;
             }
-        });   
+        });
         return connected;
     }
 
@@ -356,23 +356,23 @@ function Widget(){
         var data;
         var connected = false;
         data = this.getUsersConnectedInWidget();
-        $.each(data, function (i, item) {   
+        $.each(data, function (i, item) {
             if(item.userName == userName){
                 connected = true;
                 return false;
             }
-        });   
+        });
         return connected;
     }
 
 
     function changeUserAttributeName(data){
         result = [];
-        $.each(data, function (i, item) {    
+        $.each(data, function (i, item) {
             userAux = new Object();
             userAux.userName = item.user__username;
             result[i] = userAux;
-        });     
+        });
         return result;
     }
 

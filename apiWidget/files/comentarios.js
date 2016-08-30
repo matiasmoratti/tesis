@@ -3,37 +3,13 @@ comentarios.descripcion = "Permite realizar comentarios entre los usuarios sobre
 comentarios.icono = "commenting";
 comentarios.tittle = "Comentarios Generales";
 comentarios.loadWidget = function () {
-    ob = comentarios.getPrincipalBox('comentariosGenerales',comentarios.tittle);
-    body = comentarios.getPrincipalBody('principalGenerales');
-    lista = comentarios.getPrincipalList('listaComentariosGenerales');
-    //Creo los objetos
-    data = comentarios.getObjectsInUrl(window.location.href);
-    $.each(data, function (i, item) {
-        li = comentarios.getLi();
-        div = comentarios.getDiv();
-        div.classList.add('commentText');
-        span = comentarios.getSpan();
-        span.classList.add('sub-text');
-        span.innerHTML=item.username + " dijo el " + item.date;
-        p = comentarios.getP();
-        p.innerHTML=item.element.texto;
-        div.appendChild(span);
-        div.appendChild(p);
-        li.appendChild(div);
-        //li.innerHTML=div;
-        lista.appendChild(li);
-    });
-    body.appendChild(lista);
-    form=comentarios.getForm('');
-    textarea=comentarios.getTextArea('textoComentarioGeneral');
-    textarea.placeholder = 'Escriba su comentario...';
-    buttn=comentarios.getSubmitButton('agregarComentarioGeneral');
-    buttn.innerHTML='Agregar';
-    form.appendChild(textarea);
-    form.appendChild(buttn);
-    body.appendChild(form);
-    ob.appendChild(body);
-    return ob;    
+  // var html = "<div class='detailBox socialEye <%= idWidget %>'><div class='titleBox socialEye'><label class='socialEye'><%= title %></label><button class='botonCerrar socialEye cerrar<%= idWidget %>' aria-hidden='true'>&times;</button></div><div id='<%= idWidget %>principalGenerales' class='actionBox socialEye principal<%= idWidget %>'><ul id='<%= idWidget %>listaComentariosGenerales' class='commentList socialEye list<%= idWidget %>'><% _.each(items, function(item) { %><li class='socialEye'><div class='socialEye commentText'><span class='socialEye sub-text'><%= item.username %> dijo el <%= item.date %></span><p class='socialEye'><%= item.element.texto %></p></div></li><% }); %></ul><form class='socialEye form<%= idWidget %>'><textarea class='form-control socialEye textArea<%= idWidget %>' type='text' id='<%= idWidget %>textoComentarioGeneral' placeholder='Escriba su comentario...'></textarea><button class='submitButton socialEye button<%= idWidget %>' id='<%= idWidget %>agregarComentarioGeneral'>Agregar</button></form></div></div>";
+
+  items = comentarios.getObjectsInUrl(window.location.href);
+  var data = {idWidget: comentarios.idWidget,
+            title : comentarios.tittle,
+            items : items};
+    return data;
 }
 
 comentarios.onCloseWidget = function (){
@@ -43,7 +19,9 @@ comentarios.onCloseWidget = function (){
 
 comentarios.onReady = function () {
     $("#"+comentarios.idWidget+"listaComentariosGenerales").scrollTop($("#"+comentarios.idWidget+"listaComentariosGenerales")[0].scrollHeight);
-    $("#"+comentarios.idWidget+"cerrarBoxGenerales").on("click", function (event) {
+    alert("hola");
+    //REVISAR
+    $(".cerrar"+comentarios.idWidget).on('click',function (e) {
         comentarios.close();
     });
 
@@ -79,5 +57,3 @@ comentarios.onReady = function () {
         return false;
     });
 }
-
-
