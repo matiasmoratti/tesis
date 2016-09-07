@@ -138,33 +138,33 @@ function Manager() {
         }
 
         function runWidget(widget){
+            
               var archivo = widget.fields.fileJS;
-              widget.filesHTML = widget.fields.filesHTML;
               $(function () {
                 $('<script>').attr('type', 'text/javascript').text(archivo).appendTo('head');
               });
               var div;
-              var widgetAux;
+              var widgetAux = eval(widget.fields.widget_name);
               div = document.createElement('div');
               div.setAttribute('id', 'container' + widget.pk);
               div.classList.add('socialEye');
-              $('body').append(div);
-              widgetAux = eval(widget.fields.widget_name);
+              $('body').append(div);             
               widgetAux.idWidget = widget.pk;
+              widgetAux.filesHTML = widget.fields.filesHTML;
               widgetAux.ping(widgetAux.idWidget);
               var load = widgetAux.loadWidget();
-              if(load != null){
-                  widget.filesHTML.forEach(function(item,index){
-                    if (item.name ==load.name){
+              /*if(load != null){
+                  widgetAux.filesHTML.forEach(function(item,index){
+                    if (item.name ==load.file){
                       var template = _.template(item.data);
-                      var test = template(load.data);
-                      $(div).html(test);
+                      var test = template(load);
+                      $(div).append(test);
                     }
                   });
-              }
+              }*/
 
               widgetAux.onReady();
-              $("#widget"+widget.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+              $("#widget"+widgetAux.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
         }
 
 

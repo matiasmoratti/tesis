@@ -1,4 +1,4 @@
-function WidgetInterface(){
+    function WidgetInterface(){
 
     this.getPrincipalBox = function(idWidget,title,idElement,widgetObject){
         divPrincipal = document.createElement("div");

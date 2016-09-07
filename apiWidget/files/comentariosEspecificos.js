@@ -4,7 +4,8 @@ especificos.loadWidget = function () {
     params = {};
     params.tipo = 'commentBox';
     items = especificos.getObjectsInUrl(window.location.href, params);
-    var data = {items : items};
+    var data = {items : items,
+                file: 'comentariosEspecificos.html'};
     return data;
 }
 
@@ -43,57 +44,24 @@ function showSpecificBox(e){
             params.tag = tagAux;
             params.tipo = 'commentBox';
             boxObject = especificos.getObjectInUrl(window.location.href, params);
-            $(especificos.getWidgetContainer()).append(getCommentIcon(boxObject));
+            data = {positionTop : obj.positionLeft,                
+                    positionLeft: obj.positionTop,
+                    tag: tagAux};
+            especificos.injectHtml('commentIcon.html',data);
         }
-        boxAux = especificos.getBox(tagAux, "Comentarios relacionados");
-        boxAux.classList.add('specificBox');
-
-       // boxElement = document.getElementById("specificBox" + tagAux);
 
         positionLeft = boxObject.element.positionLeft - 25;
         positionTop = boxObject.element.positionTop - 25;
 
-     //   boxElement.style.left = positionLeft + 'px';
-    //    boxElement.style.top = positionTop + 'px';
-        boxAux.style.left = positionLeft + 'px';
-        boxAux.style.top = positionTop + 'px';
-
-        bodyAux = especificos.getPrincipalBody("bodyComentario" + tagAux);
-        listaAux = especificos.getPrincipalList("listaComentario" + tagAux);
-
-        //Creo los objetos
-        params = {};
-        params.tag = tagAux;
-        params.tipo = 'comment';
         datosComentarios = especificos.getObjectsInUrl(window.location.href, params);
-        $.each(datosComentarios, function (i, item) {
-            li = especificos.getLi();
-            div = especificos.getDiv();
-            div.classList.add('commentText');
-            span = especificos.getSpan();
-            span.classList.add('sub-text');
-            span.innerHTML=item.username + " dijo el " + item.date;
-            p = especificos.getP();
-            p.innerHTML=item.element.texto;
-            div.appendChild(span);
-            div.appendChild(p);
-            li.appendChild(div);
-            listaAux.appendChild(li);
-        });
 
-        bodyAux.appendChild(listaAux);
-        formAux = especificos.getForm('');
-        textareaAux =especificos.getTextArea('textoComentario' + tagAux);
-        textareaAux.placeholder = 'Escribe un comentario...';
-        buttnAux = especificos.getSubmitButton('agregarComentario' + tagAux);
-        buttnAux.classList.add('agregarComentarioEspecifico');
-        buttnAux.innerHTML='Agregar';
-        formAux.appendChild(textareaAux);
-        formAux.appendChild(buttnAux);
-        bodyAux.appendChild(formAux);
-        boxAux.appendChild(bodyAux);
+        data = {idWidget : this.idWidget,
+                    positionLeft: positionLeft,
+                    positionTop: positionTop,
+                    tag: tagAux,
+                    items: datosComentarios};
 
-        $(especificos.getWidgetContainer()).append(boxAux);
+        especificos.injectHtml('boxEspecifico.html',data);
 
         $(".agregarComentarioEspecifico").on('click',function (e) {
             var tag = e.target.id.substr(especificos.idWidget.toString().length + 17);
@@ -131,13 +99,6 @@ function showSpecificBox(e){
         });
 }
 
-function getCommentIcon(item){
-    var commentIcon = "<a class='socialEye iconoComentarioEspecifico' title='Mostrar comentarios' style='position:absolute; top:"+item.element.positionTop+"px; left:"+item.element.positionLeft+"px'>";
-    commentIcon += "<span class='fa-stack fa-lg socialEye'>";
-    commentIcon += "<i id='"+item.element.tag+"' class='fa fa-comments fa-stack-1x socialEye iconoClick'>";
-    commentIcon += "</i></span></a>";
-    return commentIcon;
-}
 
 
 function getXPath(element) {

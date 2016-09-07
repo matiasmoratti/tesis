@@ -6,6 +6,8 @@ function Widget(){
     this.tittle;
     this.interface = new WidgetInterface();
     this.filesHTML;
+    this.templates = {};
+
     this.getIdWidget = function(){
         return this.idWidget;
     }
@@ -80,7 +82,7 @@ function Widget(){
 
     this.loadWidget = function (){
         //
-    };
+    }
 
     this.openWidget = function () {
        $("#container"+this.idWidget).show();
@@ -88,16 +90,59 @@ function Widget(){
 
     this.onCloseWidget = function (){
         //
-    };
+    }
 
     this.onReady = function (){
         //codigo javasript que se ejecutara despues de
         // que la estructura del widget haya sido cargada
-    };
-
-    this.inyectHTML = function (html){
-            $('#container'+this.idWidget).append(html);
     }
+
+    this.createTemplate = function(idTemplate, title, htmlFile, data){
+        debugger;
+        this.templates[idTemplate] = new Template(idTemplate, title, this.idWidget);
+        this.injectInTemplate(idTemplate, "#"+idTemplate+this.idWidget, htmlFile,data);
+    }
+
+    this.getTemplate = function(idTemplate){
+        return this.templates[idTemplate];
+    }
+
+    this.showTemplate = function(idTemplate){
+        this.getTemplate(idTemplate).show();
+    }
+
+    this.closeTemplate = function(idTemplate){
+        this.getTemplate(idTemplate).close();
+    }
+
+    this.setTemplatePosition = function(idTemplate, top, left){
+        this.getTemplate(idTemplate).setPosition(top,left);
+    }
+
+    this.injectInTemplate = function(idTemplate, cssSelector, htmlFile,  data){
+        var widget = this;
+        this.filesHTML.forEach(function(item,index){
+            if (item.name == htmlFile){
+                widget.getTemplate(idTemplate).injectHtml(item.data,cssSelector ,data);
+            }
+        });
+        
+    }
+
+  /*  this.injectHtml = function (file, data){
+        debugger;
+        console.log('Inyectando archivo: ' + file + '. Datos: ' + data);
+        console.log(this.idWidget);
+        idWidgetAux = this.idWidget;
+        this.filesHTML.forEach(function(item,index){
+            if (item.name == file){
+                var template = _.template(item.data);
+                var test = template(data);
+                $('#container'+idWidgetAux).append(test);
+                //$("#container" + this.idWidget).html(test);
+            }
+        });
+    }*/
 
 
     this.close = function (){
@@ -454,4 +499,61 @@ function Widget(){
         $("#label"+this.idWidget + idBoxElement).text(newTitle);
     }
 
+}
+
+function Template(idTemplate, title, idWidget){
+    this.idTemplate = idTemplate;
+    this.title = title;
+    this.idWidget = idWidget;
+    this.box = getTemplateBox(idTemplate, title, idWidget);
+    $("#container"+this.idWidget).append(this.box);
+
+    this.injectHtml = function(html,cssSelector,data){
+        debugger;
+        var template = _.template(html);
+        var test = template(data);
+        if($(this.box).is($(cssSelector))){
+            $(this.box).append(test);
+        }
+        else{
+            $(this.box).find(cssSelector).append(test);
+        }      
+    }
+
+    this.setPosition = function(top, left){
+        this.box.style.top = top;
+        this.box.style.left = left;
+    }
+
+    this.close = function(){
+        this.box.style.display = 'none';
+    }
+
+    this.show = function(){
+        this.box.style.display = 'initial';
+    }
+}
+
+function getTemplateBox(idTemplate, title, idWidget){
+        divPrincipal = document.createElement("div");
+        divPrincipal.setAttribute('id', idTemplate+idWidget);
+        divPrincipal.classList.add( "detailBox","specificBox");
+        divPrincipal.style.position = "absolute";
+        divPrincipal.style.top = '50%';
+        divPrincipal.style.left = '50%';
+        divTitulo = document.createElement("div");
+        divTitulo.classList.add( "titleBox");
+        label = document.createElement("label");
+        label.innerHTML = title;
+        boton = document.createElement("button");
+        boton.classList.add("botonCerrar", 'cerrar'+idTemplate+idWidget);
+        boton['aria-hidden'] = "true";
+        boton.innerHTML = '&times;';
+        $(boton).on('click',function (e) {
+            $("#"+idTemplate+idWidget).remove();
+        });
+        divTitulo.appendChild(label);
+        divTitulo.appendChild(boton);
+        divPrincipal.appendChild(divTitulo);
+        return divPrincipal;
 }

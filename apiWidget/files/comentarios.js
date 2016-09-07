@@ -8,7 +8,8 @@ comentarios.loadWidget = function () {
   items = comentarios.getObjectsInUrl(window.location.href);
   var data = {idWidget: comentarios.idWidget,
             title : comentarios.tittle,
-            items : items};
+            items : items
+            file: 'comentarios_L76B80n'};
     return data;
 }
 
