@@ -12,6 +12,9 @@ comentarios.loadWidget = function () {
             items : items,
             file: 'comentarios_L76B80n.html'};
   comentarios.createTemplate('principal', 'Comentarios', 'comentarios_L76B80n.html', data);
+  comentarios.onCloseTemplate('principal', function(){
+        comentarios.close();
+  });
 }
 
 comentarios.onCloseWidget = function (){

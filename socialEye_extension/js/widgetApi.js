@@ -137,8 +137,7 @@ function Manager() {
             $(".socialEyeWidget").show('slow');
         }
 
-        function runWidget(widget){
-            
+        function runWidget(widget){           
               var archivo = widget.fields.fileJS;
               $(function () {
                 $('<script>').attr('type', 'text/javascript').text(archivo).appendTo('head');
@@ -164,7 +163,7 @@ function Manager() {
               }*/
 
               widgetAux.onReady();
-              $("#widget"+widgetAux.pk).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
+              $("#widget"+widgetAux.idWidget).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
         }
 
 

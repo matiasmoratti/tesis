@@ -98,8 +98,7 @@ function Widget(){
     }
 
     this.createTemplate = function(idTemplate, title, htmlFile, data){
-        debugger;
-        this.templates[idTemplate] = new Template(idTemplate, title, this.idWidget);
+        this.templates[idTemplate] = new Template(idTemplate, title, this);
         this.injectInTemplate(idTemplate, "#"+idTemplate+this.idWidget, htmlFile,data);
     }
 
@@ -112,6 +111,7 @@ function Widget(){
     }
 
     this.closeTemplate = function(idTemplate){
+        this.getTemplate(idTemplate).onCloseTemplate();
         this.getTemplate(idTemplate).close();
     }
 
@@ -129,21 +129,9 @@ function Widget(){
         
     }
 
-  /*  this.injectHtml = function (file, data){
-        debugger;
-        console.log('Inyectando archivo: ' + file + '. Datos: ' + data);
-        console.log(this.idWidget);
-        idWidgetAux = this.idWidget;
-        this.filesHTML.forEach(function(item,index){
-            if (item.name == file){
-                var template = _.template(item.data);
-                var test = template(data);
-                $('#container'+idWidgetAux).append(test);
-                //$("#container" + this.idWidget).html(test);
-            }
-        });
-    }*/
-
+    this.onCloseTemplate = function(idTemplate, callBackfunction){
+        this.getTemplate(idTemplate).onCloseTemplate = callBackfunction;
+    }
 
     this.close = function (){
         this.onCloseWidget();
@@ -501,15 +489,14 @@ function Widget(){
 
 }
 
-function Template(idTemplate, title, idWidget){
+function Template(idTemplate, title, widget){
     this.idTemplate = idTemplate;
     this.title = title;
-    this.idWidget = idWidget;
-    this.box = getTemplateBox(idTemplate, title, idWidget);
-    $("#container"+this.idWidget).append(this.box);
+    this.widget = widget;
+    this.box = getTemplateBox(idTemplate, title, widget);
+    $("#container"+widget.idWidget).append(this.box);
 
     this.injectHtml = function(html,cssSelector,data){
-        debugger;
         var template = _.template(html);
         var test = template(data);
         if($(this.box).is($(cssSelector))){
@@ -532,11 +519,15 @@ function Template(idTemplate, title, idWidget){
     this.show = function(){
         this.box.style.display = 'initial';
     }
+
+    this.onCloseTemplate = function(){
+        //
+    }
 }
 
-function getTemplateBox(idTemplate, title, idWidget){
+function getTemplateBox(idTemplate, title, widget){
         divPrincipal = document.createElement("div");
-        divPrincipal.setAttribute('id', idTemplate+idWidget);
+        divPrincipal.setAttribute('id', idTemplate+widget.idWidget);
         divPrincipal.classList.add( "detailBox","specificBox");
         divPrincipal.style.position = "absolute";
         divPrincipal.style.top = '50%';
@@ -546,11 +537,12 @@ function getTemplateBox(idTemplate, title, idWidget){
         label = document.createElement("label");
         label.innerHTML = title;
         boton = document.createElement("button");
-        boton.classList.add("botonCerrar", 'cerrar'+idTemplate+idWidget);
+        boton.classList.add("botonCerrar", 'cerrar'+idTemplate+widget.idWidget);
         boton['aria-hidden'] = "true";
         boton.innerHTML = '&times;';
         $(boton).on('click',function (e) {
-            $("#"+idTemplate+idWidget).remove();
+            widget.closeTemplate(idTemplate);
+            $("#"+idTemplate+widget.idWidget).remove();
         });
         divTitulo.appendChild(label);
         divTitulo.appendChild(boton);
