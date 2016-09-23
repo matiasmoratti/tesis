@@ -1,13 +1,13 @@
-    function WidgetInterface(){
+function WidgetInterface(){
 
     this.getPrincipalBox = function(idWidget,title,idElement,widgetObject){
         divPrincipal = document.createElement("div");
-        divPrincipal.classList.add( "detailBox", "socialEye", idWidget);
+        divPrincipal.classList.add( "detailBox");
         if (!(typeof idElement === 'undefined'))
-            divPrincipal.setAttribute('id', idWidget+idElement);
+            divPrincipal.setAttribute('id', idElement);
         divTitulo = document.createElement("div");
-        divTitulo.classList.add( "titleBox", "socialEye");
-        divTitulo.setAttribute('id', "titulo"+idWidget);
+        divTitulo.classList.add( "titleBox");
+        divTitulo.setAttribute('id', "titulo");
         label = document.createElement("label");
         label.classname='socialEye';
         label.innerHTML = title;
@@ -27,152 +27,138 @@
         return divPrincipal;
     }
 
-    this.getPrincipalBody = function(idWidget,idElement){
+    this.getPrincipalBody = function(idElement){
         divBody = document.createElement("div");
         if (!(typeof idElement === 'undefined'))
-            divBody.setAttribute('id', idWidget+idElement);
-        divBody.classList.add( "actionBox", "socialEye", "principal"+idWidget);
+            divBody.setAttribute('id', idElement);
+        divBody.classList.add("actionBox");
         return divBody;
     }
 
-    this.getPrincipalList = function(idWidget,idElement){
+    this.getPrincipalList = function(idElement){
         ul = document.createElement("ul");
-        ul.classList.add( "commentList", "socialEye","list"+idWidget);
+        ul.classList.add("commentList");
         if (!(typeof idElement === 'undefined'))
-            ul.setAttribute('id', idWidget+idElement);
+            ul.setAttribute('id', idElement);
         return ul;
     }
 
-    this.getLi = function(idWidget,idElement){
+    this.getLi = function(idElement){
         li = document.createElement("li");
-        li.classname = 'socialEye';
         if (!(typeof idElement === 'undefined'))
-            li.setAttribute('id', idWidget+idElement);
+            li.setAttribute('id', idElement);
         return li;
     }
 
-    this.getForm = function(idWidget,idElement){
+    this.getForm = function(idElement){
         form = document.createElement("form");
         if (!(typeof idElement === 'undefined'))
-            form.setAttribute('id', idWidget+idElement);
-        form.classList.add("socialEye","form"+idWidget);
+            form.setAttribute('id', idElement);
         return form;
     }
 
-    this.getInput = function(idWidget,type,idElement) {
+    this.getInput = function(type,idElement) {
         input = document.createElement("input");
         input.type = type;
         if (!(typeof idElement === 'undefined'))
-            input.setAttribute('id', idWidget+idElement);
-        input.classname='input'+idWidget;
-        input.classList.add('socialEyeInput'+type,'socialEye');
+            input.setAttribute('id', idElement);
         return input;
     }
 
-    this.getTextArea = function(idWidget,idElement){
+    this.getTextArea = function(idElement){
         textarea = document.createElement("textarea");
         if (!(typeof idElement === 'undefined'))
-            textarea.setAttribute('id', idWidget+idElement);
-        textarea.classList.add( "form-control", "socialEye","textArea"+idWidget);
+            textarea.setAttribute('id', idElement);
+        textarea.classList.add("form-control");
         textarea.type = 'text';
         return textarea;
     }
 
-    this.getSubmitButton = function(idWidget,idElement){
+    this.getSubmitButton = function(idElement){
         buttn = document.createElement("button");
         if (!(typeof idElement === 'undefined'))
-            buttn.setAttribute('id', idWidget+idElement);
-        buttn.classList.add('submitButton','socialEye',"button"+idWidget);
+            buttn.setAttribute('id', idElement);
+        buttn.classList.add('submitButton');
         return buttn;
     }
 
-    this.getListButton = function(idWidget,idElement){
+    this.getListButton = function(idElement){
         buttn = document.createElement("button");
         if (!(typeof idElement === 'undefined'))
-            buttn.setAttribute('id', idWidget+idElement);
-        buttn.classList.add('listButton','socialEye',"button"+idWidget);
+            buttn.setAttribute('id', idElement);
+        buttn.classList.add('listButton');
         return buttn;
     }
 
-    this.getDiv = function(idWidget,idElement){
+    this.getDiv = function(idElement){
         div = document.createElement("div");
         if (!(typeof idElement === 'undefined'))
-            div.setAttribute('id', idWidget+idElement);
-        div.classList.add('socialEye');
+            div.setAttribute('id', idElement);
         return div;
     }
 
-    this.getSpan = function(idWidget,idElement){
+    this.getSpan = function(idElement){
         span = document.createElement("span");
         if (!(typeof idElement === 'undefined'))
-            span.setAttribute('id', idWidget+idElement);
-        span.classList.add('socialEye');
+            span.setAttribute('id', idElement);
         return span;
     }
-    this.getP = function(idWidget,idElement){
+    this.getP = function(idElement){
         p = document.createElement("p");
         if (!(typeof idElement === 'undefined'))
-            p.setAttribute('id', idWidget+idElement);
-        p.classList.add('socialEye');
+            p.setAttribute('id', idElement);
         return p;
     }
 
-    this.getA = function(idWidget,idElement){
+    this.getA = function(idElement){
         anchor = document.createElement("a");
         if (!(typeof idElement === 'undefined'))
-            anchor.setAttribute('id', idWidget+idElement);
-        anchor.classList.add('socialEye');
+            anchor.setAttribute('id', idElement);
         return anchor;
     }
 
-    this.getI = function(idWidget,idElement){
+    this.getI = function(idElement){
         tagI = document.createElement("i");
         if (!(typeof idElement === 'undefined'))
-            tagI.setAttribute('id', idWidget+idElement);
-        tagI.classList.add('socialEye');
+            tagI.setAttribute('id', idElement);
         return tagI;
     }
 
-    this.getLabel = function(idWidget,idElement,text){
+    this.getLabel = function(idElement,text){
         tagLabel = document.createElement("label");
         if (!(typeof idElement === 'undefined'))
-            tagLabel.setAttribute('id', idWidget+idElement);
-        tagLabel.classList.add('socialEye');
+            tagLabel.setAttribute('id', idElement);
         tagLabel.innerHTML = text;
         return tagLabel;
     }
 
 
-    this.getVideo = function(idWidget,idElement){
+    this.getVideo = function(idElement){
         tagVideo = document.createElement("video");
         if (!(typeof idElement === 'undefined'))
-            tagVideo.setAttribute('id', idWidget+idElement);
-        tagVideo.classList.add('socialEye');
+            tagVideo.setAttribute('id', idElement);
         return tagVideo;
     }
 
     this.getBox = function(idWidget,title,idElement){
         divPrincipal = document.createElement("div");
-        divPrincipal.classList.add("detailBox", "socialEye", idWidget);
+        divPrincipal.classList.add("detailBox");
         if (!(typeof idElement === 'undefined'))
-            divPrincipal.setAttribute('id', idWidget+idElement);
+            divPrincipal.setAttribute('id', idElement);
         divTitulo = document.createElement("div");
         divTitulo.classList.add( "titleBox", "socialEye");
-        divTitulo.setAttribute('id', "titulo"+idWidget);
         label = document.createElement("label");
-        label.setAttribute('id', "label"+idWidget+idElement);
-        label.classname='socialEye';
         label.innerHTML = title;
         boton = document.createElement("button");
-        boton.setAttribute('id', 'cerrar'+idWidget + idElement);
-        boton.classList.add('botonCerrar', 'socialEye', 'cerrar'+idWidget + idElement);
+        boton.setAttribute('id', "cerrar" + idElement);
+        boton.classList.add('botonCerrar');
         boton['aria-hidden'] = "true";
         boton.innerHTML = '&times;';
         divTitulo.appendChild(label);
         divTitulo.appendChild(boton);
         divPrincipal.appendChild(divTitulo);
         $(boton).on('click',function (e) {
-            document.getElementById(idWidget + idElement).remove();
+            $("#container" + idWidget).find("#"+idElement).remove();
         });
         return divPrincipal;
     }

@@ -11,10 +11,6 @@ function Manager() {
 
     this.iniciarScript = function () {
 
-      // _.templateSettings = {
-      //   interpolate: /\{\{(.+?)\}\}/g
-      // };
-
         $("head").append("<link href='https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' rel='stylesheet'>");
 
         $("body").append(" <div id='socialEyeBar' class='socialEyeBar socialEye'> <ul class='socialEyeList socialEye' id='socialEyeList'>   <li class='socialEyeIcon active socialEye'>    <a id='icono' title='SocialEye'><span class='fa-stack fa-lg socialEye'><i class='fa fa-eye fa-stack-1x socialEye'></i></span></a> </li>  <li class='socialEyeWidget socialEye'>  <a id='configuraciones' class='socialEye' title='Configuraciones'><span class='fa-stack fa-lg socialEye'><i class='fa fa-cogs fa-stack-1x socialEye'></i></span></a> </li> <li class='socialEyeWidget'> <a id='cerrarSesion' title='Cerrar sesión'><span class='fa-stack fa-lg'><i class='fa fa-sign-out fa-stack-1x '></i></span></a> </li></ul> </div> ");
@@ -24,11 +20,12 @@ function Manager() {
                 xhr.setRequestHeader('Authorization', "Basic " + btoa(localStorage['user'] + ":" + localStorage['token']));
             }
         });
+ 
 
         function initializeTool(){
 
             $("#configuraciones").click(function () {
-                if ((widgetConfiguraciones == null) || ($(widgetConfiguraciones.getWidgetElement('boxConfiguraciones')).length == 0)) {
+                if ((widgetConfiguraciones == null) || ($(widgetConfiguraciones.getWidgetElement('##boxConfiguraciones')).length == 0)) {
                     div = document.createElement('div');
                     div.setAttribute('id', 'container999');
                     div.classList.add('socialEye');
@@ -40,7 +37,7 @@ function Manager() {
                         $("#configuraciones").removeAttr('style');
                     });
                     $(".widgetCheck").click(function () {
-                        widgetId = this.id.substring(14, this.id.length);
+                        widgetId = this.id.substring(11, this.id.length);
                         widgetActual = getWidget(widgetId);
                         if(this.checked){
                             addUserWidget(widgetId);
@@ -151,17 +148,7 @@ function Manager() {
               widgetAux.idWidget = widget.pk;
               widgetAux.filesHTML = widget.fields.filesHTML;
               widgetAux.ping(widgetAux.idWidget);
-              var load = widgetAux.loadWidget();
-              /*if(load != null){
-                  widgetAux.filesHTML.forEach(function(item,index){
-                    if (item.name ==load.file){
-                      var template = _.template(item.data);
-                      var test = template(load);
-                      $(div).append(test);
-                    }
-                  });
-              }*/
-
+              widgetAux.loadWidget();
               widgetAux.onReady();
               $("#widget"+widgetAux.idWidget).css({"text-decoration": "none", "background": "rgba(255,255,255,0.2)",  "border-left": "red 2px solid"});
         }
@@ -201,7 +188,7 @@ function Manager() {
                 }
             }
             else {
-                if ((widgetLogin == null) || ($(widgetLogin.getWidgetElement('boxLogin')).length == 0)) {
+                if ((widgetLogin == null) || ($(widgetLogin.getWidgetElement('#boxLogin')).length == 0)) {
                     div = document.createElement('div');
                     div.setAttribute('id', 'container0');
                     div.classList.add('socialEye');
@@ -211,23 +198,21 @@ function Manager() {
                         $(widgetLogin.getWidgetContainer()).remove();
                         widgetLogin = null;
                     });
-                    $(widgetLogin.getWidgetElement('loginButton')).click(function () {
+                    $(widgetLogin.getWidgetElement('#loginButton')).click(function () {
                         $.ajax({
                             url: "https://127.0.0.1:8000/widgetRest/token/new.json", // the endpoint
                             type: "POST", // http method
                             data: {
-                                username: $(widgetLogin.getWidgetElement('user')).val(),
-                                password: $(widgetLogin.getWidgetElement('pass')).val(),
-                                //domain: window.location.hostname,
-                            }, // data sent with the post request
+                                username: $(widgetLogin.getWidgetElement('#user')).val(),
+                                password: $(widgetLogin.getWidgetElement('#pass')).val(),                  
+                            },
 
-                            // handle a successful response
                             success: function (response) {
                                 if (response.success == true) {
                                     localStorage.setItem('token', response.token);
                                     localStorage.setItem('user', response.user);
-                                    localStorage.setItem('username', $(widgetLogin.getWidgetElement('user')).val());
-                                    $(widgetLogin.getWidgetElement('boxLogin')).remove();
+                                    localStorage.setItem('username', $(widgetLogin.getWidgetElement('#user')).val());
+                                    $(widgetLogin.getWidgetElement('#boxLogin')).remove();
                                     if(!toolInitialized){
                                         initializeTool();
                                     }
@@ -236,16 +221,16 @@ function Manager() {
                                 }
                                 else {
                                     alert("Usuario o contraseña inválidos");
-                                    $(widgetLogin.getWidgetElement('user')).val("");
-                                    $(widgetLogin.getWidgetElement('pass')).val("");
+                                    $(widgetLogin.getWidgetElement('#user')).val("");
+                                    $(widgetLogin.getWidgetElement('#pass')).val("");
                                 }
                             },
                         });
                     });
 
-                    $(widgetLogin.getWidgetElement('registro')).click(function () {
-                        $(widgetLogin.getWidgetElement('boxLogin')).remove();
-                        if ((widgetRegistro == null) || ($(widgetRegistro.getWidgetElement('boxRegistro')).length == 0)) {
+                    $(widgetLogin.getWidgetElement('#registro')).click(function () {
+                        $(widgetLogin.getWidgetElement('#boxLogin')).remove();
+                        if ((widgetRegistro == null) || ($(widgetRegistro.getWidgetElement('#boxRegistro')).length == 0)) {
                             div = document.createElement('div');
                             div.setAttribute('id', 'container99');
                             div.classList.add('socialEye');
@@ -255,24 +240,21 @@ function Manager() {
                                 $(widgetRegistro.getWidgetContainer()).remove();
                                 widgetRegistro = null;
                             });
-                            $(widgetRegistro.getWidgetElement('registrationButton')).click(function () {
+                            $(widgetRegistro.getWidgetElement('#registrationButton')).click(function () {
                                 $.ajax({
-                                    url: "https://127.0.0.1:8000/widgetRest/registration/", // the endpoint
-                                    type: "POST", // http method
+                                    url: "https://127.0.0.1:8000/widgetRest/registration/", 
+                                    type: "POST", 
                                     async: false,
                                     data: {
-                                        username: $(widgetRegistro.getWidgetElement('userReg')).val(),
-                                        password1: $(widgetRegistro.getWidgetElement('passReg')).val(),
-                                        password2: $(widgetRegistro.getWidgetElement('passReg')).val(),
-                                    }, // data sent with the post request
-
-                                    // handle a successful response
+                                        username: $(widgetRegistro.getWidgetElement('#userReg')).val(),
+                                        password1: $(widgetRegistro.getWidgetElement('#passReg')).val(),
+                                        password2: $(widgetRegistro.getWidgetElement('#passReg')).val(),
+                                    }, 
                                     success: function (data) {
                                         $(widgetRegistro.getWidgetContainer()).remove();
                                         widgetRegistro = null;
                                     },
 
-                                    // handle a non-successful response
                                     error: function (xhr, errmsg, err) {
                                         alert("El usuario ingresado ya existe");
                                     }
@@ -297,6 +279,11 @@ function Manager() {
         widgetConfiguraciones = new Widget();
         widgetConfiguraciones.setIdWidget(999);
         boxConfiguraciones = widgetConfiguraciones.getPrincipalBox('boxConfiguraciones','Configuraciones');
+        boxConfiguraciones.firstChild.onmousedown = function(event){
+            _drag_init(this.parentElement, event);
+            document.addEventListener('mousemove',_move_elem);
+            document.addEventListener('mouseup',_destroy);
+        };
         boxConfiguraciones.classList.add('boxConfiguraciones');
         bodyConfiguraciones = widgetConfiguraciones.getPrincipalBody('bodyConfiguraciones');
         bodyConfiguraciones.classList.add('bodyConfiguraciones');
@@ -333,6 +320,11 @@ function Manager() {
         widgetLogin = new Widget();
         widgetLogin.setIdWidget(0);
         boxLogin = widgetLogin.getPrincipalBox('boxLogin','Login');
+        boxLogin.firstChild.onmousedown = function(event){
+            _drag_init(this.parentElement, event);
+            document.addEventListener('mousemove',_move_elem);
+            document.addEventListener('mouseup',_destroy);
+        };
         boxLogin.classList.add('socialEyeContainer','boxLogin');
         bodyLogin = widgetLogin.getPrincipalBody('bodyLogin');
         formLogin = widgetLogin.getForm('');
@@ -365,6 +357,11 @@ function Manager() {
         widgetRegistro = new Widget();
         widgetRegistro.setIdWidget(99);
         boxRegistro = widgetRegistro.getPrincipalBox('boxRegistro','Registro');
+        boxRegistro.firstChild.onmousedown = function(event){
+            _drag_init(this.parentElement, event);
+            document.addEventListener('mousemove',_move_elem);
+            document.addEventListener('mouseup',_destroy);
+        };
         boxRegistro.classList.add('socialEyeContainer','boxRegistro');
         bodyRegistro = widgetRegistro.getPrincipalBody('bodyRegistro');
         formRegistro = widgetRegistro.getForm('');
@@ -388,16 +385,14 @@ function Manager() {
         return boxRegistro;
     }
 
-
     function deleteSession() {
         var dominio = window.location.hostname;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/logout/", // the endpoint
-            type: "POST", // http method
+            url: "https://127.0.0.1:8000/widgetRest/logout/",
+            type: "POST",
             data: {
                 url: dominio,
-            }, // data sent with the post request
-            // handle a successful response
+            }, 
             success: function (data) {
                 setTimeout(function () {
                     alert("Hasta luego "+ localStorage['username']);
@@ -415,19 +410,17 @@ function Manager() {
     function getUserWidgets(){
         var data;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/widgetsByUser/", // the endpoint
-            type: "GET", // http method
+            url: "https://127.0.0.1:8000/widgetRest/widgetsByUser/", 
+            type: "GET", 
             dataType: 'json',
             async: false,
             data : {
-            }, // data sent with the post request
+            }, 
 
-            // handle a successful response
             success: function (response) {
                 data = response
             },
 
-            // handle a non-successful response
             error: function (xhr, errmsg, err) {
                 alert("Error al cargar los comentarios");
 
@@ -439,19 +432,17 @@ function Manager() {
     function getWidgets(){
         var data;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/widget/", // the endpoint
-            type: "GET", // http method
+            url: "https://127.0.0.1:8000/widgetRest/widget/",
+            type: "GET",
             dataType: 'json',
             async: false,
             data : {
-            }, // data sent with the post request
+            }, 
 
-            // handle a successful response
             success: function (response) {
                 data = response
             },
 
-            // handle a non-successful response
             error: function (xhr, errmsg, err) {
                 alert("Error al cargar los comentarios");
 
@@ -463,18 +454,16 @@ function Manager() {
     function getWidget(idWidget){
         var data;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/getWidget/", // the endpoint
-            type: "GET", // http method
+            url: "https://127.0.0.1:8000/widgetRest/getWidget/",
+            type: "GET", 
             async: false,
             data : {idWidget: idWidget
-            }, // data sent with the post request
+            }, 
 
-            // handle a successful response
             success: function (response) {
                 data = response
             },
 
-            // handle a non-successful response
             error: function (xhr, errmsg, err) {
                 alert("Error al cargar los comentarios");
 
@@ -493,18 +482,15 @@ function Manager() {
 
     function addUserWidget(idWidget){
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/addUserWidget/", // the endpoint
-            type: "POST", // http method
+            url: "https://127.0.0.1:8000/widgetRest/addUserWidget/",
+            type: "POST", 
             async: false,
             data: {
                 idWidget: idWidget
-            }, // data sent with the post request
-
-            // handle a successful response
+            }, 
             success: function () {
             },
 
-            // handle a non-successful response
             error: function (xhr, errmsg, err) {
                 alert("Error al enviar el objeto");
             }
@@ -513,18 +499,15 @@ function Manager() {
 
     function removeUserWidget(idWidget){
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/removeUserWidget/", // the endpoint
-            type: "POST", // http method
+            url: "https://127.0.0.1:8000/widgetRest/removeUserWidget/", 
+            type: "POST", 
             async: false,
             data: {
                 idWidget: idWidget
-            }, // data sent with the post request
-
-            // handle a successful response
+            }, 
             success: function () {
             },
 
-            // handle a non-successful response
             error: function (xhr, errmsg, err) {
                 alert("Error al enviar el objeto");
             }
@@ -532,6 +515,48 @@ function Manager() {
     }
 
 }
+
+//Drag widgets windows
+var selected = null, x_pos = 0, y_pos = 0; 
+
+function _drag_init(elem, e) {
+    selected = elem;
+    x_pos = e.pageX;
+    y_pos = e.pageY;
+}
+
+function _move_elem(e) {
+    e.stopPropagation();
+    e.preventDefault();
+    selected.firstChild.style.cursor = 'move';
+    if (selected !== null) {
+        newX = selected.offsetLeft + e.pageX - x_pos - 50;
+        newY = selected.offsetTop + e.pageY - y_pos - 50;
+        if((newX + 50) < 0)
+            newX = -50;
+        else{
+            if((newX + 50) > ($(document).width() - selected.offsetWidth))
+                newX = $(document).width() - selected.offsetWidth - 50;
+        }
+        if((newY + 50) < 0)
+            newY = -50;
+        else{
+            if((newY + 100) > ($(document).height() - selected.offsetHeight))
+                newY = $(document).height() - selected.offsetHeight - 100;
+        }
+        selected.style.left = newX + 'px';
+        selected.style.top = newY +'px';
+        x_pos = e.pageX;
+        y_pos = e.pageY;
+    }
+}
+
+function _destroy() {        
+    selected.firstChild.style.cursor = 'default';
+    document.removeEventListener('mousemove',_move_elem);
+    document.removeEventListener('mouseup',_destroy);
+    selected = null;
+}   
 
 
 $(document).ready(function () {

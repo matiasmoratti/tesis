@@ -34,7 +34,7 @@
     position: relative;
     float:right;
     margin-right: 5%;
-    margin-top: 5%;
+    margin-top: 7%;
     width: 200px;
     display: none;
     bottom:50px;
@@ -94,7 +94,31 @@ span{
     margin-left: 0px !important;
 }
 
-.commentTextP{
+.commentList li{
+    margin: 0;
+}
+
+.commentText p{
     padding: 0 !important;
     margin-left: 5px !important;
+}
+
+.userLabel{
+    position: relative;
+    left: 1%;
+}
+
+.bootbox{
+    font-size: 20px;
+    text-align: center;
+    width: 80%;
+}
+
+.modal-footer{
+    position: relative;
+    left: 40%;
+}
+
+.modal-footer button{
+    width: 30%;
 }

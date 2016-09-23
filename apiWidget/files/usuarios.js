@@ -15,35 +15,16 @@ var lastWrite = false;
 
 usuarios.loadWidget = function () {
     var dominio = window.location.hostname;
-    boxGeneral = usuarios.getPrincipalBox('boxUsuarios',usuarios.tittle + dominio); //AGREGAR UN MÉTODO QUE FACILITE ESTOO!!! CREAR METODOS
-                                                                                      //PARA OBTENER UN BODY Y LIST IGUAL QUE BOX
-    boxGeneral.classList.add('boxUsuarios');
-    body = usuarios.getPrincipalBody('listaUsuarios');
-    body.classList.add('list-group','listaUsuarios');
-
     enChat = usuarios.getUsersConnectedInWidget();
-    $.each(enChat, function (i, item) { 
-        if(item.userName != usuarios.getUser()){
-          userButton = usuarios.getListButton(item.userName);
-          userButton.classList.add('usuarioChat');
-          userSpan = usuarios.getSpan();
-          userSpan.classList.add('fa-stack', 'fa-lg');
-          userI = usuarios.getI();
-          userI.classList.add('fa', 'fa-user', 'fa-stack-1x');
-          messageLabel = usuarios.getLabel('labelMensaje', '  Nuevo mensaje');
-          messageLabel.classList.add('nuevoMensaje');
-          userLabel = usuarios.getLabel('userLabel', item.userName);
-          userLabel.classList.add('userLabel');
-          userSpan.appendChild(userI);
-          userButton.appendChild(userSpan);
-          userButton.appendChild(userLabel);
-          userButton.appendChild(messageLabel);
-          body.appendChild(userButton);
-        }
-    });    
-    boxGeneral.appendChild(body); 
 
-    return boxGeneral;
+    var data = {user: usuarios.getUser(),
+                enChat : enChat};
+
+    usuarios.createTemplate('usuarios', usuarios.tittle + dominio, 'usuarios.html', data);
+    usuarios.onCloseTemplate('usuarios', function(){
+          usuarios.close();
+    });
+    usuarios.setTemplatePosition('usuarios', '10%', '50%');
 }
 
 usuarios.onReady = function(){
@@ -56,28 +37,14 @@ usuarios.onReady = function(){
         enChat = usuarios.getUsersConnectedInWidget();
         $.each(enChat, function (i, item) { //Agrego nuevos usuarios conectados
             idsEnChat.push(item.userName);
-            if( (item.userName != usuarios.getUser()) && (usuarios.getWidgetElement(item.userName) == null) ){
-                userButton = usuarios.getListButton(item.userName);
-                userButton.classList.add('usuarioChat');
-                userSpan = usuarios.getSpan();
-                userSpan.classList.add('fa-stack', 'fa-lg');
-                userI = usuarios.getI();
-                userI.classList.add('fa', 'fa-user', 'fa-stack-1x');
-                messageLabel = usuarios.getLabel('labelMensaje', 'Nuevo mensaje');
-                messageLabel.classList.add('nuevoMensaje');
-                userLabel = usuarios.getLabel('userLabel', item.userName);
-                userLabel.classList.add('userLabel');
-                userSpan.appendChild(userI);
-                userButton.appendChild(userSpan);
-                userButton.appendChild(userLabel);
-                userButton.appendChild(messageLabel);
-                usuarios.getWidgetElement('listaUsuarios').appendChild(userButton);
-                $(userButton).on('click', chatClick);
+            if( (item.userName != usuarios.getUser()) && (usuarios.getWidgetElement("#"+item.userName) == null) ){
+                data = {userName : item.userName};
+                usuarios.injectInTemplate('usuarios','nuevoUsuario.html', data, "#listaUsuarios");
+                $(usuarios.getWidgetElement("#"+item.userName)).on('click', chatClick);
             }
         });       
         $.each(mostrados, function (i, item) { //Elimino de la lista los usuarios que ya no están conectados
-            userDiscName = $(item).attr('id').substring(usuarios.idWidget.toString().length, $(item).attr('id').length);
-            if($.inArray(userDiscName, idsEnChat ) == -1){
+            if($.inArray($(item).attr('id'), idsEnChat ) == -1){
                 $(item).remove();
             }
         });
@@ -94,7 +61,7 @@ usuarios.onReady = function(){
 
     conexion.on('message', function(messageData){
         if(messageData.messenger != usuarios.getUser())
-          $(usuarios.getWidgetElement(messageData.messenger).childNodes[2]).show();
+          $(usuarios.getWidgetElement("#"+messageData.messenger + 'labelMensaje')).show();
     });
 
 }
@@ -107,7 +74,7 @@ usuarios.onCloseWidget = function(){
 }
 
 function chatClick(e){
-    userChatName = e.target.id.substring(usuarios.idWidget.toString().length, e.target.id.length);
+    userChatName = e.target.id;
     if(chatAbierto){
         if(userChatName != usuarioChatActual){
             cerrarChat();
@@ -129,7 +96,6 @@ function getChatMessage(textMessage){
     span.innerHTML= textMessage;
     div.appendChild(span);
     li.appendChild(div);
-
     return li;
 }
 
@@ -137,17 +103,13 @@ function mostrarChat(otroUsuario){
     llamando = false;
     chatAbierto = true; 
     usuarioChatActual = otroUsuario;
-    if($(usuarios.getWidgetElement(otroUsuario).childNodes[2]).is(":visible")){
-        $(usuarios.getWidgetElement(otroUsuario).childNodes[2]).hide();
+    if($(usuarios.getWidgetElement("#"+usuarioChatActual + 'labelMensaje')).is(":visible")){
+        $(usuarios.getWidgetElement("#"+usuarioChatActual + 'labelMensaje')).hide();
     }
+    var data = {usuarioChatActual : usuarioChatActual};
 
-    chatBox = usuarios.getBox('chatBox', "Conversación con " + usuarioChatActual);
-    chatBox.classList.add('chatBox');
-
-    chatBody = usuarios.getPrincipalBody("chatBody");
-    chatBody.classList.add('chatBody');
-    
-    chatList = usuarios.getPrincipalList("listaComentarios");
+    usuarios.createTemplate('chat', "Conversación con " + usuarioChatActual, 'chat.html', data);
+    usuarios.setTemplateHeight("chat", "390px");
 
     params = {};
     if(usuarioChatActual > usuarios.getUser()){
@@ -160,26 +122,19 @@ function mostrarChat(otroUsuario){
     }
     chat = usuarios.getObject(params);
     if(chat == null){
-        params.comentarios = [];
+        chat = {};
+        chat.comentarios = [];
+        chat.user1 = params['user1'];
+        chat.user2 = params['user2'];
+        usuarios.saveObject(chat);
     }
     else{
         var lastUserWriting = null;
         $.each(chat.element.comentarios, function (i, item) {
-            li = usuarios.getLi();
-            div = usuarios.getDiv();
-            div.classList.add('commentText');
-            if((lastUserWriting == null) || (lastUserWriting != item.userName)){
-                span = usuarios.getSpan();
-                span.classList.add('sub-text', 'userIcon');
-                span.innerHTML=item.userName + " dijo: "; 
-                div.appendChild(span);
-            }
-            p = usuarios.getP();
-            p.classList.add('commentTextP');
-            p.innerHTML=item.texto;      
-            div.appendChild(p);
-            li.appendChild(div);
-            chatList.appendChild(li);
+            
+            data = {lastWriter: lastUserWriting,
+                    item: item}
+            usuarios.injectInTemplate('chat','mensajeChat.html', data, '#listaComentarios');
             lastUserWriting = item.userName;
         });
     }
@@ -188,47 +143,13 @@ function mostrarChat(otroUsuario){
         lastWrite = true;
     }
 
-    chatBody.appendChild(chatList);
-    chatForm = usuarios.getForm('');
-    chatTextArea = usuarios.getTextArea('textoComentarioChat');
-    chatTextArea.classList.add('textoComentarioChat');
-    chatTextArea.placeholder = 'Envía un mensaje a ' + usuarioChatActual;
-    chatForm.appendChild(chatTextArea);
-    chatBody.appendChild(chatForm);
-    chatBox.appendChild(chatBody);
-
-
-
     if (window.location.protocol == "https:"){
-        divIconoLlamada = usuarios.getDiv('divIconoLlamada');
-        divIconoLlamada.classList.add('divIconoLlamada');
-        aLlamada = usuarios.getA('iconTitle');
-        aLlamada.title = 'Realizar videollamada';
-        spanLlamada = usuarios.getSpan();
-        iLlamada = usuarios.getI('call' + usuarioChatActual); 
-        iLlamada.classList.add('fa', 'fa-video-camera', 'botonLlamada');
-        spanLlamada.appendChild(iLlamada);
-        aLlamada.appendChild(spanLlamada);
-        divIconoLlamada.appendChild(aLlamada);
-        chatBox.appendChild(divIconoLlamada);
-        
-        divVideoCall = usuarios.getDiv('videoCall');
-        divVideoCall.classList.add('videoCall');
-        labelConnecting = usuarios.getLabel('labelConnecting', 'Conectando...');
-        labelConnecting.classList.add('labelConnecting');
-        localVideoTag = usuarios.getVideo('localVideo');
-        localVideoTag.classList.add('videos');
-        remoteVideoTag = usuarios.getVideo('remoteVideo');
-        remoteVideoTag.classList.add('videos');
-        divVideoCall.appendChild(labelConnecting);
-        divVideoCall.appendChild(localVideoTag);
-        divVideoCall.appendChild(remoteVideoTag);
-        chatBox.appendChild(divVideoCall);
+        data = {usuarioChatActual : usuarioChatActual};
+
+        usuarios.injectInTemplate('chat','videollamada.html', data);
     }
 
-    $(usuarios.getWidgetContainer()).append(chatBox);
-
-    var listaComentariosElement = usuarios.getWidgetElement('listaComentarios');
+    var listaComentariosElement = usuarios.getWidgetElement('#listaComentarios');
 
     $(listaComentariosElement).scrollTop( $(listaComentariosElement)[0].scrollHeight);
 
@@ -239,27 +160,19 @@ function mostrarChat(otroUsuario){
          //Recibo mensaje del usuario con el cual estoy chateando
         if(message.messenger != usuarios.getUser()){
              if(message.messenger == usuarioChatActual){
-                li = usuarios.getLi();
-                div = usuarios.getDiv();
-                div.classList.add('commentText');
-                if(lastWrite){
-                    span = usuarios.getSpan();
-                    span.classList.add('sub-text');
-                    span.innerHTML=usuarioChatActual + " dijo: ";
-                    div.appendChild(span);
-                }          
-                p = usuarios.getP();
-                p.classList.add('commentTextP');
-                p.innerHTML= message.messageText;
-                div.appendChild(p);
-                li.appendChild(div);
-                usuarios.getWidgetElement('listaComentarios').appendChild(li);
-                $(usuarios.getWidgetElement('listaComentarios')).animate({scrollTop: $(usuarios.getWidgetElement('listaComentarios'))[0].scrollHeight});
+                item = {};
+                item.userName = usuarioChatActual;
+                item.texto = message.messageText;
+                data = {lastWrite: lastWrite,
+                    item: item}
+                usuarios.injectInTemplate('chat','mensajeChat2.html', data, '#listaComentarios');
+
+                $(usuarios.getWidgetElement('#listaComentarios')).animate({scrollTop: $(usuarios.getWidgetElement('#listaComentarios'))[0].scrollHeight});
                 lastWrite = false;
             }
             //Recibo mensaje de otro usuario
             else{
-                $(usuarios.getWidgetElement(message.messenger).childNodes[2]).show();//Muestro aviso en la lista de usuarios
+                $(usuarios.getWidgetElement("#"+message.messenger + 'labelMensaje')).show();//Muestro aviso en la lista de usuarios
             }     
         }
        
@@ -274,33 +187,24 @@ function mostrarChat(otroUsuario){
     });
 
 
-    $(usuarios.getWidgetElement("call"+ usuarioChatActual)).on('click', callClick);
+    $(usuarios.getWidgetElement("#call"+ usuarioChatActual)).on('click', callClick);
 
-    var textoComentarioChat = usuarios.getWidgetElement("textoComentarioChat");
-    textoComentarioChat.addEventListener("keydown", function(e) {
+    var textoComentarioChat = usuarios.getWidgetElement('#textoComentarioChat');
+    $(textoComentarioChat).on("keydown", function(e) {
       if (!e) { var e = window.event; }
  
-      //keyCode 13 is the enter/return button keyCode
+      //Presionó enter luego de escribir un mensaje
       if (e.keyCode == 13) {
-        // enter/return probably starts a new line by default
         e.preventDefault();
         if(textoComentarioChat.value != ""){
-            li = usuarios.getLi();
-            div = usuarios.getDiv();
-            div.classList.add('commentText');
-            if(!lastWrite){
-                span = usuarios.getSpan();
-                span.classList.add('sub-text');
-                span.innerHTML=usuarios.getUser() + " dijo: ";
-                div.appendChild(span);
-            }
-            p = usuarios.getP();
-            p.classList.add('commentTextP');
-            p.innerHTML=textoComentarioChat.value;           
-            div.appendChild(p);
-            li.appendChild(div);
-            usuarios.getWidgetElement('listaComentarios').appendChild(li);
-            $(usuarios.getWidgetElement('listaComentarios')).animate({scrollTop: $(usuarios.getWidgetElement('listaComentarios'))[0].scrollHeight});
+            item = {};
+            item.userName = usuarios.getUser();
+            item.texto = textoComentarioChat.value;
+            data = {lastWrite: (!lastWrite),  //Paso el valor de lastWrite invertido para no crear otro html sólo por la condición
+                    item: item}
+            usuarios.injectInTemplate('chat','mensajeChat2.html', data, '#listaComentarios');
+
+            $(usuarios.getWidgetElement('#listaComentarios')).animate({scrollTop: $(usuarios.getWidgetElement('#listaComentarios'))[0].scrollHeight});
 
             params = {};
             if(usuarioChatActual > usuarios.getUser()){
@@ -324,27 +228,27 @@ function mostrarChat(otroUsuario){
         }
 
       }
-    }, false);
+    });
 
-    usuarios.onCloseBox('chatBox', cerrarChat);
+    usuarios.onCloseTemplate('chat', cerrarChat);
 
     connected = true;
 
     setInterval(function () {
         if(usuarios.isUserConnectedInWidget(usuarioChatActual) == false){
             connected = false;
-            $(usuarios.getWidgetElement('textoComentarioChat')).prop("disabled", true);
-            $(usuarios.getWidgetElement("call"+ usuarioChatActual)).prop('onclick',null).off('click');
-            usuarios.setBoxTitle('chatBox', "Conversación con " + usuarioChatActual + " (desconectado)");
+            $(usuarios.getWidgetElement('#textoComentarioChat')).prop("disabled", true);
+            $(usuarios.getWidgetElement("#call"+ usuarioChatActual)).prop('onclick',null).off('click');
+            usuarios.setBoxTitle('chatBox', "Conversación con " + usuarioChatActual + " (desconectado)"); //NO ESTA FUNCIONANDO
             if(llamadaEstablecida)
                 terminarLlamada();
         }
         else{
             if(!connected){
                 connected = true;
-                $(usuarios.getWidgetElement('textoComentarioChat')).prop("disabled", false);
-                $(usuarios.getWidgetElement("call"+ usuarioChatActual)).on('click', callClick);
-                usuarios.setBoxTitle('chatBox', "Conversación con " + usuarioChatActual);
+                $(usuarios.getWidgetElement('#textoComentarioChat')).prop("disabled", false);
+                $(usuarios.getWidgetElement("#call"+ usuarioChatActual)).on('click', callClick);
+                usuarios.setBoxTitle('chatBox', "Conversación con " + usuarioChatActual);                  //NO ESTA FUNCIONANDO
             }           
         }
     }, 10000);   
@@ -353,7 +257,7 @@ function mostrarChat(otroUsuario){
 function colgarClick(e){
     terminarLlamada();
     conexion.send(usuarioChatActual, 'colgar', {});
-    appendAndScrollList(usuarios.getWidgetElement('listaComentarios'), getChatMessage("Llamada finalizada"));
+    appendAndScrollList(usuarios.getWidgetElement('#listaComentarios'), getChatMessage("Llamada finalizada"));
 }
 
 function terminarLlamada(){
@@ -367,11 +271,11 @@ function cerrarChat(event) {
         if(llamadaEstablecida){
             colgarClick();
         }
-        $(usuarios.getWidgetElement('chatBox')).remove();
+        $(usuarios.getWidgetElement('#chatBox')).remove();
         chatAbierto = false;
         conexion.on('message', function(messageData){
             if(messageData.messenger != usuarios.getUser())
-                $(usuarios.getWidgetElement(messageData.messenger).childNodes[2]).show();
+                $(usuarios.getWidgetElement("#"+messageData.messenger + 'labelMensaje')).show();
         });
         conexion.leaveRoom(usuarioChatActual);
 } 
@@ -395,21 +299,21 @@ function callClick(e){
 }
 
 function extenderChatBox(){
-    $(usuarios.getWidgetElement("videoCall")).show();
-    usuarios.getWidgetElement("chatBox").style.width = "650px";
-    $(usuarios.getWidgetElement("call"+ usuarioChatActual)).prop('onclick',null).off('click');
-    $(usuarios.getWidgetElement("call"+ usuarioChatActual)).on('click', colgarClick);
-    $(usuarios.getWidgetElement("iconTitle")).attr('title', 'Colgar videollamada');
+    $(usuarios.getWidgetElement("#videoCall")).show();
+    usuarios.setTemplateWidth("chat", "650px");
+    $(usuarios.getWidgetElement("#call"+ usuarioChatActual)).prop('onclick',null).off('click');
+    $(usuarios.getWidgetElement("#call"+ usuarioChatActual)).on('click', colgarClick);
+    $(usuarios.getWidgetElement("#iconTitle")).attr('title', 'Colgar videollamada');
 }
 
 function contraerChatBox(){
-    $(usuarios.getWidgetElement("videoCall")).hide();
-    usuarios.getWidgetElement("chatBox").style.width = "400px";
-    $(usuarios.getWidgetElement("call"+ usuarioChatActual)).prop('onclick',null).off('click');
-    $(usuarios.getWidgetElement("call"+ usuarioChatActual)).on('click', callClick);
-    $(usuarios.getWidgetElement("iconTitle")).attr('title', 'Realizar videollamada');
-    $(usuarios.getWidgetElement('localVideo')).attr('src', '');
-    $(usuarios.getWidgetElement('remoteVideo')).attr('src', '');
+    $(usuarios.getWidgetElement("#videoCall")).hide();
+    usuarios.setTemplateWidth("chat", "400px");
+    $(usuarios.getWidgetElement("#call"+ usuarioChatActual)).prop('onclick',null).off('click');
+    $(usuarios.getWidgetElement("#call"+ usuarioChatActual)).on('click', callClick);
+    $(usuarios.getWidgetElement("#iconTitle")).attr('title', 'Realizar videollamada');
+    $(usuarios.getWidgetElement('#localVideo')).attr('src', '');
+    $(usuarios.getWidgetElement('#remoteVideo')).attr('src', '');
     conexion.stopStreaming();
 }
 
@@ -433,7 +337,7 @@ function crearBoxLlamada(data){
                 chatAbierto = true;
             }
             extenderChatBox();
-            $(usuarios.getWidgetElement('labelConnecting')).show();
+            $(usuarios.getWidgetElement('#labelConnecting')).show();
             callAnswer = 1;
             }
         },
@@ -497,8 +401,8 @@ function SocketConnection(){
                         conexion.send(evt.sender, 'callAnswer' ,{answer: 'aceptada'});
                         llamadaEstablecida = true;
                         conexion.startPeerConnection(false);
-                        appendAndScrollList(usuarios.getWidgetElement('listaComentarios',getChatMessage("Conexión de videollamada establecida")));
-                        $(usuarios.getWidgetElement("labelConnecting")).hide();
+                        appendAndScrollList(usuarios.getWidgetElement('#listaComentarios',getChatMessage("Conexión de videollamada establecida")));
+                        $(usuarios.getWidgetElement("#labelConnecting")).hide();
                     }
                     else{
                         if(callAnswer == 2) //Rechazó
@@ -506,7 +410,7 @@ function SocketConnection(){
                         else{ //No contestó
                             conexion.send(evt.sender, 'callAnswer' ,{answer: 'noRta'});
                             if(chatAbierto)
-                                appendAndScrollList(usuarios.getWidgetElement("listaComentarios"), getChatMessage("Llamada perdida de " + usuarioChatActual));
+                                appendAndScrollList(usuarios.getWidgetElement("#listaComentarios"), getChatMessage("Llamada perdida de " + usuarioChatActual));
                         }
                     }
                 }, 10000);
@@ -527,8 +431,8 @@ function SocketConnection(){
         function successCallback(localMediaStream) {
           window.stream = localMediaStream;
           localStream = localMediaStream;
-          $(usuarios.getWidgetElement('localVideo')).attr('src', window.URL.createObjectURL(localMediaStream));
-          $(usuarios.getWidgetElement('localVideo')).get(0).play();
+          $(usuarios.getWidgetElement('#localVideo')).attr('src', window.URL.createObjectURL(localMediaStream));
+          $(usuarios.getWidgetElement('#localVideo')).get(0).play();
         }
 
         function errorCallback(error){
@@ -539,7 +443,7 @@ function SocketConnection(){
 
         if(!webRTCEnabled){
             socket.on('callAnswer', function(callData){
-                var listaComentariosElement = usuarios.getWidgetElement('listaComentarios');
+                var listaComentariosElement = usuarios.getWidgetElement('#listaComentarios');
                 if((callData.sender != usuarios.getUser()) && (!llamadaEstablecida)){
                     if(callData.answer == 'aceptada'){
                         conexion.startPeerConnection(true);
@@ -558,7 +462,6 @@ function SocketConnection(){
 
             socket.on('localDescription', function(description){
                 if(description.sender != usuarios.getUser()){
-                    console.log('Description recibida de ' + description.sender + ': '+ description.sdp.sdp);
                     pc.setRemoteDescription(new RTCSessionDescription(description.sdp), function () {
                         if (pc.remoteDescription.type == "offer")
                           pc.createAnswer(gotLocalDescription, logError);
@@ -569,7 +472,6 @@ function SocketConnection(){
             socket.on('callCandidate', function(candidate){
                 if(candidate.sender != usuarios.getUser()){
                     candidatoAgregado = true;
-                    console.log(usuarios.getUser() + ' agregando candidato: ' + candidate.sender);
                     pc.addIceCandidate(new RTCIceCandidate(candidate.candidate), function () {}, logError);
                 }
             });
@@ -599,7 +501,6 @@ function SocketConnection(){
     }
 
     this.endPeerConnection = function(){
-       console.log(localStream);
        pc.close();
        pc = null;
        candidatoCreado = false;
@@ -608,21 +509,19 @@ function SocketConnection(){
     function gotLocalIceCandidate(event) {
       if ((event.candidate) && (candidatoCreado == false)) {
          candidatoCreado = true;
-         console.log(usuarios.getUser() + ' se envía como candidato');
          conexion.send(usuarioChatActual, 'callCandidate', { candidate: event.candidate});
       }
     }
 
     function gotRemoteStream(event) {
-        $(usuarios.getWidgetElement('remoteVideo')).attr('src', URL.createObjectURL(event.stream));
-        $(usuarios.getWidgetElement('remoteVideo')).get(0).play();
+        $(usuarios.getWidgetElement('#remoteVideo')).attr('src', URL.createObjectURL(event.stream));
+        $(usuarios.getWidgetElement('#remoteVideo')).get(0).play();
     }
 
 
     function gotLocalDescription(description) {
         pc.setLocalDescription(description, function () {
-            conexion.send(usuarioChatActual, 'localDescription', {sdp: pc.localDescription });});
-        console.log(usuarios.getUser() + ' seteando descripcion local y enviando: ' + description.sdp);      
+            conexion.send(usuarioChatActual, 'localDescription', {sdp: pc.localDescription });});     
     }
 
 }

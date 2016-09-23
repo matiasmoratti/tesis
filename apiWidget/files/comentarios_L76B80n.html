@@ -1,21 +1,21 @@
-    <div id='<%= idWidget %>principalGenerales' class='actionBox socialEye principal<%= idWidget %>'>
-      <ul id='<%= idWidget %>listaComentariosGenerales' class='commentList socialEye list<%= idWidget %>'>
+    <div id='principalGenerales' class='actionBox'>
+      <ul id='listaComentariosGenerales' class='commentList'>
         <% _.each(items, function(item) { %>
-          <li class='socialEye'>
-            <div class='socialEye commentText'>
-              <span class='socialEye sub-text'>
+          <li>
+            <div class='commentText'>
+              <span class='sub-text'>
                 <%= item.username %> dijo el <%= item.date %>
               </span>
-              <p class='socialEye'>
+              <p>
                 <%= item.element.texto %>
               </p>
             </div>
           </li>
           <% }); %>
       </ul>
-      <form class='socialEye form<%= idWidget %>'>
-        <textarea class='form-control socialEye textArea<%= idWidget %>' type='text' id='<%= idWidget %>textoComentarioGeneral' placeholder='Escriba su comentario...'/>
-        <button class='submitButton socialEye button<%= idWidget %>' id='<%= idWidget %>agregarComentarioGeneral'>
+      <form>
+        <textarea class='form-control' type='text' id='textoComentarioGeneral' placeholder='Escriba su comentario...'/>
+        <button class='submitButton' id='agregarComentarioGeneral'>
           Agregar
         </button>
       </form>

@@ -1,0 +1,13 @@
+    <div id='listaUsuarios' class='actionBox list-group'>
+        <% _.each(enChat, function(item) { %>
+          <% if (item.userName !== user) { %>
+              <button class='listButton usuarioChat' id='<%= item.userName %>'>
+                <span class='fa-stack, fa-lg'>
+                    <i class='fa, fa-user, fa-stack-1x'> </i>
+                </span>
+                <label id='userLabel' class='userLabel'> <%= item.userName %></label>
+                <label id='<%= item.userName %>labelMensaje' class='nuevoMensaje'>Nuevo mensaje</label>               
+              </button>
+          <% } %>
+        <% }); %>
+  </div>

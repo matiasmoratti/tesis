@@ -54,7 +54,7 @@ function Widget(){
 
 
 
-    this.ping = function(idWidget){ //Encontrar otra solución para no repetir (me rompí el coco ya)
+    this.ping = function(idWidget){ 
         $.ajax({
                 type: "POST",
                 url: "https://127.0.0.1:8000/widgetRest/user_ping/",
@@ -99,7 +99,7 @@ function Widget(){
 
     this.createTemplate = function(idTemplate, title, htmlFile, data){
         this.templates[idTemplate] = new Template(idTemplate, title, this);
-        this.injectInTemplate(idTemplate, "#"+idTemplate+this.idWidget, htmlFile,data);
+        this.injectInTemplate(idTemplate, htmlFile,data);
     }
 
     this.getTemplate = function(idTemplate){
@@ -119,11 +119,19 @@ function Widget(){
         this.getTemplate(idTemplate).setPosition(top,left);
     }
 
-    this.injectInTemplate = function(idTemplate, cssSelector, htmlFile,  data){
+    this.setTemplateWidth = function(idTemplate, width){
+        this.getTemplate(idTemplate).setWidth(width);
+    }
+
+    this.setTemplateHeight= function(idTemplate, height){
+        this.getTemplate(idTemplate).setHeight(height);
+    }
+
+    this.injectInTemplate = function(idTemplate, htmlFile,  data, cssSelector){
         var widget = this;
         this.filesHTML.forEach(function(item,index){
             if (item.name == htmlFile){
-                widget.getTemplate(idTemplate).injectHtml(item.data,cssSelector ,data);
+                widget.getTemplate(idTemplate).injectHtml(item.data,data,cssSelector);
             }
         });
         
@@ -143,22 +151,20 @@ function Widget(){
     this.saveObject = function (data){
         var idAgregado=0;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/objects/", // the endpoint
-            type: "POST", // http method
+            url: "https://127.0.0.1:8000/widgetRest/objects/", 
+            type: "POST", 
             async: false,
             data: {
                 data: JSON.stringify(data),
                 url: window.location.href,
                 idWidget: this.idWidget
-            }, // data sent with the post request
-
-            // handle a successful response
+            }, 
             success: function (data) {
                 idAgregado = data;
 
             },
 
-            // handle a non-successful response
+            
             error: function (xhr, errmsg, err) {
                 alert("Error al enviar el objeto");
             }
@@ -169,22 +175,19 @@ function Widget(){
     this.updateObject = function (object, params){
         var success = false;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/updateObject/", // the endpoint
-            type: "POST", // http method
+            url: "https://127.0.0.1:8000/widgetRest/updateObject/", 
+            type: "POST", 
             async: false,
             data: {
                 object: JSON.stringify(object),
                 idWidget: this.idWidget,
                 params: JSON.stringify(params)
-            }, // data sent with the post request
-
-            // handle a successful response
+            }, 
             success: function () {
                 success = true;
 
             },
 
-            // handle a non-successful response
             error: function (xhr, errmsg, err) {
                 alert("Error al actualizar el objeto");
             }
@@ -195,20 +198,17 @@ function Widget(){
     this.getObjects = function (params){
         var data;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/objects/", // the endpoint
-            type: "GET", // http method
+            url: "https://127.0.0.1:8000/widgetRest/objects/",
+            type: "GET",
             dataType: 'json',
             async: false,
             data : {idWidget : this.idWidget,
                 params : JSON.stringify(params)
-            }, // data sent with the post request
-
-            // handle a successful response
+            }, 
             success: function (response) {
                 data = response
             },
 
-            // handle a non-successful response
             error: function (xhr, errmsg, err) {
                 alert("Error al cargar los comentarios");
 
@@ -221,15 +221,13 @@ function Widget(){
     this.getObject = function (params){
         var data;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/objects/", // the endpoint
-            type: "GET", // http method
+            url: "https://127.0.0.1:8000/widgetRest/objects/", 
+            type: "GET", 
             dataType: 'json',
             async: false,
             data : {idWidget : this.idWidget,
                 params : JSON.stringify(params)
-            }, // data sent with the post request
-
-            // handle a successful response
+            }, 
             success: function (response) {
                 if(response.length > 1){
                     alert("Error: más de un objeto con los parámetros especificados");
@@ -240,7 +238,6 @@ function Widget(){
                 }
             },
 
-            // handle a non-successful response
             error: function (xhr, errmsg, err) {
                 alert("Error al cargar los comentarios");
 
@@ -252,28 +249,25 @@ function Widget(){
     this.getObjectsInUrl = function (url, params){
         var data;
         var urlAux = url;
-        console.log(url);
         //La url enviada no contiene http/https, por lo que es un nombre de dominio o una url inválida.
         if((url.indexOf("http://") == -1) && (url.indexOf("https://") == -1)){
             var href = window.location.href;
             urlAux = href.split("/", 3).join("/") + "/";
         }
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/objects/", // the endpoint
-            type: "GET", // http method
+            url: "https://127.0.0.1:8000/widgetRest/objects/", 
+            type: "GET", 
             dataType: 'json',
             async: false,
             data : {url : urlAux,
                 idWidget : this.idWidget,
                 params : JSON.stringify(params)
-            }, // data sent with the post request
-
-            // handle a successful response
+            }, 
             success: function (response) {
                 data = response
             },
 
-            // handle a non-successful response
+
             error: function (xhr, errmsg, err) {
                 alert("Error al cargar los comentarios");
 
@@ -294,16 +288,14 @@ function Widget(){
         }
         console.log(urlAux);
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/objects/", // the endpoint
-            type: "GET", // http method
+            url: "https://127.0.0.1:8000/widgetRest/objects/", 
+            type: "GET", 
             dataType: 'json',
             async: false,
             data : {url : urlAux,
                 idWidget : this.idWidget,
                 params : JSON.stringify(params)
-            }, // data sent with the post request
-
-            // handle a successful response
+            }, 
             success: function (response) {
                 if(response.length > 1){
                     alert("Error: más de un objeto con los parámetros especificados");
@@ -314,7 +306,6 @@ function Widget(){
                 }
             },
 
-            // handle a non-successful response
             error: function (xhr, errmsg, err) {
                 alert("Error al cargar los comentarios");
 
@@ -326,19 +317,16 @@ function Widget(){
     this.getUsersConnected = function (){
         var data;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/user_ping/", // the endpoint
-            type: "GET", // http method
+            url: "https://127.0.0.1:8000/widgetRest/user_ping/", 
+            type: "GET", 
             dataType: 'json',
             async: false,
             data : {url : window.location.hostname,
-            }, // data sent with the post request
-
-            // handle a successful response
+            }, 
             success: function (response) {
                 data = response
             },
 
-            // handle a non-successful response
             error: function (xhr, errmsg, err) {
                 alert("Error al cargar los usuarios");
 
@@ -350,20 +338,17 @@ function Widget(){
     this.getUsersConnectedInWidget = function (){
         var data;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/user_ping/", // the endpoint
-            type: "GET", // http method
+            url: "https://127.0.0.1:8000/widgetRest/user_ping/", 
+            type: "GET", 
             dataType: 'json',
             async: false,
             data : {url : window.location.hostname,
                 idWidget : this.idWidget
-            }, // data sent with the post request
-
-            // handle a successful response
+            }, 
             success: function (response) {
                 data = response
             },
 
-            // handle a non-successful response
             error: function (xhr, errmsg, err) {
                 alert("Error al cargar los usuarios");
 
@@ -418,15 +403,15 @@ function Widget(){
     }
 
     this.getForm = function(idElement){
-        return this.interface.getForm(this.idWidget,idElement);
+        return this.interface.getForm(idElement);
     }
 
     this.getInput = function(type,idElement){
-        return this.interface.getInput(this.idWidget,type,idElement);
+        return this.interface.getInput(type,idElement);
     }
 
     this.getTextArea = function(idElement){
-        return this.interface.getTextArea(this.idWidget,idElement);
+        return this.interface.getTextArea(idElement);
     }
 
     this.getPrincipalBox = function(idElement,title){
@@ -438,53 +423,53 @@ function Widget(){
     }
 
     this.getPrincipalList = function(idElement){
-        return this.interface.getPrincipalList(this.idWidget,idElement);
+        return this.interface.getPrincipalList(idElement);
     }
     this.getPrincipalBody = function(idElement){
-        return this.interface.getPrincipalBody(this.idWidget,idElement);
+        return this.interface.getPrincipalBody(idElement);
     }
     this.getLi = function(idElement){
-        return this.interface.getLi(this.idWidget,idElement);
+        return this.interface.getLi(idElement);
     }
 
     this.getSubmitButton = function(idElement){
-        return this.interface.getSubmitButton(this.idWidget,idElement);
+        return this.interface.getSubmitButton(idElement);
     }
 
     this.getListButton = function(idElement){
-        return this.interface.getListButton(this.idWidget,idElement);
+        return this.interface.getListButton(idElement);
     }
 
     this.getDiv = function(idElement){
-        return this.interface.getDiv(this.idWidget,idElement);
+        return this.interface.getDiv(idElement);
     }
     this.getSpan = function(idElement){
-        return this.interface.getSpan(this.idWidget,idElement);
+        return this.interface.getSpan(idElement);
     }
     this.getP = function(idElement){
-        return this.interface.getP(this.idWidget,idElement);
+        return this.interface.getP(idElement);
     }
     this.getA = function(idElement){
-        return this.interface.getA(this.idWidget,idElement);
+        return this.interface.getA(idElement);
     }
     this.getI = function(idElement){
-        return this.interface.getI(this.idWidget,idElement);
+        return this.interface.getI(idElement);
     }
     this.getLabel = function(idElement,text){
-        return this.interface.getLabel(this.idWidget,idElement,text);
+        return this.interface.getLabel(idElement,text);
     }
     this.getVideo = function(idElement){
-        return this.interface.getVideo(this.idWidget,idElement);
+        return this.interface.getVideo(idElement);
     }
-    this.getWidgetElement = function(idElement){
-        return document.getElementById(this.idWidget + idElement);
+    this.getWidgetElement = function(selector){
+        return $('#container' + this.idWidget).find(selector)[0];
     }
     this.onCloseBox = function(idElement, event){ //Permite redefinir al usuario el evento onClose de un box.
-        $("#cerrar" + this.idWidget + idElement).prop('onclick',null).off('click');
-        $("#cerrar" + this.idWidget + idElement).on('click', event);
+        $("#cerrar" + idElement).prop('onclick',null).off('click');
+        $("#cerrar" + idElement).on('click', event);
     }
     this.setBoxTitle = function(idBoxElement, newTitle){
-        $("#label"+this.idWidget + idBoxElement).text(newTitle);
+        $("#label"+ idBoxElement).text(newTitle);
     }
 
 }
@@ -494,22 +479,37 @@ function Template(idTemplate, title, widget){
     this.title = title;
     this.widget = widget;
     this.box = getTemplateBox(idTemplate, title, widget);
-    $("#container"+widget.idWidget).append(this.box);
 
-    this.injectHtml = function(html,cssSelector,data){
+    $("#container"+widget.idWidget).append(this.box);
+    this.box.firstChild.onmousedown = function(event){
+        _drag_init(this.parentElement, event);
+        document.addEventListener('mousemove',_move_elem);
+        document.addEventListener('mouseup',_destroy);
+    };
+
+    this.injectHtml = function(html,data,cssSelector){
         var template = _.template(html);
         var test = template(data);
-        if($(this.box).is($(cssSelector))){
+        if(cssSelector == null){
             $(this.box).append(test);
         }
         else{
             $(this.box).find(cssSelector).append(test);
         }      
+        
     }
 
     this.setPosition = function(top, left){
         this.box.style.top = top;
         this.box.style.left = left;
+    }
+
+    this.setWidth = function(width){
+        this.box.style.width = width;
+    }
+
+    this.setHeight = function(height){
+        this.box.style.height = height;
     }
 
     this.close = function(){
@@ -523,7 +523,9 @@ function Template(idTemplate, title, widget){
     this.onCloseTemplate = function(){
         //
     }
+
 }
+
 
 function getTemplateBox(idTemplate, title, widget){
         divPrincipal = document.createElement("div");
@@ -533,11 +535,11 @@ function getTemplateBox(idTemplate, title, widget){
         divPrincipal.style.top = '50%';
         divPrincipal.style.left = '50%';
         divTitulo = document.createElement("div");
-        divTitulo.classList.add( "titleBox");
+        divTitulo.classList.add("titleBox", "socialEyeDragableWindow");
         label = document.createElement("label");
         label.innerHTML = title;
         boton = document.createElement("button");
-        boton.classList.add("botonCerrar", 'cerrar'+idTemplate+widget.idWidget);
+        boton.classList.add("botonCerrar");
         boton['aria-hidden'] = "true";
         boton.innerHTML = '&times;';
         $(boton).on('click',function (e) {
@@ -545,7 +547,7 @@ function getTemplateBox(idTemplate, title, widget){
             $("#"+idTemplate+widget.idWidget).remove();
         });
         divTitulo.appendChild(label);
-        divTitulo.appendChild(boton);
         divPrincipal.appendChild(divTitulo);
+        divPrincipal.appendChild(boton);
         return divPrincipal;
 }
