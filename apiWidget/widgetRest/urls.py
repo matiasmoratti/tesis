@@ -1,7 +1,7 @@
 from django.conf.urls import url,include
 
 from . import views
-from views import WidgetListView
+from views import WidgetListView, EditWidget
 from django.contrib.auth.views import logout_then_login
 
 urlpatterns = [
@@ -36,6 +36,7 @@ urlpatterns = [
     # url(r'^exit', views.exit, name='exit'),
     url(r'^newWidget', views.newWidget, name='newWidget'),
     url(r'^widgets', WidgetListView.as_view(), name='widget-list'),
+    url(r'^edit', EditWidget.as_view(), name='edit'),
 
     # url(r'^usuariosActivos/', views.usuariosActivos, name='usuariosActivos'),
 ]

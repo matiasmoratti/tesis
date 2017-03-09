@@ -29,7 +29,10 @@
     <script src="{% static "js/creative.js" %}"></script>
 
     <script src="{% static "js/bootbox.min.js" %}"></script>
+
     <script src="{% static "js/widgets.js" %}"></script>
+
+
     {% load bootstrap3 %}
     {% load bootstrap %}
     {% load i18n %}
@@ -55,6 +58,8 @@
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static "css/creative.css" %}" type="text/css">
+
+    <link rel="shortcut icon" href="../static/img/eye.png" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -98,7 +103,7 @@
                                     <td>{{ widget.widget_title }}</td>
                                     <td>{{ widget.description }}</td>
                                     <td>{{ widget.widget_icon }}</td>
-                                    <td><a href="edit/{{  widget.id  }}" class="editLink"><i class="glyphicon glyphicon-wrench edit"></i></a> <a href="{% url 'remove' %}?id={{  widget.id  }}" class="removeLink"><i class="glyphicon glyphicon-remove-circle delete"></i></a></td>
+                                    <td><a href="{% url 'edit' %}?id={{  widget.id  }}" class="editLink"><i class="glyphicon glyphicon-wrench edit"></i></a> <a href="{% url 'remove' %}?id={{  widget.id  }}" class="removeLink"><i class="glyphicon glyphicon-remove-circle delete"></i></a></td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -110,8 +115,8 @@
             </div>
 
             <div class="text-center">
-
-                <button class="btn btn-info"><i class="glyphicon glyphicon-floppy-save"></i><a href="newWidget">Nuevo Widget</a></button>
+                <br>
+                <button class="btn btn-info webButton"><i class="glyphicon glyphicon-floppy-save"></i><a href="newWidget">Nuevo Widget</a></button>
 
             </div>
         </div>

@@ -28,6 +28,8 @@
     <!-- Custom Theme JavaScript -->
     <script src="{% static "js/creative.js" %}"></script>
 
+    <link rel="shortcut icon" href="../static/img/eye.png" />
+
 {% load bootstrap3 %}
     {% load bootstrap %}
 {% load i18n %}
@@ -66,7 +68,7 @@
     {% include "navbar.html" %}
 
     <header>
-        <div class="header-content">
+        <div class="header-content webForm">
             <div class="header-content-inner">
 
                 <form class="form-horizontal" role="form"  action="register" method="post">
@@ -74,7 +76,7 @@
                     {{ userCreationForm|bootstrap_horizontal }}
                     <div class="control-group">
                         <div class="controls">
-                            <button type="submit" class="btn btn-default">Registrarse</button>
+                            <button type="submit" class="btn btn-default webButton">Registrarse</button>
                         </div>
                     </div>
                 </form>

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django import forms
 
 from .models import Comment, User, SpecificComment
@@ -11,12 +12,14 @@ from django.utils.translation import ugettext_lazy as _
 
 
 class LoginForm(forms.Form):
-    username = forms.CharField(required = True)
-    password = forms.CharField(widget=forms.PasswordInput,required = True)
+    username = forms.CharField(required = True, label= "Usuario")
+    password = forms.CharField(widget=forms.PasswordInput,required = True, label= "Contraseña")
 
 class UserCreationForm(UserCreationForm):
-    email = EmailField(label=_("Email"), required=True,
-                       help_text=_("Obligatorio."))
+    email = EmailField(label=_("Email"), required=True)
+    username = forms.CharField(label = "Usuario", required = True)
+    password1 = forms.CharField(widget = forms.PasswordInput, label = "Contraseña", required = True)
+    password2 = forms.CharField(widget = forms.PasswordInput, label = "Repetir contraseña", required = True)
 
     class Meta:
         model = User
@@ -30,10 +33,10 @@ class UserCreationForm(UserCreationForm):
         return user
 
 class WidgetForm(forms.Form):
-    title = forms.CharField(max_length=50,required=True)
-    descripcion = forms.CharField(max_length=250,required=True)
+    title = forms.CharField(max_length=50,required=True, label = "Nombre")
+    descripcion = forms.CharField(max_length=250,required=True, label = "Descripción")
     file = forms.FileField(label="Widget project",required=True)
-    icon = forms.CharField(max_length=200,required=True)
+    icon = forms.CharField(max_length=200,required=True, label = "Ícono")
 
 
 class CommentForm(forms.ModelForm):

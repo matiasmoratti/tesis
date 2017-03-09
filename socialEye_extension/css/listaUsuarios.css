@@ -68,6 +68,7 @@
     position: absolute;
     left: 355px;
     bottom: 12%;
+    cursor: pointer;
 }
 
 .videos{
@@ -89,7 +90,7 @@
     width: 360px;
 }
 
-span{
+.listButton span, .commentText span{
     padding-left: 0px !important;
     margin-left: 0px !important;
 }
@@ -114,11 +115,11 @@ span{
     width: 80%;
 }
 
-.modal-footer{
+/*.modal-footer{
     position: relative;
     left: 40%;
 }
 
 .modal-footer button{
     width: 30%;
-}
+}*/

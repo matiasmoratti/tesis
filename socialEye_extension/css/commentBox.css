@@ -19,13 +19,13 @@
     padding:10px;
     border-top:1px dotted #bbb;
 }
-.commentBox .form-group:first-child, .actionBox .form-group:first-child {
+.commentBox, .actionBox {
     width:80%;
 }
-.commentBox .form-group:nth-child(2), .actionBox .form-group:nth-child(2) {
+.commentBox, .actionBox {
     width:25%;
 }
-.actionBox .form-group * {
+.actionBox{
     width:100%;
 }
 .taskDescription {
@@ -69,7 +69,7 @@
    padding:10px;
 }
 
-.form-inline .form-control{
+.form-inline, .form-control{
     resize:none;
     width: 100%;
 }

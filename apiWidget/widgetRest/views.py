@@ -15,6 +15,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic.list import ListView
+from django.views.generic.edit import UpdateView
 from tokenapi.decorators import token_required
 
 from .forms import LoginForm,UserCreationForm,WidgetForm
@@ -249,6 +250,20 @@ def removeUserWidget(request):
         widget = Widget.objects.get(pk=request.POST['idWidget'])
         user.widgets.remove(widget)
         return HttpResponse()
+
+class EditWidget(UpdateView):
+        model = Widget
+        form = WidgetForm
+        fields = ('description', 'filesHTML', 'widget_icon')
+        template_name = 'editWidget.html'
+
+        def get_object(self, queryset=None):
+            return self.request.user
+        #fields = ['name']f
+        #template_name_suffix = '_update_form'
+        #id = request.GET['id']
+        #widget = Widget.objects.get(pk=id)
+    #return render(request, 'editWidget.html', {'widget' : widget })
 
 @csrf_exempt
 @token_required

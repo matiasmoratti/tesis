@@ -10,7 +10,7 @@
             /*background-color:#fdfdfd;*/
 /*}*/
 
-#container4,#4divEncuestas{
+#container4, #divEncuestas{
             z-index: 9999999999;
             width:350px;
             position: fixed;
@@ -71,9 +71,9 @@
         width: 100%;
     }
 }
-.modal-footer .btn+.btn {
+/*.modal-footer .btn+.btn {
     margin-left: 0px;
-}
+}*/
 .progress {
     margin-right: 10px;
 }
@@ -140,9 +140,9 @@ input[type="radio"]{
     width: 100%;
 }
 
-* {
+/** {
   .border-radius(0) !important;
-}
+}*/
 
 #field {
     margin-bottom:20px;

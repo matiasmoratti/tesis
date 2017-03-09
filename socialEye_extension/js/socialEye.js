@@ -415,7 +415,7 @@ function Widget(){
     }
 
     this.getPrincipalBox = function(idElement,title){
-        return principalBox = this.interface.getPrincipalBox(this.idWidget,title,idElement,this);
+        return getPrincipalBox = this.interface.getPrincipalBox(this.idWidget,title,idElement,this);
     }
 
     this.getBox = function(idElement,title){
@@ -469,7 +469,7 @@ function Widget(){
         $("#cerrar" + idElement).on('click', event);
     }
     this.setBoxTitle = function(idBoxElement, newTitle){
-        $("#label"+ idBoxElement).text(newTitle);
+        $("#"+ idBoxElement + "Title").text(newTitle);
     }
 
 }
@@ -535,6 +535,7 @@ function getTemplateBox(idTemplate, title, widget){
         divPrincipal.style.top = '50%';
         divPrincipal.style.left = '50%';
         divTitulo = document.createElement("div");
+        divTitulo.setAttribute('id', idTemplate + "Title");
         divTitulo.classList.add("titleBox", "socialEyeDragableWindow");
         label = document.createElement("label");
         label.innerHTML = title;

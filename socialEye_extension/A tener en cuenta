@@ -18,3 +18,8 @@ _Para ir teniendo en cuenta para el manual de usuario:
 
 	*Aclarar a los desarrolladores que SIEMPRE deben llamar al close() del widget en algún momento. Esto porque al crear templates individuales, ninguno le da el "cierre completo" al widget (lo cual se puede ver cuando se deshabilita el brillo en el ícono del widget).
 	*Explicar bien el funcionamiento de widget.getWidgetElement(selector).
+
+
+Cosas para hacer:
+
+*Página web con herramienta activada.

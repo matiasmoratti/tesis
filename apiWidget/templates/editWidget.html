@@ -28,6 +28,8 @@
     <!-- Custom Theme JavaScript -->
     <script src="{% static "js/creative.js" %}"></script>
 
+    <link rel="shortcut icon" href="../static/img/eye.png" />
+
     {% load bootstrap3 %}
     {% load bootstrap %}
     {% load i18n %}
@@ -53,8 +55,6 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static "css/creative.css" %}" type="text/css">
 
-    <link rel="shortcut icon" href="../static/img/eye.png" />
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -71,17 +71,10 @@
     <div class="header-content">
         <div class="header-content-inner">
             <div id="login">
-                <form class="form-horizontal webForm" role="form"  action="loginWeb" method="post">
-                    {% csrf_token %}
-                    {% if next %}
-                        <input type="hidden" name="next" value="{{ next }}" />
-                    {% endif %}
-                    {{ loginForm|bootstrap_horizontal }}
-                    <div class="control-group">
-                        <div class="controls">
-                            <button type="submit" class="btn btn-default webButton">Ingresar</button>
-                        </div>
-                    </div>
+                <form action="" method="post">{% csrf_token %}
+                    {{ form.description}}
+                    <input type="text" value={{ form.description}} />
+                    <input type="submit" value="Update" />
                 </form>
             </div>
         </div>
