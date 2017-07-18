@@ -422,7 +422,7 @@ function Manager() {
             },
 
             error: function (xhr, errmsg, err) {
-                alert("Error al cargar los comentarios");
+                alert("Error al intentar recuperar los widgets del usuario");
 
             }
         });
@@ -444,7 +444,7 @@ function Manager() {
             },
 
             error: function (xhr, errmsg, err) {
-                alert("Error al cargar los comentarios");
+                alert("Error al intentar recuperar los widgets");
 
             }
         });
@@ -465,7 +465,7 @@ function Manager() {
             },
 
             error: function (xhr, errmsg, err) {
-                alert("Error al cargar los comentarios");
+                alert("Error al intentar recuperar un widget");
 
             }
         });
@@ -492,7 +492,7 @@ function Manager() {
             },
 
             error: function (xhr, errmsg, err) {
-                alert("Error al enviar el objeto");
+                alert("Error al intentar agregar el widget");
             }
         });
     }
@@ -509,7 +509,7 @@ function Manager() {
             },
 
             error: function (xhr, errmsg, err) {
-                alert("Error al enviar el objeto");
+                alert("Error al intentar eliminar el widget");
             }
         });
     }
