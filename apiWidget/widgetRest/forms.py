@@ -16,7 +16,7 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput,required = True, label= "Contraseña")
 
 class UserCreationForm(UserCreationForm):
-    email = EmailField(label=_("Email"), required=True)
+    email = EmailField(label=_("Email"), required=False)
     username = forms.CharField(label = "Usuario", required = True)
     password1 = forms.CharField(widget = forms.PasswordInput, label = "Contraseña", required = True)
     password2 = forms.CharField(widget = forms.PasswordInput, label = "Repetir contraseña", required = True)

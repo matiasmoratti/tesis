@@ -110,6 +110,7 @@ function mostrarChat(otroUsuario){
 
     usuarios.createTemplate('chat', "Conversación con " + usuarioChatActual, 'chat.html', data);
     usuarios.setTemplateHeight("chat", "390px");
+    usuarios.setTemplatePosition('chat', '10%', '20%');
 
     params = {};
     if(usuarioChatActual > usuarios.getUser()){
@@ -239,7 +240,7 @@ function mostrarChat(otroUsuario){
             connected = false;
             $(usuarios.getWidgetElement('#textoComentarioChat')).prop("disabled", true);
             $(usuarios.getWidgetElement("#call"+ usuarioChatActual)).prop('onclick',null).off('click');
-            usuarios.setBoxTitle('chatBox', "Conversación con " + usuarioChatActual + " (desconectado)"); //NO ESTA FUNCIONANDO
+            usuarios.setBoxTitle('chat', "Conversación con " + usuarioChatActual + " (desconectado)"); 
             if(llamadaEstablecida)
                 terminarLlamada();
         }
@@ -248,7 +249,7 @@ function mostrarChat(otroUsuario){
                 connected = true;
                 $(usuarios.getWidgetElement('#textoComentarioChat')).prop("disabled", false);
                 $(usuarios.getWidgetElement("#call"+ usuarioChatActual)).on('click', callClick);
-                usuarios.setBoxTitle('chatBox', "Conversación con " + usuarioChatActual);                  //NO ESTA FUNCIONANDO
+                usuarios.setBoxTitle('chat', "Conversación con " + usuarioChatActual);   
             }           
         }
     }, 10000);   
