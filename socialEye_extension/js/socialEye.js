@@ -54,7 +54,7 @@ function Widget(){
 
 
 
-    this.ping = function(idWidget){ 
+    this.ping = function(idWidget){
         $.ajax({
                 type: "POST",
                 url: "https://127.0.0.1:8000/widgetRest/user_ping/",
@@ -97,9 +97,9 @@ function Widget(){
         // que la estructura del widget haya sido cargada
     }
 
-    this.createTemplate = function(idTemplate, title, htmlFile, data){
-        this.templates[idTemplate] = new Template(idTemplate, title, this);
-        this.injectInTemplate(idTemplate, htmlFile,data);
+    this.createTemplate = function(idTemplate, title, htmlFile, data,boxInvisible){
+        this.templates[idTemplate] = new Template(idTemplate, title, this,boxInvisible);
+        this.injectInTemplate(idTemplate, htmlFile,data,'',boxInvisible);
     }
 
     this.getTemplate = function(idTemplate){
@@ -127,14 +127,14 @@ function Widget(){
         this.getTemplate(idTemplate).setHeight(height);
     }
 
-    this.injectInTemplate = function(idTemplate, htmlFile,  data, cssSelector){
+    this.injectInTemplate = function(idTemplate, htmlFile,  data, cssSelector,boxInvisible){
         var widget = this;
         this.filesHTML.forEach(function(item,index){
             if (item.name == htmlFile){
-                widget.getTemplate(idTemplate).injectHtml(item.data,data,cssSelector);
+                widget.getTemplate(idTemplate).injectHtml(item.data,data,cssSelector,boxInvisible);
             }
         });
-        
+
     }
 
     this.onCloseTemplate = function(idTemplate, callBackfunction){
@@ -151,20 +151,20 @@ function Widget(){
     this.saveObject = function (data){
         var idAgregado=0;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/objects/", 
-            type: "POST", 
+            url: "https://127.0.0.1:8000/widgetRest/objects/",
+            type: "POST",
             async: false,
             data: {
                 data: JSON.stringify(data),
                 url: window.location.href,
                 idWidget: this.idWidget
-            }, 
+            },
             success: function (data) {
                 idAgregado = data;
 
             },
 
-            
+
             error: function (xhr, errmsg, err) {
                 alert("Error al enviar el objeto");
             }
@@ -175,14 +175,14 @@ function Widget(){
     this.updateObject = function (object, params){
         var success = false;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/updateObject/", 
-            type: "POST", 
+            url: "https://127.0.0.1:8000/widgetRest/updateObject/",
+            type: "POST",
             async: false,
             data: {
                 object: JSON.stringify(object),
                 idWidget: this.idWidget,
                 params: JSON.stringify(params)
-            }, 
+            },
             success: function () {
                 success = true;
 
@@ -204,7 +204,7 @@ function Widget(){
             async: false,
             data : {idWidget : this.idWidget,
                 params : JSON.stringify(params)
-            }, 
+            },
             success: function (response) {
                 data = response
             },
@@ -221,13 +221,13 @@ function Widget(){
     this.getObject = function (params){
         var data;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/objects/", 
-            type: "GET", 
+            url: "https://127.0.0.1:8000/widgetRest/objects/",
+            type: "GET",
             dataType: 'json',
             async: false,
             data : {idWidget : this.idWidget,
                 params : JSON.stringify(params)
-            }, 
+            },
             success: function (response) {
                 if(response.length > 1){
                     alert("Error: más de un objeto con los parámetros especificados");
@@ -255,14 +255,14 @@ function Widget(){
             urlAux = href.split("/", 3).join("/") + "/";
         }
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/objects/", 
-            type: "GET", 
+            url: "https://127.0.0.1:8000/widgetRest/objects/",
+            type: "GET",
             dataType: 'json',
             async: false,
             data : {url : urlAux,
                 idWidget : this.idWidget,
                 params : JSON.stringify(params)
-            }, 
+            },
             success: function (response) {
                 data = response
             },
@@ -288,14 +288,14 @@ function Widget(){
         }
         console.log(urlAux);
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/objects/", 
-            type: "GET", 
+            url: "https://127.0.0.1:8000/widgetRest/objects/",
+            type: "GET",
             dataType: 'json',
             async: false,
             data : {url : urlAux,
                 idWidget : this.idWidget,
                 params : JSON.stringify(params)
-            }, 
+            },
             success: function (response) {
                 if(response.length > 1){
                     alert("Error: más de un objeto con los parámetros especificados");
@@ -317,12 +317,12 @@ function Widget(){
     this.getUsersConnected = function (){
         var data;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/user_ping/", 
-            type: "GET", 
+            url: "https://127.0.0.1:8000/widgetRest/user_ping/",
+            type: "GET",
             dataType: 'json',
             async: false,
             data : {url : window.location.hostname,
-            }, 
+            },
             success: function (response) {
                 data = response
             },
@@ -338,13 +338,13 @@ function Widget(){
     this.getUsersConnectedInWidget = function (){
         var data;
         $.ajax({
-            url: "https://127.0.0.1:8000/widgetRest/user_ping/", 
-            type: "GET", 
+            url: "https://127.0.0.1:8000/widgetRest/user_ping/",
+            type: "GET",
             dataType: 'json',
             async: false,
             data : {url : window.location.hostname,
                 idWidget : this.idWidget
-            }, 
+            },
             success: function (response) {
                 data = response
             },
@@ -464,6 +464,10 @@ function Widget(){
     this.getWidgetElement = function(selector){
         return $('#container' + this.idWidget).find(selector)[0];
     }
+
+    this.getWidgetElements = function(selector){
+        return $('#container' + this.idWidget).find(selector);
+    }
     this.onCloseBox = function(idElement, event){ //Permite redefinir al usuario el evento onClose de un box.
         $("#cerrar" + idElement).prop('onclick',null).off('click');
         $("#cerrar" + idElement).on('click', event);
@@ -474,29 +478,46 @@ function Widget(){
 
 }
 
-function Template(idTemplate, title, widget){
+function Template(idTemplate, title, widget,boxInvisible){
     this.idTemplate = idTemplate;
     this.title = title;
     this.widget = widget;
-    this.box = getTemplateBox(idTemplate, title, widget);
-
-    $("#container"+widget.idWidget).append(this.box);
-    this.box.firstChild.onmousedown = function(event){
+    if (!boxInvisible) {
+      this.box = getTemplateBox(idTemplate, title, widget);
+      $("#container"+widget.idWidget).append(this.box);
+      this.box.firstChild.onmousedown = function(event){
         _drag_init(this.parentElement, event);
         document.addEventListener('mousemove',_move_elem);
         document.addEventListener('mouseup',_destroy);
-    };
+      };
+    }
 
-    this.injectHtml = function(html,data,cssSelector){
+    this.injectHtml = function(html,data,cssSelector,boxInvisible){
         var template = _.template(html);
         var test = template(data);
-        if(cssSelector == null){
-            $(this.box).append(test);
+        if (cssSelector) {
+            if ($(this.box).is($(cssSelector))) {
+                if (!boxInvisible) {
+                    $(this.box).append(test);
+                } else {
+                    $("#container" + widget.idWidget).append(test);
+                }
+            } else {
+                if (!boxInvisible) {
+                    $(this.box).find(cssSelector).append(test);
+                } else {
+                    $("#container" + widget.idWidget).append(test);
+                }
+
+            }
+        } else {
+            if (!boxInvisible) {
+                $(this.box).append(test);
+            } else {
+                $("#container" + widget.idWidget).append(test);
+            }
         }
-        else{
-            $(this.box).find(cssSelector).append(test);
-        }      
-        
+
     }
 
     this.setPosition = function(top, left){
