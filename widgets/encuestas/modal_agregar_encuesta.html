@@ -1,0 +1,31 @@
+<div class='modal fade' id='encueste' tabindex='-1' role='dialog' aria-labelledby='voteLabel' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='panel panel-primary'>
+            <div class='titleBox' id='divNuevaEncuesta'>
+                <button class='botonCerrar cerrarCrear'>x</button>
+                <label>Nueva encuesta</label>
+            </div>
+            <div class='actionBox'>
+                <div class='modal-body'>
+                    <form id='formEncuesta'>
+                        <input type='text' id='titEncuesta' class='form-control inputEncuesta' placeholder='Ingrese el título de la encuesta' />
+                        <a id='agregarPregunta' title='Nueva pregunta'><i class='fa fa-question-circle fa-stack-1x' id='iconoPregunta'> </i></a>
+                </div>
+                <div id='divPreguntas'>
+                    <br><br>
+                    <input type='text' id='pregunta<%= numPregunta %>' class='form-control inputPregunta' placeholder='Ingrese una pregunta' />
+                    <a id=<%= numPregunta %> title='Nueva opción' class='agregarOpcion'><i class='fa fa-plus fa-stack-1x' id='iconoMas'> </i></a>
+                </div><br><br>
+                <div id='divBotonNuevaEncuesta'><button id='agregarEncuesta' class='submitButton'>Crear Encuesta</button>
+                    <div>
+                        </form>
+                    </div>
+                    <div class='modal-body'>
+                        <ul id='listaOpciones' class='list-group'>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<div class='modal fade' id='modalOpcion' tabindex='-1' role='dialog' aria-hidden='true'>
+    <div class='modal-dialog'>
+        <div class='panel panel-primary'>
+            <div class='titleBoxOpcion'>
+                <button class='botonCerrar botonCerrarOpcion' data-dismiss='modal' aria-hidden='true'>x</button>
+                <label>Nueva opción</label>
+            </div>
+            <div class='actionBox'>
+                <div class='modal-body'>
+                    <div class='container'>
+                        <div class='row'>
+                          <input type='hidden' name='count' value='1' />
+                        <div class='control-group tituloOpciones' id='fields'>
+                            <h4 class='control-label' for='field1'>Ingrese las posibles opciones de respuesta</h4>
+                            <div class='controls' id='profs'>
+                                <% if (typeof preguntas[idPreguntaSeleccionada] === "undefined") { %>
+                                    <form class='input-append'>
+                                        <div id='field'><input autocomplete='off' class='input form-control inputOpcion' id='field1' name='prof1' type='text' placeholder='Escriba la opcion' data-items='8' /><button id='b1' class='btn btn-success btn-xs add-more'
+                                                type='button'>+</button></div>
+                                    </form>
+                                    <br>
+                                    <small>Presione + para agregar otra opcion </small>
+                            </div>
+                            <% }
+else {
+    var next = 0;
+   _.each(preguntas[idPreguntaSeleccionada].options, function (option) {
+       next += 1;
+       if (next ==1){%>
+                                <form class='input-append'>
+                                    <div id='field'><input autocomplete='off' value='<%= option.opcion %>' class='input form-control inputOpcion' id='field1' name='prof1' type='text' placeholder='Escriba la opcion' data-items='8' /><button id='b1' class='btn btn-success add-more'
+                                            type='button'>+</button>
+                                    </div>
+                                </form>
+                                <%    }
+       else {%>
+                                    <form class='input-append'>
+                                        <div id='field<%= next %>'><input autocomplete='off' value="<%= option.opcion %>" class='input form-control inputOpcion' id='field' name='prof1' type='text' placeholder='Escriba la opcion' data-items='8' /><button id='b1' class='btn btn-success btn-xs add-more'
+                                                type='button'>+</button>
+                                            <button id='remove<%= next %>' class='btn btn-danger btn-xs remove-me'>-</button></div>
+                                        <div id='field'>
+                                        </div>
+                                    </form>
+                                    <%
+       }
+   }); %>
+                                        <br>
+                                        <small>Presione + para agregar otra opcion </small>
+                        </div>
+                        <% } %>
+                    </div>
+                    <div class='modal-footer footerOpcion'>
+                        <button id='guardarOpcion' type='button' class='btn btn-success btn-vote'>Guardar opciones</button>
+                        <button type='button' class='btn btn-default btn-close botonCerrarOpcion' data-dismiss='modal'>Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

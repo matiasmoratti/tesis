@@ -1,0 +1,16 @@
+<div>
+  <ul id='listaEncuestas'>
+    <% _.each(items, function(item) { %>
+      <li class='socialEye'>
+        <button class="listButton socialEye filaEncuesta" id="encuesta<%= item.id %>">
+          <div class="tituloEncuesta">
+            <%= item.element.description %>
+          </div>
+          <div class="subtituloEncuesta">
+            creada por <%= item.username %> el <%= item.date %>
+          </div>
+        </button>
+      </li>
+      <% }); %>
+  </ul>
+</div>

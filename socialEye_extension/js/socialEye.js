@@ -166,7 +166,7 @@ function Widget(){
 
 
             error: function (xhr, errmsg, err) {
-                alert("Error al enviar el objeto");
+                alert("Error al intentar guardar el objeto");
             }
         });
         return idAgregado;
@@ -189,7 +189,7 @@ function Widget(){
             },
 
             error: function (xhr, errmsg, err) {
-                alert("Error al actualizar el objeto");
+                alert("Error al intentar actualizar el objeto");
             }
         });
         return success;
@@ -210,7 +210,7 @@ function Widget(){
             },
 
             error: function (xhr, errmsg, err) {
-                alert("Error al cargar los comentarios");
+                alert("Error al intentar recuperar los datos del widget");
 
             }
         });
@@ -239,7 +239,7 @@ function Widget(){
             },
 
             error: function (xhr, errmsg, err) {
-                alert("Error al cargar los comentarios");
+                alert("Error al intentar recuperar el dato del widget");
 
             }
         });
@@ -269,7 +269,7 @@ function Widget(){
 
 
             error: function (xhr, errmsg, err) {
-                alert("Error al cargar los comentarios");
+                alert("Error al intentar recuperar los datos del widget en la url");
 
             }
         });
@@ -307,7 +307,7 @@ function Widget(){
             },
 
             error: function (xhr, errmsg, err) {
-                alert("Error al cargar los comentarios");
+                alert("Error al intentar recuperar el dato del widget en la url");
 
             }
         });
@@ -328,7 +328,7 @@ function Widget(){
             },
 
             error: function (xhr, errmsg, err) {
-                alert("Error al cargar los usuarios");
+                alert("Error al intentar recuperar los usuarios conectados");
 
             }
         });
@@ -350,7 +350,7 @@ function Widget(){
             },
 
             error: function (xhr, errmsg, err) {
-                alert("Error al cargar los usuarios");
+                alert("Error al intentar recuperar los usuarios conectados al widget");
 
             }
         });

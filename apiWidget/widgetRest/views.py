@@ -68,9 +68,8 @@ def registration(request):
         # check whether it's valid:
         if user_form.is_valid():
             newUser = user_form.save()
-            for i in range(1,5):
-                defaultWidget = Widget.objects.get(pk=i)
-                newUser.widget_set.add(defaultWidget)
+            defaultWidget = Widget.objects.get(pk=1)
+            newUser.widgets.add(defaultWidget)
             return HttpResponse()
         else:
             print(user_form.errors)

@@ -1,0 +1,10 @@
+<% _.each(questions[numPreguntaEncuesta].options, function (option) { %>
+  <li class='list-group-item opcion'>
+<div class='radio'>
+<label>
+<input id='<%= option['id'] %>' class='<%= option['id'] %>' type='radio' name='optionsRadios'/>
+<%= option['opcion'] %>
+</label>
+</div>
+</li>
+<% }); %>
