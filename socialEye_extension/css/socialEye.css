@@ -107,7 +107,7 @@
 }
 
 #socialEyeBar{
-    z-index: 999999999999999999999;
+    zz-index: 999999999999999999999;
     position: fixed;
     margin: 0 auto;
     top: 0;

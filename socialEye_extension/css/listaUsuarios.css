@@ -95,6 +95,11 @@
     margin-left: 0px !important;
 }
 
+.commentList {
+    height: 295px;
+}
+
+
 .commentList li{
     margin: 0;
 }

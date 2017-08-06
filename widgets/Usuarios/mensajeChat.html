@@ -1,0 +1,12 @@
+<li>
+ <div class="commentText">
+  <% if (lastWriter !== item.userName) { %>
+     <span class="sub-text userIcon">
+     	<%= item.userName %> dijo:
+     </span>
+  <% } %>
+   <p>
+     <%= item.texto %>
+   </p>
+ </div>
+</li> 

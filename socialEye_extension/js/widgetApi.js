@@ -45,17 +45,23 @@ function Manager() {
                             $("#socialEyeList li:eq("+iconPos+")").after("<li class='socialEyeWidget socialEye' id='widgetList"+widgetId+"' style='display: list-item;'>  <a class='widgetIcon' id='widget"+widgetId+"' title='"+widgetActual.fields.widget_name+"'><span class='fa-stack fa-lg'><i class='fa fa-"+widgetActual.fields.widget_icon+" fa-stack-1x '></i></span></a> </li>");
                             altoBarra = altoBarra + 44;
                             $("#widget"+widgetId).click(function (e) {
-                                if($("#container"+widgetId).length == 0){
-                                    runWidget(widgetActual);
+                                widgetIdAux = e.currentTarget.id.substring(6, this.id.length);
+                                widgetAux = getWidget(widgetIdAux);                             
+                                if($("#container"+widgetIdAux).length == 0){
+                                    runWidget(widgetAux);
                                 }
                                 else{
-                                    widgetAux.close();
-                                    widgetAux = null;
+                                    widgetActual = eval(widgetAux.fields.widget_name);
+                                    widgetActual.close();
+                                    widgetActual = null;
                                 }
                             });
                         }
                         else{
+                            $('#widgetList'+widgetId).off();
                             $('#widgetList'+widgetId).remove();
+                            $('#widget'+widgetId).off();
+                            $('#widget'+widgetId).remove();
                             removeUserWidget(widgetId);
                             altoBarra = altoBarra - 44;
                             if($("#container"+widgetId).length != 0){
